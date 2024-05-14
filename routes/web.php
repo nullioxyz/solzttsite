@@ -24,8 +24,9 @@ Route::prefix('justiceroom')->group(function() {
         Route::get('/', [InstitucionalController::class, 'index'])->name('institucional.index');
         Route::get('/create', [InstitucionalController::class, 'create'])->name('institucional.create');
         Route::post('/store', [InstitucionalController::class, 'store'])->name('institucional.store');
-        Route::get('/edit', [InstitucionalController::class, 'create'])->name('institucional.edit');
+        Route::get('/edit/{institucional}', [InstitucionalController::class, 'edit'])->name('institucional.edit');
         Route::post('/save/{institucional}', [InstitucionalController::class, 'update'])->name('institucional.update');
+        Route::delete('/delete/{institucional}', [InstitucionalController::class, 'destroy'])->name('institucional.delete');
     });
     
     Route::middleware('auth')->group(function () {

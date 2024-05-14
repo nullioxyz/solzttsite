@@ -5,31 +5,34 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Institucional;
+use App\Repositories\InstitucionalRepository;
 use App\Http\Requests\Admin\StoreInstitucionalRequest;
+use App\Http\Requests\Admin\UpdateInstitucionalRequest;
 use Inertia\Inertia;
-
 
 class InstitucionalController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    protected $institucionalRepo;
+
+    public function __construct(InstitucionalRepository $institucionalRepo)
     {
-        return Inertia::render('Institucional/Index');
+        $this->institucionalRepo = $institucionalRepo;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    public function index(Request $request)
+    {
+        $institucionals = $this->institucionalRepo->paginate();
+        
+        return Inertia::render('Institucional/Index', [
+            'institucionals' => $institucionals
+        ]);
+    }
+
     public function create()
     {
-        //
+        return Inertia::render('Institucional/Create');
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
+    
     public function store(StoreInstitucionalRequest $request)
     {
         if (!$request->validated()) {
@@ -40,38 +43,33 @@ class InstitucionalController extends Controller
 
         Institucional::create($request->validated());
 
-        return redirect()->route('institucional.index');
+        return redirect()->route('institucional.index')->with('success', __('Saved with success'));
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(Institucional $institucional)
     {
-        //
+        return Inertia::render('Institucional/Edit', [
+            'institucional' => $institucional
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(UpdateInstitucionalRequest $request, Institucional $institucional)
     {
-        //
+        if (!$request->validated()) {
+            return redirect()->route('institucional.create')
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+
+        $this->institucionalRepo->update($institucional, $request->validated());
+        
+        return redirect()->route('institucional.index')->with('success', __('Saved with success'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(Institucional $institucional)
     {
-        //
-    }
+        $this->institucionalRepo->destroy($institucional);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return redirect()->route('institucional.index')->with('success', __('Deleted with success'));
     }
 }

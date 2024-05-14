@@ -26,6 +26,11 @@ class Institucional extends Model
         'updated_at'
     ];
 
+    protected $casts = [
+        'created_at'  => 'date:d-m-Y H:i',
+        'updated_at' => 'date:d-m-Y H:i',
+    ];
+
     public $timestamps = true;
 
 
@@ -37,5 +42,10 @@ class Institucional extends Model
     public function contentType(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(ContentType::class, 'content_type_id');
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 }
