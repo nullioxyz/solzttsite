@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Institucional;
+use App\Services\ContentTypeService;
 use App\Repositories\InstitucionalRepository;
+use App\Repositories\ContentTypeRepository;
 use App\Http\Requests\Admin\StoreInstitucionalRequest;
 use App\Http\Requests\Admin\UpdateInstitucionalRequest;
 use Inertia\Inertia;
@@ -13,10 +15,12 @@ use Inertia\Inertia;
 class InstitucionalController extends Controller
 {
     protected $institucionalRepo;
+    protected $contentTypeRepo;
 
-    public function __construct(InstitucionalRepository $institucionalRepo)
+    public function __construct(InstitucionalRepository $institucionalRepo, ContentTypeRepository $contentTypeRepo)
     {
         $this->institucionalRepo = $institucionalRepo;
+        $this->contentTypeRepo = $contentTypeRepo;
     }
 
     public function index(Request $request)
@@ -29,8 +33,10 @@ class InstitucionalController extends Controller
     }
 
     public function create()
-    {
-        return Inertia::render('Institucional/Create');
+    {   
+        return Inertia::render('Institucional/Create', [
+            'contentTypes' => ContentTypeService::formatedTypes($this->contentTypeRepo->get())
+        ]);
     }
     
     public function store(StoreInstitucionalRequest $request)

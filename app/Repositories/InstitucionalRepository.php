@@ -28,11 +28,6 @@ class InstitucionalRepository
         return $institucional->update($data);
     }
 
-    public function find(Institucional $institucional)
-    {
-        
-    }
-
     public function destroy(Institucional $institucional)
     {
         return $institucional->delete();

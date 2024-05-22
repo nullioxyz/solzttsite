@@ -11,7 +11,8 @@ import Select from '@/Components/Select';
 import { Head, useForm } from '@inertiajs/react';
 import BackButton from '@/Components/Buttons/BackButton/Index';
 
-export default function Create({ auth }) {
+export default function Create({ auth, contentTypes }) {
+    
     const editorRef = useRef(null);
     const { data, setData, post, processing, errors, reset } = useForm({
         language_id: '',
@@ -21,11 +22,6 @@ export default function Create({ auth }) {
         description: '',
         slug: ''
     });
-
-    const options = [
-        { label: 'Tatto', value: 1 },
-        { label: 'Painting', value: 2 },
-    ];
 
     const langs = [
         { label: 'PT-BR', value: 1 },
@@ -65,7 +61,7 @@ export default function Create({ auth }) {
                             <Select
                                 onChange={(e) => setData('content_type_id', e.target.value)}
                                 name="content_type_id"
-                                options={options}/>
+                                options={contentTypes}/>
                             
                             {errors.content_type_id && 
                                 <InputError message={errors.content_type_id} />
