@@ -2,9 +2,15 @@
 
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\InstitucionalController;
+use App\Http\Controllers\Site\HomeController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
+
+Route::prefix('/')->group(function() {
+    Route::get('/', [HomeController::class, 'index'])->name('site.index');
+});
 
 Route::prefix('justiceroom')->group(function() {
     Route::get('/', function () {
