@@ -11,7 +11,7 @@ export default function Index() {
     }
 
     return (
-        <div className="flex justify-between items-center h-24 max-w-[1240px] mx-auto text-white bg-[#000000]">
+        <div className="flex justify-between items-center h-32 max-w-[1240px] mx-auto text-white bg-[#000000]">
             <div className="iconMenu flex ml-auto mr-2 cursor-pointer" onClick={onclickMenu}>
                 {!open ? <TiThMenu size={30} /> : <IoCloseSharp size={30} />}
             </div>

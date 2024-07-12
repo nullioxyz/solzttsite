@@ -22,11 +22,11 @@ export default function About() {
                         </div>
                     </div>
 
-                    <div className="flex justify-center items-center mt-32 sm:mt-32 md:mt-10 mb-24 ml-9">
+                    <div className="flex justify-center items-center lg:mt-32 sm:mt-32 md:mt-[-35px] mb-24 ml-9">
                         <img src={image1} alt="Image 1" />
                     </div>
 
-                    <div className="flex justify-center mt-[-260px] lg:mt-[-200px] sm:mt-[-100px] ml-22">
+                    <div className="flex justify-center max:lg:mt-[-260px] lg:mt-[-140px] sm:mt-[5px] ml-22">
                         <img src={image2} alt="Image 1" />
                     </div>
 
