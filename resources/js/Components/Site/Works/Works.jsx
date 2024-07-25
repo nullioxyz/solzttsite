@@ -1,5 +1,3 @@
-import { Carousel, Typography, Button  } from '@material-tailwind/react'
-
 import image3 from '@/Assets/Images/image3.jpg'
 import image4 from '@/Assets/Images/image4.jpg'
 import image5 from '@/Assets/Images/image5.jpg'
@@ -11,14 +9,14 @@ import image10 from '@/Assets/Images/image10.jpeg'
 
 export default function Works() {
     return (
-        <section id="works" className="max-w-[1240px] h-auto mt-44 mx-auto text-white">
+        <section id="works" className="flex flex-col justify-between max-w-[1240px] h-auto mt-44 mx-auto text-white">
             <div className="text-left">
                 <div className="title uppercase">
                     <h1 className='text-5xl tracking-tight'>Trabalhos</h1>
                 </div>
             </div>
 
-            <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-4 justify-center items-center mt-10 mb-24 mx-auto">
+            <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-4 justify-center items-center mt-10 mb-24">
                 <img src={image3} alt="Image 3" className="w-full h-[400px]" />
                 <img src={image4} alt="Image 4" className="w-full h-[400px]" />
                 <img src={image5} alt="Image 5" className="w-full h-[400px]" />
