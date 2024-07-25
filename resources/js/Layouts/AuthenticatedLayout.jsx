@@ -1,13 +1,18 @@
 import { useState } from 'react';
+import { usePage } from '@inertiajs/react'
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
+import Success from '@/Components/Alerts/Success';
+import Error from '@/Components/Alerts/Error';
+import Warning from '@/Components/Alerts/Warning';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
 
 export default function Authenticated({ user, header, children }) {
+    const { flash } = usePage().props
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
-
+    
     return (
         <div className="min-h-screen bg-gray-100">
             <nav className="bg-white border-b border-gray-100">
@@ -23,6 +28,9 @@ export default function Authenticated({ user, header, children }) {
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink href={route('dashboard')} active={route().current('dashboard')}>
                                     Dashboard
+                                </NavLink>
+                                <NavLink href={route('institucional.index')} active={route().current('institucional.index')}>
+                                    Institucional
                                 </NavLink>
                             </div>
                         </div>
@@ -95,6 +103,9 @@ export default function Authenticated({ user, header, children }) {
                         <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
                             Dashboard
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink href={route('institucional.index')} active={route().current('institucional.index')}>
+                            Institucional
+                        </ResponsiveNavLink>
                     </div>
 
                     <div className="pt-4 pb-1 border-t border-gray-200">
@@ -118,8 +129,22 @@ export default function Authenticated({ user, header, children }) {
                     <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">{header}</div>
                 </header>
             )}
+          
+            <main>
+                <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                    {flash.error && (
+                        <Error message="test"/>
+                    )}
 
-            <main>{children}</main>
+                    {flash.warning && (
+                        <Warning message={flash.warning} />
+                    )}
+                    {flash.success && (
+                        <Success message={flash.success} />
+                    )}
+                </div>
+                {children}
+            </main>
         </div>
     );
 }
