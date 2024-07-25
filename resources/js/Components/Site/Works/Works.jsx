@@ -12,11 +12,11 @@ export default function Works() {
         <section id="works" className="flex flex-col justify-between max-w-[1240px] h-auto mt-44 mx-auto p-5 text-white">
             <div className="text-left">
                 <div className="title uppercase">
-                    <h1 className='text-5xl tracking-tight'>Trabalhos</h1>
+                    <h1 className='text-5xl tracking-tight'>Works</h1>
                 </div>
             </div>
 
-            <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-4 justify-center items-center mt-10 mb-24">
+            <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-4 items-center mt-10 mb-24">
                 <div className="relative w-full h-[400px]">
                     <img src={image3} alt="Image 3" className="inset-0 object-cover w-full h-full" />
                 </div>
@@ -45,8 +45,8 @@ export default function Works() {
 
 
             <div className="flex justify-center mb-10">
-                <button className="px-6 py-3 bg-[#272533] text-white text-lg rounded-full hover:bg-[#9a7cae] transition duration-300">
-                    Carregar mais
+                <button className="px-6 py-3 bg-[#272533] text-white text-lg rounded-full hover:bg-[#9a7cae] transition duration-300 uppercase">
+                    Load more
                 </button>
             </div>
         </section>
