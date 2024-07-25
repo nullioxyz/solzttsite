@@ -10,7 +10,7 @@ export default function Index() {
                 <Nav />
             </header>
 
-            <main className="flex-grow flex flex-col justify-center items-center space-y-20">
+            <main>
                 <Highlight />
                 <About />
                 <Works />
