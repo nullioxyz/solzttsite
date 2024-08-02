@@ -10,11 +10,10 @@ import image10 from '@/Assets/Images/image10.jpeg'
 export default function AvailableDesign() {
     return (
         <section id="available" className="flex flex-col justify-between h-auto mx-auto p-5 text-white">
-            
             <div className="max-w-[1240px] mx-auto">
                 <div className="lg:text-left sm:text-center custom:text-center md:text-center">
                     <div className="title uppercase">
-                        <h1 className='text-5xl tracking-tight uppercase'>Available Designs</h1>
+                        <h1 className='text-5xl tracking-tight'>Available Designs</h1>
                     </div>
                 </div>
             

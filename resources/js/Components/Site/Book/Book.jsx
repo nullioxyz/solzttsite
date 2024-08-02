@@ -36,7 +36,7 @@ export default function Book () {
             </div>
 
             <div className="flex">
-                <div className="grid lg:grid-cols-2 md:grid-cols-1   sm:grid-cols-1">
+                <div className="grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1">
                     <div className="information m-10 lg:mt-20 md:mt-10 sm:mt-5">
                         <div className="text mt-10 text-[20px] sm:mb-15 md:mb-15">
                             <ol className='list-disc pl-5 text-justify'>
