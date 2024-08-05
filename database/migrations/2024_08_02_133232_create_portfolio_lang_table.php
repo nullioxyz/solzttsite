@@ -11,10 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('institucional', function (Blueprint $table) {
-            
+        Schema::create('portfolio_lang', function (Blueprint $table) {
+            $table->id();
+
+            $table->unsignedBigInteger('portfolio_id');
+            $table->foreign('portfolio_id')->references('id')->on('portfolio');
+
             $table->unsignedBigInteger('language_id');
             $table->foreign('language_id')->references('id')->on('language');
+
+            $table->string('title', 255);
+            $table->string('slug', 255);
         });
     }
 
@@ -23,8 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('institucional', function (Blueprint $table) {
-            $table->dropColumn('language_id');
-        });
+        Schema::dropIfExists('portfolio_lang');
     }
 };

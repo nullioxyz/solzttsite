@@ -11,8 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('institucional', function (Blueprint $table) {
-            $table->string('slug', 255);
+        Schema::create('language', function (Blueprint $table) {
+            $table->id();
+            
+            $table->string('name', 45);
+            $table->tinyInteger('default')->default(0);
+
+            $table->string('slug', 45);
+
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -21,8 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('institucional', function (Blueprint $table) {
-            $table->dropColumn('slug');
-        });
+        Schema::dropIfExists('language');
     }
 };

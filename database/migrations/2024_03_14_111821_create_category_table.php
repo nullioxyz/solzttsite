@@ -11,16 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('scheduling', function (Blueprint $table) {
+        Schema::create('category', function (Blueprint $table) {
             $table->id();
-            
+
             $table->unsignedBigInteger('content_type_id');
             $table->foreign('content_type_id')->references('id')->on('content_type');
 
-            $table->string('name', 100);
-            $table->string('phone', 40);
-            $table->text('description');
-            $table->json('references');
+            $table->tinyInteger('active')->nullable()->default(0);
+            $table->string('slug', 100);
+
             $table->timestamps();
             $table->softDeletes();
         });
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('scheduling');
+        Schema::dropIfExists('category');
     }
 };

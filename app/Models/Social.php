@@ -7,21 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-class Language extends Model
+class Social extends Model
 {
-    use HasFactory;
-
-    use HasFactory, SoftDeletes;
-
-    protected $table = 'language';
+    use SoftDeletes, HasFactory;
     
+    protected $table = 'social';
+
     protected $fillable = [
         'name',
-        'default',
-        'slug',
-        'created_at',
-        'updated_at'
+        'url'
     ];
-
-    public $timestamps = true;
 }

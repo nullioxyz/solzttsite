@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('media_description', function (Blueprint $table) {
+        Schema::create('media_description_lang', function (Blueprint $table) {
             $table->id();
             
             $table->unsignedBigInteger('language_id');
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('media_description');
+        Schema::dropIfExists('media_description_lang');
     }
 };

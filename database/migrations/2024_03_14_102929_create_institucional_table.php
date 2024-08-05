@@ -17,9 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('content_type_id');
             $table->foreign('content_type_id')->references('id')->on('content_type');
 
-            $table->string('title', 255);
-            $table->string('subtitle', 255);
-            $table->text('description');
+            $table->string('slug', 255);
             $table->timestamps();
             $table->softDeletes();
         });

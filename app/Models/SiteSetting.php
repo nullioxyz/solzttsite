@@ -7,21 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-class Language extends Model
+class SiteSetting extends Model
 {
-    use HasFactory;
-
-    use HasFactory, SoftDeletes;
-
-    protected $table = 'language';
+    use SoftDeletes, HasFactory;
     
-    protected $fillable = [
-        'name',
-        'default',
-        'slug',
-        'created_at',
-        'updated_at'
-    ];
+    protected $table = 'site_setting';
 
-    public $timestamps = true;
+    protected $fillable = [
+        'title',
+        'slug',
+        'description',
+        'night_mode'
+    ];
 }

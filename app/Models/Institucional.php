@@ -33,10 +33,18 @@ class Institucional extends Model
 
     public $timestamps = true;
 
-
-    public function language(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function langs(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->belongsTo(Language::class, 'language_id');
+        return $this->hasMany(InstitucionalLang::class, 'institucional_id');
+    }
+
+    public function defaultTranslation()
+    {
+        return $this->institucionalLangs()
+            ->whereHas('language', function ($query) {
+                $query->where('default', true);
+            })
+            ->first();
     }
 
     public function contentType(): \Illuminate\Database\Eloquent\Relations\BelongsTo

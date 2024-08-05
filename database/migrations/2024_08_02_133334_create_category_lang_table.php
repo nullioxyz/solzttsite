@@ -11,20 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('portfolio', function (Blueprint $table) {
+        Schema::create('category_lang', function (Blueprint $table) {
             $table->id();
-
-            $table->unsignedBigInteger('content_type_id');
-            $table->foreign('content_type_id')->references('id')->on('content_type');
 
             $table->unsignedBigInteger('category_id');
             $table->foreign('category_id')->references('id')->on('category');
 
-            $table->tinyInteger('active')->nullable()->default(1);
-            $table->string('slug', 100);
+            $table->unsignedBigInteger('language_id');
+            $table->foreign('language_id')->references('id')->on('language');
 
-            $table->timestamps();
-            $table->softDeletes();
+            $table->string('title', 255);
+            $table->string('slug', 255);
         });
     }
 
@@ -33,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('portfolio');
+        Schema::dropIfExists('category_lang');
     }
 };
