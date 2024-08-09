@@ -1,6 +1,6 @@
 import Table from '@/Components/Institucional/Table';
 
-export default function List({items}) {
+export default function List({ items }) {
     
     return (
         <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">

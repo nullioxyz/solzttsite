@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\InstitucionalLang;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -24,15 +25,43 @@ class UpdateInstitucionalRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'language_id' => ['required', Rule::exists('language', 'id')],
-            'content_type_id' => ['required', Rule::exists('content_type', 'id')],
-            'title' => 'required',
-            'subtitle' => 'required',
-            'description' => 'required',
             'slug' => [
                 'required',
                 Rule::unique('institucional')->ignore($this->route('institucional')),
-            ]
+            ],
+            'languages' => 'required|array',
+            'languages.*.title' => 'required|string',
+            'languages.*.description' => 'required',
+            'languages.*.slug' => [
+                'required',
+                'string',
+                function ($attribute, $value, $fail) {
+                    $lang = explode('.', $attribute);
+                    $languages = $this->get('languages');
+                    
+                    $exists = InstitucionalLang::where('slug', $value)
+                        ->where('language_id', '!=', $languages[$lang[1]]['language_id'] ?? $lang[1])
+                        ->where('institucional_id', $this->route('institucional')->id)
+                        ->exists();
+                    
+                    if ($exists) {
+                        $fail(__('The slug has already been taken.'));
+                    }
+                },
+            ],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'slug.required' => __('Slug is required'),
+            'slug.unique' => __('Slug is already in use'),
+            'languages.required' => __('At least one language is mandatory(*)'),
+            'languages.*.title.required' => __('Field title is required'),
+            'languages.*.description.required' => __('Field description is required'),
+            'languages.*.slug.required' => __('Field language slug is required'),
+            'languages.*.slug.unique' => __('Slug is already in use'),
         ];
     }
 }

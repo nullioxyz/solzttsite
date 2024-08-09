@@ -3,8 +3,6 @@ import { TrashIcon } from '@heroicons/react/24/solid'
 import Confirmation from '@/Components/Dialogs/Confirmation';
 import { Inertia } from '@inertiajs/inertia';
 
-
-
 export default function DeleteButton ({  deleteUrl }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 

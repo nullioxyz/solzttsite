@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\Language;
 use App\Models\ContentType;
 
 
@@ -40,11 +39,10 @@ class Institucional extends Model
 
     public function defaultTranslation()
     {
-        return $this->institucionalLangs()
+        return $this->hasOne(InstitucionalLang::class, 'institucional_id')
             ->whereHas('language', function ($query) {
                 $query->where('default', true);
-            })
-            ->first();
+            });
     }
 
     public function contentType(): \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -24,12 +24,24 @@ class StoreInstitucionalRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'language_id' => ['required', Rule::exists('language', 'id')],
-            'content_type_id' => ['required', Rule::exists('content_type', 'id')],
-            'title' => 'required',
-            'subtitle' => 'required',
-            'description' => 'required',
-            'slug' => 'required|unique:institucional'
+            'slug' => 'required|string|unique:institucional,slug',
+            'languages' => 'required|array',
+            'languages.*.title' => 'required|string',
+            'languages.*.description' => 'required',
+            'languages.*.slug' => 'required|string|unique:institucional_lang,slug',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'slug.required' => __('Slug is required'),
+            'slug.unique' => __('Slug is already in use'),
+            'languages.required' => __('At least one language is mandatory(*)'),
+            'languages.*.title.required' => __('Field title is required'),
+            'languages.*.description.required' => __('Field description is required'),
+            'languages.*.slug.required' => __('Field language slug is required'),
+            'languages.*.slug.unique' => __('Slug is already in use'),
         ];
     }
 }

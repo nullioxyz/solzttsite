@@ -20,4 +20,6 @@ class ContentType extends Model
     ];
 
     public $timestamps = true;
+
+    const TATTOO = 1;
 }
