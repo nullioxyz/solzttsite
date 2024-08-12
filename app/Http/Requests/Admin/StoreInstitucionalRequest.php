@@ -29,6 +29,8 @@ class StoreInstitucionalRequest extends FormRequest
             'languages.*.title' => 'required|string',
             'languages.*.description' => 'required',
             'languages.*.slug' => 'required|string|unique:institucional_lang,slug',
+            'files' => 'nullable|array',
+            'files.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 
@@ -42,6 +44,10 @@ class StoreInstitucionalRequest extends FormRequest
             'languages.*.description.required' => __('Field description is required'),
             'languages.*.slug.required' => __('Field language slug is required'),
             'languages.*.slug.unique' => __('Slug is already in use'),
+            'files.array' => __('Images must be an array'),
+            'files.*.image' => __('Each file must be an image'),
+            'files.*.mimes' => __('Only JPEG, PNG and JPG files are allowed'),
+            'files.*.max' => __('Each image must be less than 2MB'),
         ];
     }
 }

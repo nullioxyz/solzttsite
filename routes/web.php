@@ -28,6 +28,7 @@ Route::prefix('justiceroom')->group(function() {
         Route::get('/edit/{institucional}', [InstitucionalController::class, 'edit'])->name('institucional.edit');
         Route::post('/save/{institucional}', [InstitucionalController::class, 'update'])->name('institucional.update');
         Route::delete('/delete/{institucional}', [InstitucionalController::class, 'destroy'])->name('institucional.delete');
+        Route::delete('/delete-file/{fileId}/{institucional}', [InstitucionalController::class, 'destroyFile'])->name('institucional.removeFile');
     });
     
     Route::middleware('auth')->group(function () {

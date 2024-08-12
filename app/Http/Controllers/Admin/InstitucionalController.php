@@ -10,20 +10,22 @@ use App\Models\ContentType;
 use App\Models\InstitucionalLang;
 use App\Models\Language;
 use App\Repositories\Institucional\InstitucionalRepository;
+use App\Strategies\Files\MediaUploadStrategy;
 use App\Strategies\Translation\Institucional\InstitucionalLangStrategy;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class InstitucionalController extends Controller
 {
-
     protected $institucionalRepo;
     protected $institucionalLangStrategy;
+    protected $mediaUploadStrategy;
 
-    public function __construct(InstitucionalRepository $institucionalRepo, InstitucionalLangStrategy $institucionalLangStrategy)
+    public function __construct(InstitucionalRepository $institucionalRepo, InstitucionalLangStrategy $institucionalLangStrategy, MediaUploadStrategy $mediaUploadStrategy)
     {
         $this->institucionalRepo = $institucionalRepo;
         $this->institucionalLangStrategy = $institucionalLangStrategy;
+        $this->mediaUploadStrategy = $mediaUploadStrategy;
     }
 
     public function index()
@@ -52,7 +54,7 @@ class InstitucionalController extends Controller
             DB::beginTransaction();
 
             $validator = $request->validated();
-
+            
             if (!$validator) {
                 return redirect()->route('institucional.create')
                             ->withErrors($validator)
@@ -67,6 +69,10 @@ class InstitucionalController extends Controller
             );
 
             $this->institucionalLangStrategy->create($request->get('languages'), $institucional);
+
+            if(count($validator['files'])) {
+                $this->mediaUploadStrategy->upload($validator['files'], $institucional, 'institucional');
+            }
             
             DB::commit();
             return redirect()->route('institucional.index')->with('success', __('Saved with success'));
@@ -78,8 +84,11 @@ class InstitucionalController extends Controller
 
     public function edit(Institucional $institucional)
     {
+        $institucional->getMedia('institucional');
+        $institucional->load('langs');
+
         return Inertia::render('Institucional/Edit', [
-            'institucional' => $institucional->load('langs'),
+            'institucional' => $institucional,
             'languages' => Language::get(),
             'translationFields' => InstitucionalLang::translationFields(),
             'translationValues' => InstitucionalLang::translationFieldValues($institucional->langs)
@@ -105,6 +114,10 @@ class InstitucionalController extends Controller
             
             $this->institucionalLangStrategy->decideCreateOrUpdate($request->get('languages'), $institucional);
 
+            if(count($validator['files'])) {
+                $this->mediaUploadStrategy->upload($validator['files'], $institucional, 'institucional');
+            }
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -127,5 +140,21 @@ class InstitucionalController extends Controller
         }
 
         return redirect()->route('institucional.index')->with('success', __('Deleted with success'));
+    }
+
+    public function destroyFile($fileId, Institucional $institucional)
+    {
+        try {
+            DB::beginTransaction();
+            
+            $this->mediaUploadStrategy->delete(
+                $this->mediaUploadStrategy->getMediaById($fileId, $institucional)
+            );
+
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+        }
     }
 }
