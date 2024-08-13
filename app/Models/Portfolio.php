@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -23,7 +24,6 @@ class Portfolio extends Model implements HasMedia
 
     public $timestamps = true;
 
-
     public function langs(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(PortfolioLang::class, 'portfolio_id');
@@ -31,10 +31,29 @@ class Portfolio extends Model implements HasMedia
 
     public function defaultTranslation()
     {
-        return $this->langs()
+        return $this->hasOne(PortfolioLang::class, 'portfolio_id')
             ->whereHas('language', function ($query) {
                 $query->where('default', true);
-            })
-            ->first();
+            });
+    }
+
+    public function category(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function contentType(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(ContentType::class, 'content_type_id');
+    }
+
+    public function scopeActive(Builder $query)
+    {
+        $query->where('active', 1);
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 }

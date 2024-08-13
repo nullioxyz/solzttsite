@@ -13,4 +13,17 @@ class CategoryRepository extends BaseRepository
     {
         $this->model = $model;
     }
+
+    public function toSelectCategories(): array
+    {
+        $categories = [];
+        foreach ($this->getAll() as $category) {
+            $categories[] = [
+                'label' => $category->defaultTranslation->title,
+                'value' => $category->id
+            ];
+        }
+
+        return $categories;
+    }
 }

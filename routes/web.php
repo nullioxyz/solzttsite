@@ -3,6 +3,8 @@
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\InstitucionalController;
+use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\PortfolioController;
 use App\Http\Controllers\Site\HomeController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +42,22 @@ Route::prefix('justiceroom')->group(function() {
         Route::post('/save/{category}', [CategoryController::class, 'update'])->name('category.update');
         Route::delete('/delete/{category}', [CategoryController::class, 'destroy'])->name('category.delete');
     });
+
+
+    Route::prefix('file')->group(function() {
+        Route::post('/sort', [MediaController::class, 'sort'])->name('media.sort');
+    });
+    
+    Route::prefix('portfolio')->group(function() {
+        Route::get('/', [PortfolioController::class, 'index'])->name('portfolio.index');
+        Route::get('/create', [PortfolioController::class, 'create'])->name('portfolio.create');
+        Route::post('/store', [PortfolioController::class, 'store'])->name('portfolio.store');
+        Route::get('/edit/{portfolio}', [PortfolioController::class, 'edit'])->name('portfolio.edit');
+        Route::post('/save/{portfolio}', [PortfolioController::class, 'update'])->name('portfolio.update');
+        Route::delete('/delete/{portfolio}', [PortfolioController::class, 'destroy'])->name('portfolio.delete');
+        Route::delete('/delete-file/{fileId}/{portfolio}', [PortfolioController::class, 'destroyFile'])->name('portfolio.removeFile');
+    });
+
     
     Route::middleware('auth')->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

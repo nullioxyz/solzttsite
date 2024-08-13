@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class PortfolioLang extends Model
 {
@@ -16,17 +17,38 @@ class PortfolioLang extends Model
         'slug'
     ];
 
-    public function langs(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public $timestamps = false;
+
+
+    public function language()
     {
-        return $this->hasMany(PortfolioLang::class, 'portfolio_id');
+        return $this->belongsTo(Language::class, 'language_id');
     }
 
-    public function defaultTranslation()
+    public static function translationFields(): Collection
     {
-        return $this->langs()
-            ->whereHas('language', function ($query) {
-                $query->where('default', true);
-            })
-            ->first();
+        return collect([
+            [
+                'field' => 'title',
+                'label' => __('Title'),
+            ],
+            [
+                'field' => 'slug',
+                'label' => __('Slug'),
+            ]
+        ]);
     }
+
+    public static function translationFieldValues($institucionalLangs)
+    {
+        $fields = [];
+        
+        foreach($institucionalLangs as $lang) {
+            $fields[$lang->id]['title'] = $lang->title;
+            $fields[$lang->id]['slug'] = $lang->slug;
+        }
+
+        return $fields;
+    }
+
 }

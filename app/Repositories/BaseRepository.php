@@ -12,9 +12,14 @@ abstract class BaseRepository implements BaseRepositoryInterface {
         $this->model = $model;
     }
 
+    public function getAll()
+    {
+        return $this->model->get();
+    }
+
     public function paginate($perPage = 20)
     {
-        return $this->model->paginate();
+        return $this->model->paginate($perPage);
     }
 
     public function with(array $relations)
