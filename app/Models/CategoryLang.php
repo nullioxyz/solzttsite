@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class CategoryLang extends Model
 {
+
     protected $table = 'category_lang';
 
     protected $fillable = [
@@ -17,4 +17,39 @@ class CategoryLang extends Model
         'title',
         'slug'
     ];
+
+    public $timestamps = false;
+
+
+    public function language()
+    {
+        return $this->belongsTo(Language::class, 'language_id');
+    }
+
+
+    public static function translationFields(): Collection
+    {
+        return collect([
+            [
+                'field' => 'title',
+                'label' => __('Title'),
+            ],
+            [
+                'field' => 'slug',
+                'label' => __('Slug'),
+            ]
+        ]);
+    }
+
+    public static function translationFieldValues($categoryLangs)
+    {
+        $fields = [];
+        
+        foreach($categoryLangs as $lang) {
+            $fields[$lang->id]['title'] = $lang->title;
+            $fields[$lang->id]['slug'] = $lang->slug;
+        }
+
+        return $fields;
+    }
 }

@@ -29,10 +29,19 @@ class Category extends Model
 
     public function defaultTranslation()
     {
-        return $this->langs()
+        return $this->hasOne(CategoryLang::class, 'category_id')
             ->whereHas('language', function ($query) {
                 $query->where('default', true);
-            })
-            ->first();
+            });
+    }
+
+    public function contentType(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(ContentType::class, 'content_type_id');
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\InstitucionalController;
 use App\Http\Controllers\Site\HomeController;
@@ -29,6 +30,15 @@ Route::prefix('justiceroom')->group(function() {
         Route::post('/save/{institucional}', [InstitucionalController::class, 'update'])->name('institucional.update');
         Route::delete('/delete/{institucional}', [InstitucionalController::class, 'destroy'])->name('institucional.delete');
         Route::delete('/delete-file/{fileId}/{institucional}', [InstitucionalController::class, 'destroyFile'])->name('institucional.removeFile');
+    });
+
+    Route::prefix('categories')->group(function() {
+        Route::get('/', [CategoryController::class, 'index'])->name('category.index');
+        Route::get('/create', [CategoryController::class, 'create'])->name('category.create');
+        Route::post('/store', [CategoryController::class, 'store'])->name('category.store');
+        Route::get('/edit/{category}', [CategoryController::class, 'edit'])->name('category.edit');
+        Route::post('/save/{category}', [CategoryController::class, 'update'])->name('category.update');
+        Route::delete('/delete/{category}', [CategoryController::class, 'destroy'])->name('category.delete');
     });
     
     Route::middleware('auth')->group(function () {

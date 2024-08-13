@@ -1,10 +1,7 @@
-import { useState } from 'react';
 import { PencilSquareIcon } from '@heroicons/react/24/solid'
-
 import DeleteButton from '../Buttons/DeleteButton/Index';
 
 export default function TableRow({ item }) {
-    const {modalOpen, setModalOpen} = useState(false);
 
     return (
         <tr className="odd:bg-whit  e odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
