@@ -9,7 +9,6 @@ use App\Models\ContentType;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 
 class Institucional extends Model implements HasMedia

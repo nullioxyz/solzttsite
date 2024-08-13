@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Institucional;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,7 +20,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Site/Index');
+        $institucional = Institucional::where('slug', 'solztt-universe')->with('defaultTranslation', 'media')->first();
+        $institucional->getMedia();
+
+        return Inertia::render('Site/Index', [
+            'institucional' => $institucional
+        ]);
     }
 
 }
