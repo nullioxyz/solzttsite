@@ -26,7 +26,5 @@ class MediaController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
         }
-    }
-
-    
+    }    
 }

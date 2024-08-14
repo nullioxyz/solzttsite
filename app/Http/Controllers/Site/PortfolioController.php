@@ -3,20 +3,16 @@
 namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
-use App\Models\Institucional;
 use App\Models\Portfolio;
-use Inertia\Inertia;
+use Illuminate\Http\Request;
 
-class HomeController extends Controller
+class PortfolioController extends Controller
 {
     /**
      * Display the user's profile form.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $institucional = Institucional::where('slug', 'solztt-universe')->with('defaultTranslation', 'media')->first();
-        $institucional->getMedia();
-
         $portfolio = Portfolio::with(
             [
                 'media' =>  function($query) {
@@ -26,13 +22,9 @@ class HomeController extends Controller
                 'media', function($query) {
                 $query->orderBy('order_column', 'asc');
             }
-        )->paginate(2);
+        )->paginate(4);
 
-
-        return Inertia::render('Site/Index', [
-            'institucional' => $institucional,
-            'portfolio' => $portfolio
-        ]);
+        return response()->json(['portfolio' => $portfolio]);
     }
 
     

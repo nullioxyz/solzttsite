@@ -6,13 +6,14 @@ use App\Http\Controllers\Admin\InstitucionalController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\PortfolioController;
 use App\Http\Controllers\Site\HomeController;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\Site\PortfolioController as PortfolioSiteController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 
 Route::prefix('/')->group(function() {
     Route::get('/', [HomeController::class, 'index'])->name('site.index');
+    Route::get('/portfolio', [PortfolioSiteController::class, 'index'])->name('site.portfolio');
 });
 
 Route::prefix('justiceroom')->group(function() {
