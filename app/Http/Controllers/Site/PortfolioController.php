@@ -16,8 +16,10 @@ class PortfolioController extends Controller
         $portfolio = Portfolio::with(
             [
                 'media' =>  function($query) {
-                $query->orderBy('order_column', 'asc');
-            }]
+                    $query->orderBy('order_column', 'asc');
+                },
+                'defaultTranslation'
+            ]
             )->whereHas(
                 'media', function($query) {
                 $query->orderBy('order_column', 'asc');

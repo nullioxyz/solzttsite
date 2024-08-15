@@ -14,6 +14,7 @@ class PortfolioLang extends Model
         'portfolio_id',
         'language_id',
         'title',
+        'description',
         'slug'
     ];
 
@@ -33,6 +34,10 @@ class PortfolioLang extends Model
                 'label' => __('Title'),
             ],
             [
+                'field' => 'description',
+                'label' => __('description'),
+            ],
+            [
                 'field' => 'slug',
                 'label' => __('Slug'),
             ]
@@ -45,6 +50,7 @@ class PortfolioLang extends Model
         
         foreach($institucionalLangs as $lang) {
             $fields[$lang->id]['title'] = $lang->title;
+            $fields[$lang->id]['description'] = $lang->description;
             $fields[$lang->id]['slug'] = $lang->slug;
         }
 

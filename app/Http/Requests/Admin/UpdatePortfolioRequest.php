@@ -32,6 +32,7 @@ class UpdatePortfolioRequest extends FormRequest
             'active' => 'nullable',
             'languages' => 'required|array',
             'languages.*.title' => 'required|string',
+            'languages.*.description' => 'string',
             'languages.*.slug' => [
                 'required',
                 'string',

@@ -1,5 +1,5 @@
-
 import React, { useState } from "react";
+import DOMPurify from 'dompurify';
 
 import {
   Button,
@@ -15,14 +15,12 @@ import { Gallery } from "./Gallery";
 import logo from '@/Assets/Images/logo.png';
 
 
-const ImageToModal = ({ reference, coverImage, alt, images}) => {
-  const [open, setOpen] = useState(false);
-  const [imageText, setImageText] = useState(null);
-  const handleOpen = () => setOpen((cur) => !cur);
+const ImageToModal = ({ reference, coverImage, alt, images, description}) => {
+  
+  const sanitizedDescription = DOMPurify.sanitize(description);
 
-  const handleImageText = (text) => {
-    setImageText(text);
-  }
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen((cur) => !cur);
 
   return (
     <>
@@ -75,12 +73,12 @@ const ImageToModal = ({ reference, coverImage, alt, images}) => {
           <Gallery images={images} />
         </DialogBody>
 
-        {imageText !== null ? (
+        {description !== null ? (
           <DialogFooter className="justify-between">
             <div className="flex items-center">
               <div>
                 <Typography variant="paragraph" color="gray" className="font-normal text-justify">
-                  {imageText}
+                  <div dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
                 </Typography>
               </div>
             </div>

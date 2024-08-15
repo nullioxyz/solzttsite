@@ -19,6 +19,7 @@ export default function Works() {
     setLoadingMore(true);
     
     const response = await axios.get(pagination.next_page_url ?? route('site.portfolio'));
+    
     if (response.data) {
       const { data, first_page, current_page, last_page, next_page_url } = response.data.portfolio;
       
@@ -32,6 +33,7 @@ export default function Works() {
         next_page_url
       });
     }
+
     setLoadingMore(false);
   };
   
@@ -77,6 +79,7 @@ export default function Works() {
           {portfolio.length && portfolio.map((item, index) => (
             <LazyImageModalComponent
               key={index}
+              description={item.default_translation.description}
               coverImage={item.media[0].original_url}
               images={item.media}
               alt={`Image ${index + 1}`}

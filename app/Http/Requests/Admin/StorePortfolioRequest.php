@@ -28,6 +28,7 @@ class StorePortfolioRequest extends FormRequest
             'category_id' => 'required',
             'languages' => 'required|array',
             'languages.*.title' => 'required|string',
+            'languages.*.description' => 'string',
             'languages.*.slug' => 'required|string|unique:portfolio_lang,slug',
             'files' => 'nullable|array',
             'files.*' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',

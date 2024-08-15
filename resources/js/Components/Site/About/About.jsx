@@ -1,6 +1,4 @@
 import DOMPurify from 'dompurify';
-import image11 from '@/Assets/Images/example11.png'
-
 
 export default function About({ institucional }) {
   

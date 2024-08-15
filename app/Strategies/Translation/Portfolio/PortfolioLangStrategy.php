@@ -49,6 +49,7 @@ class PortfolioLangStrategy implements TranslationStrategyInterface {
                 $this->update(
                     [
                         'title' => $lang['title'],
+                        'description' => $lang['description'],
                         'slug' => $lang['slug'],
                     ],
                     $lang['id']
