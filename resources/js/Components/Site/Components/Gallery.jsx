@@ -1,5 +1,4 @@
 import { Carousel } from "@material-tailwind/react";
-import { useEffect } from "react";
  
 export function Gallery({ images}) {
   return (
@@ -17,8 +16,6 @@ export function Gallery({ images}) {
             className="h-full w-full object-cover object-center"
           />
         </div>
-
-        
       ))}
     </Carousel>
   );
