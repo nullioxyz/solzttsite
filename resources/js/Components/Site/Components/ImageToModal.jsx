@@ -13,7 +13,7 @@ import {
 import { Gallery } from "./Gallery";
 import logo from "@/Assets/Images/logo.png";
 
-const ImageToModal = ({ reference, coverImage, alt, images, description }) => {
+const ImageToModal = ({ reference, coverImage, alt, images, available, description, book }) => {
   
   const sanitizedDescription = DOMPurify.sanitize(description);
 
@@ -28,13 +28,30 @@ const ImageToModal = ({ reference, coverImage, alt, images, description }) => {
         onClick={handleOpen}
         ref={reference}
       >
-        <div className="relative w-full h-full">
-          <img
-            src={coverImage}
-            alt={alt}
-            className="object-cover w-full h-full"
-          />
-        </div>
+        {book ? (
+          <div className="relative w-full h-[400px]">
+            <img
+              src={coverImage} alt={alt}
+              className={`inset-0 object-cover w-full h-full ${!available ? 'grayscale' : ''}`}
+            />
+
+            {available ? (
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-full flex justify-center">
+                <button className="px-6 py-3 bg-[#272533] text-white text-lg rounded-full hover:bg-[#9a7cae] transition duration-300 uppercase">
+                  Book Now
+                </button>
+              </div>
+            ) : (null) } 
+          </div>
+        ) : (
+          <div className="relative w-full h-full">
+            <img
+              src={coverImage}
+              alt={alt}
+              className="object-cover w-full h-full"
+            />
+          </div>
+        )}
       </Card>
 
       <Dialog

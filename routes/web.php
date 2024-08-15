@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\InstitucionalController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\PortfolioController;
+use App\Http\Controllers\Site\AvailableController as SiteAvailableController;
 use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\PortfolioController as PortfolioSiteController;
 use Illuminate\Support\Facades\Route;
@@ -15,6 +16,7 @@ use Inertia\Inertia;
 Route::prefix('/')->group(function() {
     Route::get('/', [HomeController::class, 'index'])->name('site.index');
     Route::get('/portfolio', [PortfolioSiteController::class, 'index'])->name('site.portfolio');
+    Route::get('/available-designs', [SiteAvailableController::class, 'index'])->name('site.available_designs');
 });
 
 Route::prefix('justiceroom')->group(function() {

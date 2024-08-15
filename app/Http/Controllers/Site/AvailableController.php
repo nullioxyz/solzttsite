@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
-use App\Models\Portfolio;
-use Illuminate\Http\Request;
+use App\Models\AvailableDesign;
 
-class PortfolioController extends Controller
+class AvailableController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $portfolio = Portfolio::with(
+        $designs = AvailableDesign::with(
             [
                 'media' =>  function($query) {
                     $query->orderBy('order_column', 'asc');
@@ -21,9 +20,11 @@ class PortfolioController extends Controller
                 'media', function($query) {
                 $query->orderBy('order_column', 'asc');
             }
-        )->paginate(4);
+        )
+        ->active()
+        ->paginate(4);
 
-        return response()->json(['portfolio' => $portfolio]);
+        return response()->json(['designs' => $designs]);
     }
 
     

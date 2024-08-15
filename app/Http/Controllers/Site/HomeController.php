@@ -17,21 +17,8 @@ class HomeController extends Controller
         $institucional = Institucional::where('slug', 'solztt-universe')->with('defaultTranslation', 'media')->first();
         $institucional->getMedia();
 
-        $portfolio = Portfolio::with(
-            [
-                'media' =>  function($query) {
-                $query->orderBy('order_column', 'asc');
-            }]
-            )->whereHas(
-                'media', function($query) {
-                $query->orderBy('order_column', 'asc');
-            }
-        )->paginate(2);
-
-
         return Inertia::render('Site/Index', [
-            'institucional' => $institucional,
-            'portfolio' => $portfolio
+            'institucional' => $institucional
         ]);
     }
 
