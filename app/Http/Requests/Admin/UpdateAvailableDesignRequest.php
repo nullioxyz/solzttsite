@@ -2,11 +2,12 @@
 
 namespace App\Http\Requests\Admin;
 
-use App\Models\PortfolioLang;
+use App\Models\AvailableDesignLang;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdatePortfolioRequest extends FormRequest
+
+class UpdateAvailableDesignRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,9 +27,10 @@ class UpdatePortfolioRequest extends FormRequest
         return [
             'slug' => [
                 'required',
-                Rule::unique('portfolio')->ignore($this->route('portfolio')),
+                Rule::unique('available_design')->ignore($this->route('available_design')),
             ],
             'active' => 'nullable',
+            'available' => 'nullable',
             'languages' => 'required|array',
             'languages.*.title' => 'required|string',
             'languages.*.description' => 'string',
@@ -39,9 +41,9 @@ class UpdatePortfolioRequest extends FormRequest
                     $lang = explode('.', $attribute);
                     $languages = $this->get('languages');
                     
-                    $exists = PortfolioLang::where('slug', $value)
+                    $exists = AvailableDesignLang::where('slug', $value)
                         ->where('language_id', '!=', $languages[$lang[1]]['language_id'] ?? $lang[1])
-                        ->where('portfolio_id', $this->route('portfolio')->id)
+                        ->where('available_design_id', $this->route('available_design')->id)
                         ->exists();
                     
                     if ($exists) {

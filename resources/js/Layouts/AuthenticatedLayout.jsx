@@ -38,6 +38,10 @@ export default function Authenticated({ user, header, children }) {
                                 <NavLink href={route('portfolio.index')} active={route().current('portfolio.index')}>
                                     Portfolio
                                 </NavLink>
+
+                                <NavLink href={route('available_design.index')} active={route().current('available.index')}>
+                                    Available Designs
+                                </NavLink>
                             </div>
                         </div>
 
