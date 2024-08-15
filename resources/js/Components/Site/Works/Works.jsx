@@ -1,8 +1,10 @@
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef, lazy } from "react"
 import axios from '@/Services/requests'
 import { Spinner } from "@material-tailwind/react";
 import anime from 'animejs';
-import ImageToModal from "../Components/ImageToModal";
+
+
+const LazyImageModalComponent = lazy(() => import('@/Components/Site/Components/ImageToModal'))
 
 export default function Works() {
   const boxRefs = useRef([]);
@@ -73,20 +75,13 @@ export default function Works() {
 
         <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-4 mt-10 mb-24">
           {portfolio.length && portfolio.map((item, index) => (
-            <ImageToModal 
-            key={index}
-            coverImage={item.media[0].original_url}
-            images={item.media}
-            alt={`Image ${index + 1}`}
-            reference={el => boxRefs.current[index] = el}
+            <LazyImageModalComponent
+              key={index}
+              coverImage={item.media[0].original_url}
+              images={item.media}
+              alt={`Image ${index + 1}`}
+              reference={el => boxRefs.current[index] = el}
             />
-            // <div
-            //   key={index}
-            //   className="relative w-full h-[400px] cursor-pointer"
-            //   ref={el => boxRefs.current[index] = el}
-            //   >
-            //   <img src={item.media[0].original_url} alt={`Image ${index + 1}`} className="inset-0 object-cover w-full h-full" />
-            // </div>
           ))}
         </div>
 

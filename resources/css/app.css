@@ -20,3 +20,23 @@
     border-right: .15em solid #fff;
     animation: typing 3.5s steps(40, end) 1s 1 normal both, blink-caret .75s step-end infinite;
 }
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 12px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Estilo para Firefox */
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+}

@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 
 import {
   Button,
@@ -9,17 +9,20 @@ import {
   Avatar,
   Typography,
   Card,
+  DialogFooter,
 } from "@material-tailwind/react";
 import { Gallery } from "./Gallery";
 import logo from '@/Assets/Images/logo.png';
 
 
 const ImageToModal = ({ reference, coverImage, alt, images}) => {
-  const [open, setOpen] = React.useState(false);
-  const [isFavorite, setIsFavorite] = React.useState(false);
- 
+  const [open, setOpen] = useState(false);
+  const [imageText, setImageText] = useState(null);
   const handleOpen = () => setOpen((cur) => !cur);
-  const handleIsFavorite = () => setIsFavorite((cur) => !cur);
+
+  const handleImageText = (text) => {
+    setImageText(text);
+  }
 
   return (
     <>
@@ -35,8 +38,8 @@ const ImageToModal = ({ reference, coverImage, alt, images}) => {
           </div>
       </Card>
 
-       <Dialog size="sm" open={open} handler={handleOpen}>
-        <DialogHeader className="justify-between">
+      <Dialog open={open} handler={handleOpen} size="md" className="max-w-full max-h-[900px] overflow-y-scroll custom-scrollbar">
+        <DialogHeader className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Avatar
               size="sm"
@@ -71,6 +74,18 @@ const ImageToModal = ({ reference, coverImage, alt, images}) => {
         <DialogBody>
           <Gallery images={images} />
         </DialogBody>
+
+        {imageText !== null ? (
+          <DialogFooter className="justify-between">
+            <div className="flex items-center">
+              <div>
+                <Typography variant="paragraph" color="gray" className="font-normal text-justify">
+                  {imageText}
+                </Typography>
+              </div>
+            </div>
+          </DialogFooter>
+        ): null}
       </Dialog>
     </>
   );
