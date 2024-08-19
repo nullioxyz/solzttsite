@@ -11,7 +11,7 @@ export default function About({ institucional }) {
       <div className="max-w-[1240px] mx-auto">
         <div className="lg:text-left sm:text-center custom:text-center md:text-center">
           <div className="title uppercase">
-            <h1 className='text-5xl tracking-tight'>{institucional.default_translation.title}</h1>
+            <h1 className='text-5xl tracking-tight montserrat'>{institucional.default_translation.title}</h1>
           </div>
         </div>
 

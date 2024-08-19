@@ -83,7 +83,7 @@ class PortfolioController extends Controller
             return redirect()->route('portfolio.index')->with('success', __('Saved with success'));
         } catch (\Exception $e) {
             DB::rollback();
-            dd($e->getMessage());
+            
             return redirect()->route('portfolio.create')->with('warning', __('Try again'));
         }        
     }
@@ -134,6 +134,7 @@ class PortfolioController extends Controller
 
             DB::commit();
         } catch (\Exception $e) {
+            
             DB::rollBack();
 
             return redirect()->route('portfolio.edit', $portfolio)->with('warning', __('Something wrong. Please try again'));
