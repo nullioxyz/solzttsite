@@ -27,6 +27,4 @@ class AvailableController extends Controller
         return response()->json(['designs' => $designs]);
     }
 
-    
-
 }

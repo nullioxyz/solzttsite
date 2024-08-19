@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\InstitucionalController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\PortfolioController;
+use App\Http\Controllers\Admin\ContactRequestController;
+
 use App\Http\Controllers\Site\AvailableController as SiteAvailableController;
 use App\Http\Controllers\Site\ContactController;
 use App\Http\Controllers\Site\HomeController;
@@ -72,6 +74,13 @@ Route::prefix('justiceroom')->group(function() {
         Route::post('/save/{available_design}', [AvailableController::class, 'update'])->name('available_design.update');
         Route::delete('/delete/{available_design}', [AvailableController::class, 'destroy'])->name('available_design.delete');
         Route::delete('/delete-file/{fileId}/{available_design}', [AvailableController::class, 'destroyFile'])->name('available.removeFile');
+    });
+
+    Route::prefix('requests')->group(function() {
+        Route::get('/', [ContactRequestController::class, 'index'])->name('contact.index');
+        Route::get('/view/{contact}', [ContactRequestController::class, 'view'])->name('contact.view');
+        Route::post('/save/{contact}', [ContactRequestController::class, 'update'])->name('contact.update');
+        Route::delete('/delete/{contact}', [ContactRequestController::class, 'destroy'])->name('contact.delete');
     });
 
     

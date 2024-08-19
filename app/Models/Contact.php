@@ -34,4 +34,17 @@ class Contact extends Model
     {
         return $this->belongsTo(ContentType::class, 'content_type_id');
     }
+
+    public function getRouteKeyName()
+    {
+        return 'id';
+    }
+
+    public function getCreatedAtAttribute()
+    {
+        return $this->attributes['created_at'] 
+            ? $this->asDateTime($this->attributes['created_at'])->format('d/m/Y H:i')
+            : null;
+    }
+
 }

@@ -30,7 +30,7 @@ export default function Form(props) {
 
   const onChangeRecaptcha = (e) => {
     const recaptchaValue = recaptchaRef.current.getValue();
-    console.log(recaptchaValue);
+    
     setData(prevData => ({ ...prevData, recaptcha: recaptchaValue }))
   }
 
@@ -69,7 +69,7 @@ export default function Form(props) {
           icon: "success"
         });
 
-        //document.getElementById("contactForm").reset();
+        document.getElementById("contactForm").reset();
       },
       onError: (errors) => {
         

@@ -42,6 +42,10 @@ export default function Authenticated({ user, header, children }) {
                                 <NavLink href={route('available_design.index')} active={route().current('available.index')}>
                                     Available Designs
                                 </NavLink>
+
+                                <NavLink href={route('contact.index')} active={route().current('contact.index')}>
+                                    Contacts
+                                </NavLink>
                             </div>
                         </div>
 
@@ -115,6 +119,20 @@ export default function Authenticated({ user, header, children }) {
                         </ResponsiveNavLink>
                         <ResponsiveNavLink href={route('institucional.index')} active={route().current('institucional.index')}>
                             Institucional
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink href={route('category.index')} active={route().current('category.index')}>
+                            Categories
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink href={route('portfolio.index')} active={route().current('portfolio.index')}>
+                            Portfolio
+                        </ResponsiveNavLink>
+
+                        <ResponsiveNavLink href={route('available_design.index')} active={route().current('available.index')}>
+                            Available Designs
+                        </ResponsiveNavLink>
+
+                        <ResponsiveNavLink href={route('contact.index')} active={route().current('contact.index')}>
+                            Contacts
                         </ResponsiveNavLink>
                     </div>
 
