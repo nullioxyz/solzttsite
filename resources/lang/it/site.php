@@ -3,10 +3,11 @@
 return [
 
     //menu
-    'about' => 'Informazioni',
+    'about' => 'Chi sono io?',
     'contact' => 'Contatti',
     'portfolio' => 'Portfolio',
-    'available' => 'Design Disponibili',
+    'available' => 'Disegni Disponibili',
+    'appointment' => 'Appuntamento',
     
     //sections
     'how_to_book' => 'Come prenotare un appuntamento',

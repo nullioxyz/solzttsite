@@ -3,7 +3,7 @@
 return [
 
     //menu
-    'about' => 'About',
+    'about' => 'Who Am I?',
     'contact' => 'Contact',
     'portfolio' => 'Portfolio',
     'available' => 'Available Designs',
