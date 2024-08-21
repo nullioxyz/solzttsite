@@ -31,9 +31,9 @@ return [
     'lastname' => 'Sobrenome', 
     'pronouns' => 'Quais são seus pronomes',
     'pronouns_opt' => [
-        'neuter' => 'Neuter',
-        'feminine' => 'Feminine',
-        'masculine' => 'Masculine',
+        'neuter' => 'Neutro',
+        'feminine' => 'Feminino',
+        'masculine' => 'Masculino',
     ],
     'other' => 'Outro', 
     'city' => 'Sua cidade', 
@@ -45,14 +45,14 @@ return [
 
     //lang selection
     'select_lang' => 'Selecione um idioma', 
-    'italian' => 'Italiano', 
-    'brazilian' => 'Português Brasileiro', 
-    'english' => 'Inglês', 
+    'it' => 'Italiano', 
+    'pt' => 'Português Brasileiro', 
+    'en' => 'Inglês', 
 
     //modals
     'use_as_reference' => 'Usar como referência', 
     'want_this' => 'Quero este',
 
     //buttons
-    'load_more' => 'Load More'
+    'load_more' => 'Ver mais'
 ];

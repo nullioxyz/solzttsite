@@ -24,6 +24,7 @@ Route::prefix('/')->group(function() {
     Route::post('/save-contact', [ContactController::class, 'store'])->name('contact.store');
 
     Route::get('translations', [TranslationController::class, 'getTranslations'])->name('site.translations');
+    Route::post('set-language', [TranslationController::class, 'setLanguage'])->name('site.setLanguage');
 });
 
 Route::prefix('justiceroom')->group(function() {

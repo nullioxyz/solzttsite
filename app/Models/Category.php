@@ -5,7 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cookie;
 
 class Category extends Model
 {
@@ -32,6 +33,16 @@ class Category extends Model
         return $this->hasOne(CategoryLang::class, 'category_id')
             ->whereHas('language', function ($query) {
                 $query->where('default', true);
+            });
+    }
+
+    public function translation()
+    {
+        $locale = Cookie::get('locale');
+
+        return $this->hasOne(CategoryLang::class, 'category_id')
+            ->whereHas('language', function ($query) use ($locale) {
+                $query->where('slug', $locale);
             });
     }
 

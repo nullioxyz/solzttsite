@@ -46,13 +46,14 @@ return [
 
     //lang selection
     'select_lang' => 'Select a language',
-    'italian' => 'Italian',
-    'brazilian' => 'Brazilian Portuguese',
-    'english' => 'English',
+    'it' => 'Italian',
+    'pt' => 'Brazilian Portuguese',
+    'en' => 'English',
 
 
     //modals
     'use_as_reference' => 'Use as reference',
-    'want_this' => 'I want this'
+    'want_this' => 'I want this',
+    'load_more' => 'Load more'
 
 ];

@@ -82,7 +82,7 @@ export default function AvailableDesign() {
             <LazyImageModalComponent
               key={index}
               book={true}
-              description={item.default_translation.description}
+              description={item.translation ? item.translation.description : item.default_translation.description}
               coverImage={item.media[0].original_url}
               images={item.media}
               available={item.available}

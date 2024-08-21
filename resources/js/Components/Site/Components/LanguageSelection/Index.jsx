@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { useState } from 'react';
+import axios from '@/Services/requests';
 
 import GB from 'country-flag-icons/react/3x2/GB'
 import BR from 'country-flag-icons/react/3x2/BR'
@@ -15,41 +16,32 @@ import {
 } from "@material-tailwind/react";
 
 import { useTranslation } from 'react-i18next';
+import CurrentLanguage from '../CurrentLanguage/Index';
 
 
-export default function LanguageSelection({ languages, defaultLang }) {
+export default function LanguageSelection({ languages, defaultLang, currentLanguage }) {
   
   const [langSelectOpen, setlangSelectOpen] = React.useState(false);
   const handleLangSelectOpen = () => setlangSelectOpen((cur) => !cur);
-  const [currentLanguage, setCurrentLanguage] = useState('pt-BR');
 
   const { t } = useTranslation();
+
+  const handleSelectLanguage = async (lang) => {
+    try {
+
+      await axios.post(route('site.setLanguage'), { lang: lang });
+      location.reload();
+
+    } catch {
+
+    }
+  }
 
   return (
     <div className="flex ml-auto mr-2 cursor-pointer">
       <Button onClick={handleLangSelectOpen} className='bg-transparent border-none shadow-none hover:border-none hover:shadow-none'>
         <div className='flex space-x-4 items-center'>
-
-          {defaultLang.slug === 'pt' && (
-            <>
-              <BR title={defaultLang.name} className='w-8' />
-              <span className='normal-case'>{defaultLang.name}</span>
-            </>
-          )}
-
-          {defaultLang.slug === 'it' && (
-            <>
-              <IT title={defaultLang.name} className='w-8' />
-              <span className='normal-case'>{defaultLang.name}</span>
-            </>
-          )}
-
-          {defaultLang.slug === 'en' && (
-            <>
-              <GB title={defaultLang.name} className='w-8' />
-              <span className='normal-case'>{defaultLang.name}</span>
-            </>
-          )}
+          <CurrentLanguage defaultLang={defaultLang} currentLanguage={currentLanguage} />
         </div>
 
       </Button>
@@ -74,7 +66,8 @@ export default function LanguageSelection({ languages, defaultLang }) {
                   <Button
                     variant="text"
                     fullWidth
-                    className={`text-black bg-white hover:bg-gray-100 ${currentLanguage === 'pt-BR' ? 'border-2 border-[#7c8f77]' : ''}`}
+                    className={`text-black bg-white hover:bg-gray-100 ${currentLanguage.slug === 'pt' ? 'border-2 border-[#7c8f77]' : ''}`}
+                    onClick={() => handleSelectLanguage(lang.slug)}
                   >
                     <div className='flex space-x-4 items-center'>
                       <BR title={t('brazilian')} className='w-8' />
@@ -88,7 +81,8 @@ export default function LanguageSelection({ languages, defaultLang }) {
                     key={index}
                     variant="text"
                     fullWidth
-                    className={`text-black bg-white hover:bg-gray-100 ${currentLanguage === 'it' ? 'border-2 border-[#7c8f77]' : ''}`}
+                    className={`text-black bg-white hover:bg-gray-100 ${currentLanguage.slug === 'it' ? 'border-2 border-[#7c8f77]' : ''}`}
+                    onClick={() => handleSelectLanguage(lang.slug)}
                   >
                     <div className='flex space-x-4 items-center'>
                       <IT title={t('italian')} className='w-8' />
@@ -102,7 +96,8 @@ export default function LanguageSelection({ languages, defaultLang }) {
                     key={index}
                     variant="text"
                     fullWidth
-                    className={`text-black bg-white hover:bg-gray-100 ${currentLanguage === 'en' ? 'border-2 border-[#7c8f77]' : ''}`}
+                    className={`text-black bg-white hover:bg-gray-100 ${currentLanguage.slug === 'en' ? 'border-2 border-[#7c8f77]' : ''}`}
+                    onClick={() => handleSelectLanguage(lang.slug)}
                   >
                     <div className='flex space-x-4 items-center'>
                       <GB title={t('english')} className='w-8' />

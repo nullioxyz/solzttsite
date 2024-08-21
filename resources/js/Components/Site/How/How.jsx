@@ -1,7 +1,8 @@
 import { ReactTyped } from 'react-typed'
 import { useTranslation } from 'react-i18next';
+
 export default function How({ texts, warning }) {
-  
+
   const { t } = useTranslation();
 
   const scrollToNextSection = () => {
@@ -24,15 +25,15 @@ export default function How({ texts, warning }) {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mt-24">
             {texts.map((text, index) => (
               <div key={index} className="bg-[#f4f4f4] p-6 rounded-lg shadow-lg flex flex-col items-center text-center">
-                <h2 className='text-3xl font-bold mb-4'>{text.default_translation.title}</h2>
-                <div className="text-[18px] font-light" dangerouslySetInnerHTML={{ __html: text.default_translation.description }} />
+                <h2 className='text-3xl font-bold mb-4'>{text.translation ? text.translation.title : text.default_translation.title}</h2>
+                <div className="text-[18px] font-light" dangerouslySetInnerHTML={{ __html: text.translation ? text.translation.description : text.default_translation.description }} />
               </div>
             ))}
           </div>
         )}
 
         {warning && (
-          <div className='text text-center mt-20' dangerouslySetInnerHTML={{ __html: warning.default_translation.description }} />
+          <div className='text text-center mt-20' dangerouslySetInnerHTML={{ __html: warning.translation ? warning.translation.description : warning.default_translation.description }} />
         )}
 
         <div className="flex justify-center mt-20 mb-10">

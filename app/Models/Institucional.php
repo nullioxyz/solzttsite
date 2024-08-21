@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\ContentType;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cookie;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -45,6 +47,16 @@ class Institucional extends Model implements HasMedia
         return $this->hasOne(InstitucionalLang::class, 'institucional_id')
             ->whereHas('language', function ($query) {
                 $query->where('default', true);
+            });
+    }
+
+    public function translation()
+    {
+        $locale = Cookie::get('locale');
+
+        return $this->hasOne(InstitucionalLang::class, 'institucional_id')
+            ->whereHas('language', function ($query) use ($locale) {
+                $query->where('slug', $locale);
             });
     }
 

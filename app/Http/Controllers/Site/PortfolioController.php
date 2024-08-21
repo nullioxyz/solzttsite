@@ -15,7 +15,8 @@ class PortfolioController extends Controller
                 'media' =>  function($query) {
                     $query->orderBy('order_column', 'asc');
                 },
-                'defaultTranslation'
+                'defaultTranslation',
+                'translation'
             ]
             )->whereHas(
                 'media', function($query) {

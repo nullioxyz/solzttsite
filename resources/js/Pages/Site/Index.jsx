@@ -17,16 +17,17 @@ export default function Index({
   consideration,
   paymentMethods,
   languages,
-  defaultLang
+  defaultLang,
+  currentLanguage
 }) {
-  
-  
+
+
   return (
 
 
     <div className="flex flex-col min-h-screen text-white bg-[#7c8f77]">
       <header className="w-full mt-5">
-        <Nav languages={languages} defaultLang={defaultLang}/>
+        <Nav languages={languages} defaultLang={defaultLang} currentLanguage={currentLanguage} />
       </header>
 
       <main>

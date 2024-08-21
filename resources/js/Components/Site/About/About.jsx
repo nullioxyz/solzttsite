@@ -2,7 +2,9 @@ import DOMPurify from 'dompurify';
 
 export default function About({ institucional }) {
   
-  const sanitizedDescription = DOMPurify.sanitize(institucional.default_translation.description);
+  const institucionalTranslation = institucional.translation ?? institucional.default_translation;
+
+  const sanitizedDescription = DOMPurify.sanitize(institucionalTranslation.description);
   const hasMedia = institucional.media.length > 0;
   const imageUrl = hasMedia ? institucional.media[0].original_url : '';
 
@@ -11,7 +13,7 @@ export default function About({ institucional }) {
       <div className="max-w-[1240px] mx-auto">
         <div className="lg:text-left sm:text-center custom:text-center md:text-center">
           <div className="title uppercase">
-            <h1 className='text-5xl tracking-tight montserrat'>{institucional.default_translation.title}</h1>
+            <h1 className='text-5xl tracking-tight montserrat'>{institucionalTranslation.title}</h1>
           </div>
         </div>
 

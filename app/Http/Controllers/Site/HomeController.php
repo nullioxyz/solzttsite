@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Institucional;
 use App\Models\Language;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cookie;
 use Inertia\Inertia;
 
 class HomeController extends Controller
@@ -16,18 +17,21 @@ class HomeController extends Controller
     public function index()
     {
         $institucional = Institucional::where('slug', 'solztt-universe')
-            ->with('defaultTranslation', 'media')
+            ->with('defaultTranslation', 'translation', 'media')
             ->first();
+        
         $institucional->getMedia();
 
-        $appointmentTexts = Institucional::with('defaultTranslation')->whereIn('slug', [
+        $appointmentTexts = Institucional::with(
+            'defaultTranslation', 'translation'
+        )->whereIn('slug', [
             'appointment-1',
             'appointment-2',
             'appointment-3',
         ])->get();
         
 
-        $institucionalTexts = Institucional::with('defaultTranslation')
+        $institucionalTexts = Institucional::with('defaultTranslation', 'translation')
             ->whereIn('slug', [
                 'tattoo-book-text',
                 'criative-process',
@@ -57,7 +61,8 @@ class HomeController extends Controller
             'consideration' => $consideration,
             'paymentMethods' => $paymentMethods,
             'languages' => $availableLangs,
-            'defaultLang' => $defaultLang
+            'defaultLang' => $defaultLang,
+            'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? App::getLocale()
         ]);
     }
 }

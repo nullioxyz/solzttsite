@@ -19,15 +19,15 @@ export default function Works() {
 
   const handlePortfolio = async () => {
     setLoadingMore(true);
-    
+
     const response = await axios.get(pagination.next_page_url ?? route('site.portfolio'));
-    
+
     if (response.data) {
       const { data, first_page, current_page, last_page, next_page_url } = response.data.portfolio;
-      
+
       setNewItems(data);
       setPortfolio(prevPortfolio => [...prevPortfolio, ...data]);
-      
+
       setPagination({
         current_page,
         first_page,
@@ -38,14 +38,14 @@ export default function Works() {
 
     setLoadingMore(false);
   };
-  
+
   const handleLoadMore = async () => {
-    handlePortfolio(); 
+    handlePortfolio();
   }
-  
+
   useEffect(() => {
     if (newItems.length > 0) {
-      
+
       boxRefs.current = boxRefs.current.slice(0, portfolio.length);
 
       anime({
@@ -58,13 +58,13 @@ export default function Works() {
       });
 
       setNewItems([]);
-      
+
     }
 
     if (isInitialLoad) {
       handlePortfolio().finally(() => setIsInitialLoad(false));
     }
-    
+
   }, [newItems, isInitialLoad]);
 
 
@@ -81,7 +81,7 @@ export default function Works() {
           {portfolio.length && portfolio.map((item, index) => (
             <LazyImageModalComponent
               key={index}
-              description={item.default_translation.description}
+              description={item.translation ? item.translation.description : item.default_translation.description}
               coverImage={item.media[0].original_url}
               images={item.media}
               alt={`Image ${index + 1}`}
@@ -94,12 +94,12 @@ export default function Works() {
           <div className="flex justify-center mb-10">
             <button
               className="px-6 py-3 bg-[#272533] text-white text-lg rounded-full hover:bg-[#9a7cae] transition duration-300 uppercase"
-              onClick={() => handleLoadMore() }
-              >
-              {!loadingMore ? t('load_more') : <Spinner /> }
+              onClick={() => handleLoadMore()}
+            >
+              {!loadingMore ? t('load_more') : <Spinner />}
             </button>
           </div>
-        ): null}
+        ) : null}
       </div>
     </section>
   )

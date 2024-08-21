@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\Cookie;
 use Spatie\MediaLibrary\MediaCollections\Models\Media as BaseMedia;
 
 class Media extends BaseMedia
@@ -34,11 +35,21 @@ class Media extends BaseMedia
 
     public function defaultTranslation()
     {
-        return $this->langs()
+        return $this->hasOne(MediaDescriptionLang::class, 'media_id')
             ->whereHas('language', function ($query) {
                 $query->where('default', true);
-            })
-            ->first();
+            });
     }
+
+    public function translation()
+    {
+        $locale = Cookie::get('locale');
+
+        return $this->hasOne(MediaDescriptionLang::class, 'media_id')
+            ->whereHas('language', function ($query) use ($locale) {
+                $query->where('slug', $locale);
+            });
+    }
+    
 
 }

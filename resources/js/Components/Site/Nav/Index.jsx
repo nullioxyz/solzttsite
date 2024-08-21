@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 
 
-export default function Index({ languages, defaultLang }) {
+export default function Index({ languages, defaultLang, currentLanguage }) {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
 
@@ -18,7 +18,7 @@ export default function Index({ languages, defaultLang }) {
   return (
     <div className="flex justify-between items-center h-32 max-w-[1240px] mx-auto text-white">
 
-      <LanguageSelection languages={languages} defaultLang={defaultLang}/>
+      <LanguageSelection languages={languages} defaultLang={defaultLang} currentLanguage={currentLanguage}/>
 
       <div className="iconMenu flex mr-2 cursor-pointer" onClick={onclickMenu}>
         {!open ? <TiThMenu size={30} /> : <IoCloseSharp size={30} />}
