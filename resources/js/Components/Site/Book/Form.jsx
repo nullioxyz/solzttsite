@@ -6,7 +6,7 @@ import { useForm } from "@inertiajs/react";
 import Swal from "sweetalert2";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useRef } from "react";
-
+import { useTranslation } from "react-i18next";
 
 export default function Form(props) {
   const { data, setData, post, processing, errors, reset } = useForm({
@@ -26,6 +26,8 @@ export default function Form(props) {
     recaptcha: null
   });
 
+  const { t, i18n } = useTranslation();
+  
   const recaptchaRef = useRef();
 
   const onChangeRecaptcha = (e) => {
@@ -34,24 +36,13 @@ export default function Form(props) {
     setData(prevData => ({ ...prevData, recaptcha: recaptchaValue }))
   }
 
-  const inputOptions = [
-    { id: 'upTo15', value: 'Up to 15cm', label: 'Up to 15cm' },
-    { id: '16to20', value: '16cm to 20 cm', label: '16cm to 20 cm' },
-    { id: '21to25', value: '21cm to 25 cm', label: '21cm to 25 cm' },
-    { id: '26to30', value: '26 cm to 30cm', label: '26 cm to 30cm' },
-    { id: 'above30', value: 'Above 30cm', label: 'Above 30cm' }
-  ];
-
-  const pronounOptions = [
-    { id: 'neuter', value: 'Neuter', label: 'Neuter' },
-    { id: 'feminine', value: 'Feminine', label: 'Feminine' },
-    { id: 'masculine', value: 'Masculine', label: 'Masculine' },
-  ];
+  const sizeOptions = t('sizes', { returnObjects: true });
+  const pronounsOpt = t('pronouns_opt', { returnObjects: true });
 
   const contactOptions = [
     { id: 'whatsapp', value: 'WhatsApp', label: 'WhatsApp' },
     { id: 'email', value: 'E-mail', label: 'E-mail' },
-    { id: 'any', value: 'All options', label: 'All options' },
+    { id: 'any', value: t('all'), label: t('all') },
   ];
 
 
@@ -84,7 +75,7 @@ export default function Form(props) {
           <div className="w-full">
             <InputLabel
               htmlFor='tatto-idea'
-              value='Your tattoo idea'
+              value={t('tattoo_idea')}
               className='block uppercase tracking-wide text-xl font-bold mb-2 text-white'
             />
 
@@ -107,7 +98,7 @@ export default function Form(props) {
           <div className="w-full">
             <InputLabel
               htmlFor='refenrences'
-              value='Examples of my portfolio and other references'
+              value={t('references')}
               className='block uppercase tracking-wide text-xl font-bold mb-2 text-white'
             />
 
@@ -129,23 +120,23 @@ export default function Form(props) {
           <div className='w-full'>
             <InputLabel
               htmlFor='size'
-              value='Size in centimeters'
+              value={t('size')}
               className='block uppercase tracking-wide text-xl font-bold mb-2 text-white'
             />
 
             <div className="space-y-6 mb-5">
-              {inputOptions.map((option) => (
-                <div key={option.id} className="flex items-center gap-x-3">
+              {Object.entries(sizeOptions).map(([key, value]) => (
+                <div key={key} className="flex items-center gap-x-3">
                   <InputRadio
-                    id={option.id}
+                    id={key}
                     name="size"
                     type="radio"
-                    value={option.value}
+                    value={key}
                     usedefaultclass={true}
                     onChange={(e) => setData(prevData => ({ ...prevData, size: e.target.value }))}
                   />
-                  <label htmlFor={option.id} className="block text-lg font-medium leading-6">
-                    {option.label}
+                  <label htmlFor={key} className="block text-lg font-medium leading-6">
+                    {value}
                   </label>
                 </div>
               ))}
@@ -159,7 +150,7 @@ export default function Form(props) {
           <div className="w-full">
             <InputLabel
               htmlFor='part-of-the-body'
-              value='Part of the body'
+              value={t('body_location')}
               className='block uppercase tracking-wide text-xl font-bold mb-2 text-white'
             />
 
@@ -176,11 +167,10 @@ export default function Form(props) {
 
           <hr className="border-1 w-full" />
 
-
           <div className="w-full">
             <InputLabel
               htmlFor='email'
-              value='Your best e-email'
+              value={t('email')}
               className='block uppercase tracking-wide text-xl font-bold mb-2 text-white'
             />
 
@@ -198,7 +188,7 @@ export default function Form(props) {
           <div className="w-full">
             <InputLabel
               htmlFor='phone'
-              value='Telephone number'
+              value={t('phone')}
               className='block uppercase tracking-wide text-xl font-bold mb-2 text-white'
             />
 
@@ -216,7 +206,7 @@ export default function Form(props) {
           <div className="w-full ">
             <InputLabel
               htmlFor='firstname'
-              value='First name'
+              value={t('firstname')}
               className='block uppercase tracking-wide text-xl font-bold mb-2 text-white'
             />
 
@@ -234,7 +224,7 @@ export default function Form(props) {
           <div className="w-full">
             <InputLabel
               htmlFor='lastname'
-              value='Last name'
+              value={t('lastname')}
               className='block uppercase tracking-wide text-xl font-bold mb-2 text-white'
             />
 
@@ -252,23 +242,23 @@ export default function Form(props) {
           <div className='w-full'>
             <InputLabel
               htmlFor='pronouns'
-              value='What are your pronouns?'
+              value={t('pronouns')}
               className='block uppercase tracking-wide text-xl font-bold mb-2 text-white'
             />
 
             <div className="mt-6 space-y-6">
-              {pronounOptions.map((option) => (
-                <div key={option.id} className="flex items-center gap-x-3">
+              {Object.entries(pronounsOpt).map(([key, value]) => (
+                <div key={key} className="flex items-center gap-x-3">
                   <InputRadio
-                    id={option.id}
+                    id={key}
                     name="pronouns"
                     type="radio"
                     className="h-4 w-4 border-gray-300 text-[#d3c1b2]"
-                    value={option.value}
+                    value={value}
                     onChange={(e) => setData(prevData => ({ ...prevData, gender: e.target.value }))}
                   />
-                  <label htmlFor={option.id} className="block text-lg font-medium leading-6">
-                    {option.label}
+                  <label htmlFor={key} className="block text-lg font-medium leading-6">
+                    {value}
                   </label>
                 </div>
               ))}
@@ -279,7 +269,7 @@ export default function Form(props) {
                   className="appearance-none text-gray-900 block w-full border border-[#7d3636] py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                   id="otherPronoun"
                   type="text"
-                  placeholder="Other"
+                  placeholder={t('other')}
                   value={data.otherPronoun}
                   onChange={(e) => setData({ ...data, gender: e.target.value })}
                 />
@@ -291,13 +281,15 @@ export default function Form(props) {
           <div className='w-full'>
             <InputLabel
               htmlFor='city'
-              value='Your city'
+              value={t('city')}
               className='block uppercase tracking-wide text-xl font-bold mb-2 text-white'
             />
 
             <TextInput
               usedefaultclass={false}
-              className="appearance-none text-gray-900 block w-full border border-[#7d3636] py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="text" placeholder="City"
+              className="appearance-none text-gray-900 block w-full border border-[#7d3636] py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+              type="text"
+              placeholder={t('city')}
               onChange={(e) => setData(prevData => ({ ...prevData, city: e.target.value }))}
             />
 
@@ -309,7 +301,7 @@ export default function Form(props) {
           <div className="w-full">
             <InputLabel
               htmlFor='availability'
-              value='What is your availability for the entire week, from Monday to Sunday?'
+              value={t('availability')}
               className='block uppercase tracking-wide text-xl font-bold mb-2 text-white'
             />
 
@@ -331,7 +323,7 @@ export default function Form(props) {
           <div className='w-full'>
             <InputLabel
               htmlFor='contact_me_by'
-              value='Contact preference'
+              value={t('contact_preference')}
               className='block uppercase tracking-wide text-xl font-bold mb-2 text-white'
             />
 
@@ -367,7 +359,7 @@ export default function Form(props) {
             className="w-full uppercase rounded-md bg-[#81de7c] px-3 py-2 text-xl font-semibold text-black shadow-sm hover:bg-[#d3c1b2] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
             onClick={(e) => formSubmit(e)}
           >
-            Request a quote
+            {t('requestquote')}
           </button>
         </div>
       </form>

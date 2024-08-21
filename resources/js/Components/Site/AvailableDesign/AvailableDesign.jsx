@@ -1,8 +1,8 @@
 import { lazy, useEffect, useRef, useState } from 'react'
 import axios from '@/Services/requests'
-
 import { Spinner } from "@material-tailwind/react";
 import anime from 'animejs';
+import { useTranslation } from 'react-i18next';
 
 const LazyImageModalComponent = lazy(() => import('@/Components/Site/Components/ImageToModal'))
 
@@ -14,6 +14,8 @@ export default function AvailableDesign() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [newItems, setNewItems] = useState([]);
+
+  const { t } = useTranslation();
 
   const handleDesigns = async () => {
     setLoadingMore(true);
@@ -71,7 +73,7 @@ export default function AvailableDesign() {
       <div className="max-w-[1240px] mx-auto">
         <div className="lg:text-left sm:text-center custom:text-center md:text-center">
           <div className="title uppercase">
-            <h1 className='text-5xl tracking-tight'>Available Designs</h1>
+            <h1 className='text-5xl tracking-tight'>{t('available')}</h1>
           </div>
         </div>
 
@@ -96,7 +98,7 @@ export default function AvailableDesign() {
               className="px-6 py-3 bg-[#272533] text-white text-lg rounded-full hover:bg-[#9a7cae] transition duration-300 uppercase"
               onClick={() => handleLoadMore() }
               >
-              {!loadingMore ? ('Load more') : <Spinner /> }
+              {!loadingMore ? t('load_more') : <Spinner /> }
             </button>
           </div>
         ): null}

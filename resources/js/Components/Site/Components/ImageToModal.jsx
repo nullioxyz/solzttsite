@@ -12,14 +12,15 @@ import {
 } from "@material-tailwind/react";
 import { Gallery } from "./Gallery";
 import logo from "@/Assets/Images/logo.png";
+import { useTranslation } from "react-i18next";
+
 
 const ImageToModal = ({ reference, coverImage, alt, images, available, description, book }) => {
-  
+
   const sanitizedDescription = DOMPurify.sanitize(description);
-
   const [open, setOpen] = useState(false);
-
   const handleOpen = () => setOpen((prev) => !prev);
+  const { t } = useTranslation();
 
   return (
     <>
@@ -38,10 +39,10 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, descripti
             {available ? (
               <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-full flex justify-center">
                 <button className="px-6 py-3 bg-[#272533] text-white text-lg rounded-full hover:bg-[#9a7cae] transition duration-300 uppercase">
-                  Book Now
+                  {t('book_now')}
                 </button>
               </div>
-            ) : (null) } 
+            ) : (null)}
           </div>
         ) : (
           <div className="relative w-full h-full">
@@ -86,7 +87,7 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, descripti
             </div>
           </div>
           <Button color="gray" size="sm">
-            Use as reference
+            {t('use_as_reference')}
           </Button>
         </DialogHeader>
 
@@ -96,9 +97,7 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, descripti
 
         {description && (
           <DialogFooter className="justify-between">
-            <Typography variant="paragraph" color="gray" className="font-normal text-justify">
-              <div dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
-            </Typography>
+            <div className="font-normal text-justify color-gray" dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
           </DialogFooter>
         )}
       </Dialog>

@@ -7,10 +7,10 @@ export function Gallery({ images}) {
       className="rounded-lg relative w-full h-[700px]">
       {images.map((image, index) => (
         <div
+          key={index}
           className="relative w-full h-full flex items-center justify-center"
           >
           <img
-            key={index}
             src={image.original_url}
             alt="image 1"
             className="h-full w-full object-cover object-center"

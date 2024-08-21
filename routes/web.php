@@ -12,6 +12,7 @@ use App\Http\Controllers\Site\AvailableController as SiteAvailableController;
 use App\Http\Controllers\Site\ContactController;
 use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\PortfolioController as PortfolioSiteController;
+use App\Http\Controllers\Site\TranslationController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -21,6 +22,8 @@ Route::prefix('/')->group(function() {
     Route::get('/portfolio', [PortfolioSiteController::class, 'index'])->name('site.portfolio');
     Route::get('/available-designs', [SiteAvailableController::class, 'index'])->name('site.available_designs');
     Route::post('/save-contact', [ContactController::class, 'store'])->name('contact.store');
+
+    Route::get('translations', [TranslationController::class, 'getTranslations'])->name('site.translations');
 });
 
 Route::prefix('justiceroom')->group(function() {
@@ -82,6 +85,7 @@ Route::prefix('justiceroom')->group(function() {
         Route::post('/save/{contact}', [ContactRequestController::class, 'update'])->name('contact.update');
         Route::delete('/delete/{contact}', [ContactRequestController::class, 'destroy'])->name('contact.delete');
     });
+    
 
     
     Route::middleware('auth')->group(function () {

@@ -15,30 +15,36 @@ export default function Index({
   requestSectionText,
   criativeProcess,
   consideration,
-  paymentMethods
+  paymentMethods,
+  languages,
+  defaultLang
 }) {
+  
+  
   return (
+
+
     <div className="flex flex-col min-h-screen text-white bg-[#7c8f77]">
       <header className="w-full mt-5">
-        <Nav />
+        <Nav languages={languages} defaultLang={defaultLang}/>
       </header>
 
       <main>
         <Highlight />
-        
+
         <About
           institucional={institucional}
         />
-        
+
         <Works />
-        
+
         <AvailableDesign />
-        
+
         <How
           texts={appointmentTexts}
           warning={appointmentWarning}
         />
-        
+
         <Book
           requestSectionText={requestSectionText}
           criativeProcess={criativeProcess}

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
 use App\Models\Institucional;
+use App\Models\Language;
+use Illuminate\Support\Facades\App;
 use Inertia\Inertia;
 
 class HomeController extends Controller
@@ -41,7 +43,10 @@ class HomeController extends Controller
         $criativeProcess = $institucionalTexts->get('criative-process');
         $consideration = $institucionalTexts->get('consideration');
         $paymentMethods = $institucionalTexts->get('payment-methods');
-    
+
+        $availableLangs = Language::select('slug', 'name', 'default')->get();
+        $defaultLang = $availableLangs->firstWhere('default', 1);
+        
 
         return Inertia::render('Site/Index', [
             'institucional' => $institucional,
@@ -50,8 +55,9 @@ class HomeController extends Controller
             'requestSectionText' => $requestSectionText,
             'criativeProcess' => $criativeProcess,
             'consideration' => $consideration,
-            'paymentMethods' => $paymentMethods
-
+            'paymentMethods' => $paymentMethods,
+            'languages' => $availableLangs,
+            'defaultLang' => $defaultLang
         ]);
     }
 }

@@ -1,7 +1,9 @@
 import { ReactTyped } from 'react-typed'
-
+import { useTranslation } from 'react-i18next';
 export default function How({ texts, warning }) {
   
+  const { t } = useTranslation();
+
   const scrollToNextSection = () => {
     const nextSection = document.getElementById('book');
     if (nextSection) {
@@ -14,7 +16,7 @@ export default function How({ texts, warning }) {
       <div className="max-w-[1240px] h-auto mx-auto mt-44">
         <div className="lg:text-left sm:text-center custom:text-center md:text-center">
           <div className="title uppercase">
-            <ReactTyped className='text-5xl tracking-tight' startWhenVisible showCursor={false} strings={["<h2>How to book an appointment</h2>"]} typeSpeed={40} />
+            <ReactTyped className='text-5xl tracking-tight' startWhenVisible showCursor={false} strings={[`<h2>${t('how_to_book')}</h2>`]} typeSpeed={40} />
           </div>
         </div>
 
@@ -30,7 +32,6 @@ export default function How({ texts, warning }) {
         )}
 
         {warning && (
-          
           <div className='text text-center mt-20' dangerouslySetInnerHTML={{ __html: warning.default_translation.description }} />
         )}
 
@@ -38,7 +39,7 @@ export default function How({ texts, warning }) {
           <button 
           onClick={scrollToNextSection}
           className="px-6 py-3 bg-[#FFF] text-black text-2xl rounded-full hover:bg-[#7c8f77] hover:text-white transition duration-300 uppercase">
-            Solicitar orçamento
+            {t('requestquote')}
           </button>
         </div>
       </div>

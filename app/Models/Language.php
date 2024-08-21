@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 
 
 class Language extends Model
 {
-    use HasFactory;
 
     use HasFactory, SoftDeletes;
 
@@ -24,4 +24,10 @@ class Language extends Model
     ];
 
     public $timestamps = true;
+
+    public function scopeActive(Builder $query)
+    {
+        $query->where('active', 1);
+    }
+
 }
