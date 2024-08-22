@@ -2,7 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Adicione isso no seu arquivo CSS ou dentro de uma tag <style> */
+@font-face {
+    font-family: 'Solztt';
+    src: url('../fonts/SolzttFonte-Regular.otf') format('opentype'),
+        url('../fonts/SolzttFonte-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Solztt2';
+    src: url('../fonts/SolZttFonte2-Regular.ttf') format('truetype'),
+        url('../fonts//SolzttMinusculas-Regular.otf') format('opentype'),
+        url('../fonts//SolzttMinusculas-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'MontSerratBold';
+    src: url('../fonts/montserrat/Montserrat-Bold.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'MontSerratMedium';
+    src: url('../fonts/montserrat/Montserrat-Medium.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'Times New Roman';
+    src: url('../fonts/TimesNewRoman.ttf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
 @keyframes typing {
     from { width: 0; }
     to { width: 100%; }
@@ -12,6 +52,32 @@
     from, to { border-color: transparent; }
     50% { border-color: #fff; }
 }
+
+.solztt {
+    font-family: 'Solztt';
+}
+
+.solztt2 {
+    font-family: 'Solztt2';
+}
+
+.montSerratBold {
+    font-family: 'MontSerratBold';
+}
+
+.montSerratMedium, a, button, button span, h5 {
+    font-family: 'MontSerratMedium';
+}
+
+p, label, input[type="text"] {
+    font-family: 'Times New Roman' !important;
+    font-weight: 500;
+}
+
+.times {
+    font-family: 'Times New Roman' !important;
+}
+
 
 .typing-effect {
     display: inline-block;

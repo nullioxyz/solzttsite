@@ -70,10 +70,10 @@ export default function Works() {
 
   return (
     <section id="works" className="flex flex-col justify-between h-auto mt-44 mx-auto p-5 text-black bg-white">
-      <div className="max-w-[1240px] mx-auto">
+      <div className="max-w-[1240px] mx-auto mt-44">
         <div className="lg:text-left sm:text-center custom:text-center md:text-center">
           <div className="title uppercase">
-            <h1 className='text-5xl tracking-tight'>{t('portfolio')}</h1>
+            <h1 className='text-5xl tracking-tight montSerratBold'>{t('portfolio')}</h1>
           </div>
         </div>
 

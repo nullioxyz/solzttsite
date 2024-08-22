@@ -354,9 +354,10 @@ export default function Form(props) {
             />
           </div>
         </div>
+         {/* text-white text-lg rounded-full hover:bg-[#9a7cae] transition duration-300 uppercase */}
         <div className="w-full mt-10">
           <button
-            className="w-full uppercase rounded-md bg-[#81de7c] px-3 py-2 text-xl font-semibold text-black shadow-sm hover:bg-[#d3c1b2] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            className="w-full uppercase rounded-md bg-[#272533] px-3 py-2 text-xl font-semibold text-white shadow-sm hover:bg-[#9a7cae] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
             onClick={(e) => formSubmit(e)}
           >
             {t('requestquote')}

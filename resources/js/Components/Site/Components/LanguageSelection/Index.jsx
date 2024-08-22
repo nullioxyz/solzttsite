@@ -54,9 +54,7 @@ export default function LanguageSelection({ languages, defaultLang, currentLangu
       >
         <Card className="mx-auto w-full max-w-[24rem]">
           <div className="flex border-b border-gray-200 justify-center items-center p-4">
-            <Typography variant="h5">
-              {t('select_lang')}
-            </Typography>
+            <h5 className='MontSerratMedium font-bold'>{t('select_lang')}</h5>
           </div>
 
           <CardBody className="flex flex-col gap-4">
@@ -66,7 +64,7 @@ export default function LanguageSelection({ languages, defaultLang, currentLangu
                   <Button
                     variant="text"
                     fullWidth
-                    className={`text-black bg-white hover:bg-gray-100 ${currentLanguage.slug === 'pt' ? 'border-2 border-[#7c8f77]' : ''}`}
+                    className={`text-black MontSerratMedium bg-white hover:bg-gray-100 ${currentLanguage.slug === 'pt' ? 'border-2 border-[#7c8f77]' : ''}`}
                     onClick={() => handleSelectLanguage(lang.slug)}
                   >
                     <div className='flex space-x-4 items-center'>

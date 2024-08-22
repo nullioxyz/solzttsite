@@ -17,6 +17,9 @@ export default {
     theme: {
         extend: {
             fontFamily: {
+                solztt: ['Solztt'],
+                solztt2: ['Solztt2'],
+                MontSerratMedium: ['MontSerratMedium'],
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
             screens: {

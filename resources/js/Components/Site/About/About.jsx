@@ -12,8 +12,8 @@ export default function About({ institucional }) {
     <section id="about" className="flex flex-col justify-between h-auto mx-auto mt-44 p-5 overflow-hidden">
       <div className="max-w-[1240px] mx-auto">
         <div className="lg:text-left sm:text-center custom:text-center md:text-center">
-          <div className="title uppercase">
-            <h1 className='text-5xl tracking-tight montserrat'>{institucionalTranslation.title}</h1>
+          <div className="title">
+            <h1 className='text-6xl tracking-tight montSerratBold text-black'>{institucionalTranslation.title}</h1>
           </div>
         </div>
 
@@ -55,7 +55,9 @@ export default function About({ institucional }) {
                   md:w-[45rem]
                   sm:w-[40rem]
                   xs:w-[25rem]
-                  custom:w-[20rem]">
+                  custom:w-[20rem]
+                  times
+                  ">
               <div dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
             </div>
             
