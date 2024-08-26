@@ -2,50 +2,60 @@ import { lazy, useEffect, useRef, useState } from 'react'
 import axios from '@/Services/requests'
 import { Spinner } from "@material-tailwind/react";
 import anime from 'animejs';
+import { useSelectReferences } from '@/Contexts/SelectReferencesContext';
 import { useTranslation } from 'react-i18next';
 
 const LazyImageModalComponent = lazy(() => import('@/Components/Site/Components/ImageToModal'))
 
 export default function AvailableDesign() {
   const boxRefs = useRef([]);
-
   const [designs, setDesigns] = useState([]);
   const [pagination, setPagination] = useState({});
   const [loadingMore, setLoadingMore] = useState(false);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [newItems, setNewItems] = useState([]);
-
   const { t } = useTranslation();
+
+  const { addAsReference, setSelectedReferences } = useSelectReferences();
 
   const handleDesigns = async () => {
     setLoadingMore(true);
     
-    const response = await axios.get(pagination.next_page_url ?? route('site.available_designs'));
-    
-    if (response.data) {
-      const { data, first_page, current_page, last_page, next_page_url } = response.data.designs;
+    try {
+      const response = await axios.get(pagination.next_page_url ?? route('site.available_designs'));
       
-      setNewItems(data);
-      setDesigns(prevDesigns => [...prevDesigns, ...data]);
-      
-      setPagination({
-        current_page,
-        first_page,
-        last_page,
-        next_page_url
-      });
+      if (response.data) {
+        const { data, first_page, current_page, last_page, next_page_url } = response.data.designs;
+        
+        setNewItems(data);
+        setDesigns(prevDesigns => [...prevDesigns, ...data]);
+        
+        setPagination({
+          current_page,
+          first_page,
+          last_page,
+          next_page_url
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching designs:", error);
+    } finally {
+      setLoadingMore(false);
     }
-
-    setLoadingMore(false);
   };
-  
-  const handleLoadMore = async () => {
-    handleDesigns(); 
-  }
-  
+
+  const handleAddAsReference = (item) => {
+    setSelectedReferences([]);
+    
+    addAsReference({
+      id: item.id,
+      image: item.media[0].original_url,
+      name: item.translation ? item.translation.title : item.default_translation.title,
+      type: 'available_design',
+    });
+  };
+
   useEffect(() => {
     if (newItems.length > 0) {
-      
       boxRefs.current = boxRefs.current.slice(0, designs.length);
 
       anime({
@@ -58,15 +68,21 @@ export default function AvailableDesign() {
       });
 
       setNewItems([]);
-      
     }
+  }, [newItems, designs.length]);
 
-    if (isInitialLoad) {
-      handleDesigns().finally(() => setIsInitialLoad(false));
-    }
+  useEffect(() => {
+    handleDesigns();
+  }, []);
+
+  const handleBookNow = (item) => {
+    handleAddAsReference(item);
     
-  }, [newItems, isInitialLoad]);
-
+    const nextSection = document.getElementById('book');
+    if (nextSection) {
+      nextSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
 
   return (
     <section id="available" className="flex flex-col justify-between h-auto mx-auto p-5">
@@ -78,13 +94,16 @@ export default function AvailableDesign() {
         </div>
 
         <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-4 mt-10 mb-24">
-          {designs.length && designs.map((item, index) => (
+          {designs.length > 0 && designs.map((item, index) => (
             <LazyImageModalComponent
-              key={index}
+              key={item.id}
               book={true}
               description={item.translation ? item.translation.description : item.default_translation.description}
               coverImage={item.media[0].original_url}
               images={item.media}
+              onAddReference={() => handleAddAsReference(item)}
+              onBookNow={() => handleBookNow(item)}
+              itemId={item.id}
               available={item.available}
               alt={`Image ${index + 1}`}
               reference={el => boxRefs.current[index] = el}
@@ -92,17 +111,17 @@ export default function AvailableDesign() {
           ))}
         </div>
 
-        {pagination.current_page < pagination.last_page ? (
+        {pagination.current_page < pagination.last_page && (
           <div className="flex justify-center mb-10">
             <button
               className="px-6 py-3 bg-[#272533] text-white text-lg rounded-full hover:bg-[#9a7cae] transition duration-300 uppercase"
-              onClick={() => handleLoadMore() }
-              >
-              {!loadingMore ? t('load_more') : <Spinner /> }
+              onClick={handleDesigns}
+              disabled={loadingMore}
+            >
+              {!loadingMore ? t('load_more') : <Spinner />}
             </button>
           </div>
-        ): null}
-  
+        )}
       </div>
     </section>
   )

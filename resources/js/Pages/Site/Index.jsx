@@ -7,6 +7,7 @@ import Works from '@/Components/Site/Works/Works';
 import AvailableDesign from '@/Components/Site/AvailableDesign/AvailableDesign';
 import Book from '@/Components/Site/Book/Book';
 import How from '@/Components/Site/How/How';
+import { SelectReferencesProvider } from '@/Contexts/SelectReferencesContext';
 
 export default function Index({
   institucional,
@@ -24,35 +25,36 @@ export default function Index({
 
   return (
 
+    <SelectReferencesProvider>  
+      <div className="flex flex-col min-h-screen text-white bg-[#7c8f77]">
+        <header className="w-full mt-5">
+          <Nav languages={languages} defaultLang={defaultLang} currentLanguage={currentLanguage} />
+        </header>
 
-    <div className="flex flex-col min-h-screen text-white bg-[#7c8f77]">
-      <header className="w-full mt-5">
-        <Nav languages={languages} defaultLang={defaultLang} currentLanguage={currentLanguage} />
-      </header>
+        <main>
+          <Highlight />
 
-      <main>
-        <Highlight />
+          <About
+            institucional={institucional}
+          />
 
-        <About
-          institucional={institucional}
-        />
+          <Works />
 
-        <Works />
+          <AvailableDesign />
 
-        <AvailableDesign />
+          <How
+            texts={appointmentTexts}
+            warning={appointmentWarning}
+          />
 
-        <How
-          texts={appointmentTexts}
-          warning={appointmentWarning}
-        />
-
-        <Book
-          requestSectionText={requestSectionText}
-          criativeProcess={criativeProcess}
-          consideration={consideration}
-          paymentMethod={paymentMethods}
-        />
-      </main>
-    </div>
+          <Book
+            requestSectionText={requestSectionText}
+            criativeProcess={criativeProcess}
+            consideration={consideration}
+            paymentMethod={paymentMethods}
+          />
+        </main>
+      </div>
+    </SelectReferencesProvider>
   )
 }

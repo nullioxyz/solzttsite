@@ -1,14 +1,14 @@
-import { useEffect, useState, useRef, lazy } from "react"
-import axios from '@/Services/requests'
+import { useEffect, useState, useRef, lazy, Suspense } from "react";
+import axios from '@/Services/requests';
 import { Spinner } from "@material-tailwind/react";
 import anime from 'animejs';
 import { useTranslation } from 'react-i18next';
+import { useSelectReferences } from '@/Contexts/SelectReferencesContext';
 
-const LazyImageModalComponent = lazy(() => import('@/Components/Site/Components/ImageToModal'))
+const LazyImageModalComponent = lazy(() => import('@/Components/Site/Components/ImageToModal'));
 
 export default function Works() {
   const boxRefs = useRef([]);
-
   const [portfolio, setPortfolio] = useState([]);
   const [pagination, setPagination] = useState({});
   const [loadingMore, setLoadingMore] = useState(false);
@@ -16,36 +16,62 @@ export default function Works() {
   const [newItems, setNewItems] = useState([]);
 
   const { t } = useTranslation();
+  const { addAsReference, setSelectedReferences } = useSelectReferences();
 
   const handlePortfolio = async () => {
     setLoadingMore(true);
 
-    const response = await axios.get(pagination.next_page_url ?? route('site.portfolio'));
+    try {
+      const response = await axios.get(pagination.next_page_url ?? route('site.portfolio'));
 
-    if (response.data) {
-      const { data, first_page, current_page, last_page, next_page_url } = response.data.portfolio;
+      if (response.data) {
+        const { data, first_page, current_page, last_page, next_page_url } = response.data.portfolio;
 
-      setNewItems(data);
-      setPortfolio(prevPortfolio => [...prevPortfolio, ...data]);
+        setNewItems(data);
+        setPortfolio(prevPortfolio => [...prevPortfolio, ...data]);
 
-      setPagination({
-        current_page,
-        first_page,
-        last_page,
-        next_page_url
-      });
+        setPagination({
+          current_page,
+          first_page,
+          last_page,
+          next_page_url
+        });
+      }
+    } catch (error) {
+      console.error("Failed to fetch portfolio data:", error);
+    } finally {
+      setLoadingMore(false);
     }
-
-    setLoadingMore(false);
   };
 
   const handleLoadMore = async () => {
-    handlePortfolio();
-  }
+    await handlePortfolio();
+  };
+
+  const handleAddAsReference = (item) => {
+    
+    setSelectedReferences(prevRefs =>
+      prevRefs.filter(ref => ref.type !== 'available_design')
+    );
+
+    const data = {
+      id: item.id,
+      image: item.media[0].original_url,
+      name: item.translation ? item.translation.title : item.default_translation.title,
+      type: 'portfolio'
+    }
+
+    addAsReference(data);
+  };
+
+  useEffect(() => {
+    if (isInitialLoad) {
+      handlePortfolio().finally(() => setIsInitialLoad(false));
+    }
+  }, [isInitialLoad]);
 
   useEffect(() => {
     if (newItems.length > 0) {
-
       boxRefs.current = boxRefs.current.slice(0, portfolio.length);
 
       anime({
@@ -58,15 +84,8 @@ export default function Works() {
       });
 
       setNewItems([]);
-
     }
-
-    if (isInitialLoad) {
-      handlePortfolio().finally(() => setIsInitialLoad(false));
-    }
-
-  }, [newItems, isInitialLoad]);
-
+  }, [newItems, portfolio.length]);
 
   return (
     <section id="works" className="flex flex-col justify-between h-auto mt-44 mx-auto p-5 text-black bg-white">
@@ -78,29 +97,36 @@ export default function Works() {
         </div>
 
         <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-4 mt-10 mb-24">
-          {portfolio.length && portfolio.map((item, index) => (
-            <LazyImageModalComponent
-              key={index}
-              description={item.translation ? item.translation.description : item.default_translation.description}
-              coverImage={item.media[0].original_url}
-              images={item.media}
-              alt={`Image ${index + 1}`}
-              reference={el => boxRefs.current[index] = el}
-            />
-          ))}
+          <Suspense fallback={<Spinner />}>
+            {portfolio.length > 0 && portfolio.map((item, index) => (
+              <LazyImageModalComponent
+                key={`portfolio_${item.id}`} // Use item.id instead of index for a more stable key
+                book={false}
+                description={item.translation ? item.translation.description : item.default_translation.description}
+                coverImage={item.media[0].original_url}
+                images={item.media}
+                onAddReference={() => handleAddAsReference(item)}
+                itemId={item.id}
+                available={true}
+                alt={`Image ${index + 1}`}
+                reference={el => boxRefs.current[index] = el}
+              />
+            ))}
+          </Suspense>
         </div>
 
-        {pagination.current_page < pagination.last_page ? (
+        {pagination.current_page < pagination.last_page && (
           <div className="flex justify-center mb-10">
             <button
               className="px-6 py-3 bg-[#272533] text-white text-lg rounded-full hover:bg-[#9a7cae] transition duration-300 uppercase"
-              onClick={() => handleLoadMore()}
+              onClick={handleLoadMore}
+              disabled={loadingMore}
             >
               {!loadingMore ? t('load_more') : <Spinner />}
             </button>
           </div>
-        ) : null}
+        )}
       </div>
     </section>
-  )
+  );
 }

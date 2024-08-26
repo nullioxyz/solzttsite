@@ -2,9 +2,13 @@ import React from 'react';
 import { ReactTyped } from "react-typed";
 import Form from './Form';
 import { useTranslation } from 'react-i18next';
+import { useSelectReferences } from "@/Contexts/SelectReferencesContext";
 
 export default function Book({ requestSectionText, criativeProcess, consideration, paymentMethod }) {
   const { t } = useTranslation();
+
+  const { selectedReferences } = useSelectReferences();
+
   const requestSectionTextTranslation = requestSectionText.translation ?? requestSectionText.default_translation;
   const criativeProcessTranslation = criativeProcess.translation ?? criativeProcess.default_translation;
   const considerationTranslation = consideration.translation ?? consideration.default_translation;
@@ -66,8 +70,8 @@ export default function Book({ requestSectionText, criativeProcess, consideratio
                   </div>
                 </>
               )}
-            </div>
 
+            </div>
             <Form />
           </div>
         </div>

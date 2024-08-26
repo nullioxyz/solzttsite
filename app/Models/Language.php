@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Language extends Model
 {
-
     use HasFactory, SoftDeletes;
 
     protected $table = 'language';

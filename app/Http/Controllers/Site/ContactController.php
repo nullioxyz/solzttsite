@@ -2,75 +2,40 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Site\StoreContactRequest;
+use App\Models\AvailableDesign;
 use App\Models\ContentType;
+use App\Models\Portfolio;
 use App\Repositories\Contact\ContactRepository;
 use App\Services\ContactService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class ContactController extends Controller
 {
-    protected $contactRepo;
+    protected $contactService;
 
-    public function __construct(ContactRepository $contactRepo)
+    public function __construct(ContactService $contactService)
     {
-        $this->contactRepo = $contactRepo;
+        $this->contactService = $contactService;
     }
 
     public function store(StoreContactRequest $request)
     {
-        $validator = $request->validated();
+        $validatedData = $request->validated();
 
-
-        if (!$validator) {
-            return response()->json($validator);
-        }
-        
-        $recaptchaResponse = $request->input('g-recaptcha-response');
-
-        $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-            'secret' => env('G_RECAPCHA'),
-            'response' => $recaptchaResponse,
-            'remoteip' => $request->ip(),
-        ]);
-
-        $body = json_decode((string) $response->getBody());
-
-        if (!$body->success) {
-            return back()->withErrors(['captcha' => 'ReCAPTCHA validation failed, please try again.']);
+        if (!$this->contactService->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip())) {
+            return back()->withErrors(['captcha' => __('ReCAPTCHA validation failed, please try again')]);
         }
 
         try {
-            DB::beginTransaction();
-
-            $contact = $this->contactRepo->create([
-                ...$validator,
-                'content_type_id' => ContentType::TATTOO
-            ]);
-
-            DB::commit();
-
-            //send admin e-mail
-            ContactService::sendEmail(
-                $contact,
-                __('Contact from website'),
-                'emails.contact_to_admin',
-                env('MAIL_FROM_ADDRESS')
-            );
-
-            ContactService::sendEmail(
-                $contact,
-                __('Contact from website'),
-                'emails.request_confirmation',
-            );
+            
+            $this->contactService->storeContact($validatedData);
 
             return redirect()->route('site.index');
-
         } catch (\Exception $e) {
-            
-            DB::rollBack();
-            
-            return redirect()->route('site.index');
+            Log::error($e->getMessage());
+            return redirect()->route('site.index')->withErrors(['error' => 'Something went wrong. Please try again.']);
         }
     }
 }

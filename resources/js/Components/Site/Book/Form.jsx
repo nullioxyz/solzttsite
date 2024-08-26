@@ -7,6 +7,9 @@ import Swal from "sweetalert2";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
+import { useSelectReferences } from "@/Contexts/SelectReferencesContext";
+import Attachments from "../Components/Attachments/Index";
+import { useEffect } from "react";
 
 export default function Form(props) {
   const { data, setData, post, processing, errors, reset } = useForm({
@@ -23,16 +26,24 @@ export default function Form(props) {
     gender: null,
     city: null,
     availability: null,
-    recaptcha: null
+    recaptcha: null,
+    attachments: null
   });
 
-  const { t, i18n } = useTranslation();
-  
+  const { t } = useTranslation();
   const recaptchaRef = useRef();
+  const { selectedReferences, setSelectedReferences } = useSelectReferences();
+
+  
+  useEffect(() => {
+    if (JSON.stringify(selectedReferences) !== JSON.stringify(data.attachments)) {
+      setData(prevData => ({ ...prevData, attachments: selectedReferences }));
+    }
+  }, [selectedReferences, setData, data.attachments]);
 
   const onChangeRecaptcha = (e) => {
     const recaptchaValue = recaptchaRef.current.getValue();
-    
+
     setData(prevData => ({ ...prevData, recaptcha: recaptchaValue }))
   }
 
@@ -49,6 +60,13 @@ export default function Form(props) {
   const formSubmit = async (e) => {
     e.preventDefault();
 
+    setData(prevData => ({ ...prevData, attachments: selectedReferences }));
+
+    await new Promise((resolve) => {
+      setTimeout(() => resolve(), 0);
+    });
+    
+    const formData = data;
     post(route('contact.store'), {
       data: data,
       preserveScroll: true,
@@ -60,10 +78,12 @@ export default function Form(props) {
           icon: "success"
         });
 
+        setData([]);
         document.getElementById("contactForm").reset();
+        setSelectedReferences([]);
       },
       onError: (errors) => {
-        
+
       },
     });
   }
@@ -346,6 +366,10 @@ export default function Form(props) {
             </div>
           </div>
 
+          {selectedReferences.length ? (
+            <Attachments />
+          ): null}
+
           <div className="w-full">
             <ReCAPTCHA
               ref={recaptchaRef}
@@ -354,7 +378,7 @@ export default function Form(props) {
             />
           </div>
         </div>
-         {/* text-white text-lg rounded-full hover:bg-[#9a7cae] transition duration-300 uppercase */}
+
         <div className="w-full mt-10">
           <button
             className="w-full uppercase rounded-md bg-[#272533] px-3 py-2 text-xl font-semibold text-white shadow-sm hover:bg-[#9a7cae] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"

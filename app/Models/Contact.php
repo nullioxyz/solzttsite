@@ -30,6 +30,28 @@ class Contact extends Model
 
     public $timestamps = true;
 
+    public function references(): \Illuminate\Database\Eloquent\Relations\MorphToMany
+    {
+        return $this->morphToMany(
+            Portfolio::class,
+            'referenceable',
+            'contact_reference',
+            'contact_id',
+            'referenceable_id'
+        )->withPivot('referenceable_type');
+    }
+
+    public function reservedDesign(): \Illuminate\Database\Eloquent\Relations\MorphToMany
+    {
+        return $this->morphToMany(
+            AvailableDesign::class,
+            'referenceable',
+            'contact_reference',
+            'contact_id',
+            'referenceable_id'
+        )->withPivot('referenceable_type');
+    }
+
     public function contentType(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(ContentType::class, 'content_type_id');

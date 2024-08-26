@@ -23,7 +23,8 @@ class StoreContactRequest extends FormRequest
             'gender' => 'nullable',
             'city' => 'required',
             'contact_me_by' => 'nullable',
-            'availability' => 'required'
+            'availability' => 'required',
+            'attachments' => 'array|nullable',
         ];
     }
 
