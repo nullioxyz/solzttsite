@@ -11,6 +11,18 @@ import { useSelectReferences } from "@/Contexts/SelectReferencesContext";
 import Attachments from "../Components/Attachments/Index";
 import { useEffect } from "react";
 
+const Toast = Swal.mixin({
+  toast: true,
+  position: "top-end",
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.onmouseenter = Swal.stopTimer;
+    toast.onmouseleave = Swal.resumeTimer;
+  }
+});
+
 export default function Form(props) {
   const { data, setData, post, processing, errors, reset } = useForm({
     firstname: null,
@@ -33,7 +45,6 @@ export default function Form(props) {
   const { t } = useTranslation();
   const recaptchaRef = useRef();
   const { selectedReferences, setSelectedReferences } = useSelectReferences();
-
   
   useEffect(() => {
     if (JSON.stringify(selectedReferences) !== JSON.stringify(data.attachments)) {
@@ -59,22 +70,15 @@ export default function Form(props) {
 
   const formSubmit = async (e) => {
     e.preventDefault();
-
-    setData(prevData => ({ ...prevData, attachments: selectedReferences }));
-
-    await new Promise((resolve) => {
-      setTimeout(() => resolve(), 0);
-    });
     
-    const formData = data;
     post(route('contact.store'), {
       data: data,
       preserveScroll: true,
       preserveState: true,
       onSuccess: () => {
         Swal.fire({
-          title: "Thank you!",
-          text: "Soon I'll be in touch to discuss about your project",
+          title: t("Thank you!"),
+          text: t("Soon I'll be in touch to discuss about your project"),
           icon: "success"
         });
 
@@ -82,8 +86,11 @@ export default function Form(props) {
         document.getElementById("contactForm").reset();
         setSelectedReferences([]);
       },
-      onError: (errors) => {
-
+      onError: () => {
+        Toast.fire({
+          icon: "warning",
+          title: t("Check your information and submit the form again")
+        });
       },
     });
   }
@@ -176,7 +183,9 @@ export default function Form(props) {
 
             <TextInput
               usedefaultclass={false}
-              className="appearance-none text-gray-900 block w-full border border-[#7d3636] py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="text" placeholder="Arm, Forearm"
+              className="appearance-none text-gray-900 block w-full border border-[#7d3636] py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+              type="text"
+              placeholder={t("Arm, Forearm")}
               onChange={(e) => setData(prevData => ({ ...prevData, body_location: e.target.value }))}
             />
 
@@ -196,7 +205,9 @@ export default function Form(props) {
 
             <TextInput
               usedefaultclass={false}
-              className="appearance-none text-gray-900 block w-full border border-[#7d3636] py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="text" placeholder="email@example"
+              className="appearance-none text-gray-900 block w-full border border-[#7d3636] py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+              type="text"
+              placeholder={t("email@email.com")}
               onChange={(e) => setData(prevData => ({ ...prevData, email: e.target.value }))}
             />
 
@@ -214,7 +225,9 @@ export default function Form(props) {
 
             <TextInput
               usedefaultclass={false}
-              className="appearance-none text-gray-900 block w-full border border-[#7d3636] py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="text" placeholder="+39 389 748 2409"
+              className="appearance-none text-gray-900 block w-full border border-[#7d3636] py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+              type="text"
+              placeholder={t("+39 389 748 2409")}
               onChange={(e) => setData(prevData => ({ ...prevData, phone: e.target.value }))}
             />
 
@@ -232,7 +245,9 @@ export default function Form(props) {
 
             <TextInput
               usedefaultclass={false}
-              className="appearance-none text-gray-900 block w-full border border-[#7d3636] py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="text" placeholder="Jane"
+              className="appearance-none text-gray-900 block w-full border border-[#7d3636] py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+              type="text"
+              placeholder={t("Jane")}
               onChange={(e) => setData(prevData => ({ ...prevData, firstname: e.target.value }))}
             />
 
@@ -250,7 +265,9 @@ export default function Form(props) {
 
             <TextInput
               usedefaultclass={false}
-              className="appearance-none text-gray-900 block w-full border border-[#7d3636] py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" type="text" placeholder="Pack"
+              className="appearance-none text-gray-900 block w-full border border-[#7d3636] py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+              type="text"
+              placeholder={t("Joseph")}
               onChange={(e) => setData(prevData => ({ ...prevData, lastname: e.target.value }))}
             />
 

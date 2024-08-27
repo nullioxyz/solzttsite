@@ -54,5 +54,20 @@ return [
     //modals
     'use_as_reference' => 'Usa come riferimento',
     'want_this' => 'Lo voglio',
-    'load_more' => 'Carica di più'
+    'load_more' => 'Carica di più',
+
+    // site static texts and messages
+    "Thank you!" => 'Grazie',
+    "Soon I'll be in touch to discuss about your project" => "Presto ti contatterò per discutere del tuo progetto",
+    "Check your information and submit the form again" => "Controlla i tuoi dati e invia nuovamente",
+
+    "Arm, Forearm" => 'Braccio, Avambraccio',
+    "+39 389 748 2409" => "+39 389 748 2409",
+    "Jane" => 'Ilaria',
+    "Joseph" => 'Florio',
+
+    "not available" => "Non disponibile",
+    "remove_reference" => "Rimuovere riferimento",
+    "choose_another" => "Scegline un altro disegno"
+
 ];

@@ -55,5 +55,19 @@ return [
     'want_this' => 'Quero este',
 
     //buttons
-    'load_more' => 'Ver mais'
+    'load_more' => 'Ver mais',
+
+    // site static texts and messages
+    "Thank you!" => 'Obrigada',
+    "Soon I'll be in touch to discuss about your project" => "Em breve entrarei em contato para discutir sobre seu projeto",
+    "Check your information and submit the form again" => "Verifique suas informações e envie o formulário novamente",
+
+    "Arm, Forearm" => 'Braço, antebraço, perna, costas...',
+    "+39 389 748 2409" => "+55 67 99954-2233",
+    "Jane" => 'Maria',
+    "Joseph" => 'José',
+
+    "not available" => "Não Disponível",
+    "remove_reference" => "Remover referência",
+    "choose_another" => "Escolher outro desenho"
 ];

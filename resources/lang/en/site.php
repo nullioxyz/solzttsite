@@ -54,6 +54,20 @@ return [
     //modals
     'use_as_reference' => 'Use as reference',
     'want_this' => 'I want this',
-    'load_more' => 'Load more'
+    'load_more' => 'Load more',
+
+    // site static texts and messages
+    "Thank you!" => 'Thank you!',
+    "Soon I'll be in touch to discuss about your project" => "Soon I'll be in touch to discuss about your project",
+    "Check your information and submit the form again" => "Check your information and submit the form again",
+
+    "Arm, Forearm" => 'Arm, Forearm',
+    "+39 389 748 2409" => "+39 389 748 2409",
+    "Jane" => 'Jane',
+    "Joseph" => 'Joseph',
+
+    "not available" => "Not Available",
+    "remove_reference" => "Remove Reference",
+    "choose_another" => "choose another"
 
 ];
