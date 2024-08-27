@@ -134,3 +134,43 @@ p, label, input[type="text"] {
     scrollbar-width: thin;
     scrollbar-color: #888 #f1f1f1;
 }
+
+/* Fundo da bandeira para combinar com o input */
+.react-tel-input .flag-dropdown {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    padding: 0;
+
+    border-width: 1px;
+    border-radius: 0px !important;
+    border-color: #6b7280 !important;
+    border-right: none !important;
+
+}
+
+.react-tel-input .flag-dropdown.open {
+    background: none !important;
+}
+  
+  /* Cor de fundo e fonte do menu de seleção de países */
+  .react-tel-input .country-list {
+    background-color: white; /* Fundo da lista de países */
+    color: black; /* Cor da fonte da lista */
+  }
+  
+  /* Ajuste da cor de texto para países específicos */
+  .react-tel-input .country-list .country {
+    color: black; /* Cor do texto para todos os países */
+  }
+  
+  /* Ajuste para o fundo dos itens ao passar o mouse */
+  .react-tel-input .country-list .country:hover {
+    background-color: #f0f0f0; /* Cor de fundo ao passar o mouse */
+  }
+  
+  /* Ajuste para a bandeira selecionada no dropdown */
+  .react-tel-input .selected-flag {
+    background-color: white; /* Cor de fundo da bandeira selecionada */
+    border-radius: 0px !important;
+  }

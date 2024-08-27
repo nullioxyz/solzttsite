@@ -26,6 +26,7 @@ Route::prefix('/')->group(function() {
 
     Route::get('translations', [TranslationController::class, 'getTranslations'])->name('site.translations');
     Route::post('set-language', [TranslationController::class, 'setLanguage'])->name('site.setLanguage');
+    Route::get('current-language', [TranslationController::class, 'getCurrentTranslation'])->name('site.currentLanguage');
 });
 
 Route::prefix('justiceroom')->group(function() {

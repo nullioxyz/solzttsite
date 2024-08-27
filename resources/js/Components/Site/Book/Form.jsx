@@ -1,3 +1,5 @@
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css'
 import InputLabel from "@/Components/InputLabel";
 import InputRadio from "@/Components/InputRadio";
 import TextArea from "@/Components/TextArea";
@@ -10,6 +12,9 @@ import { useTranslation } from "react-i18next";
 import { useSelectReferences } from "@/Contexts/SelectReferencesContext";
 import Attachments from "../Components/Attachments/Index";
 import { useEffect } from "react";
+import { useState } from 'react';
+import axios from '@/Services/requests';
+
 
 const Toast = Swal.mixin({
   toast: true,
@@ -23,7 +28,8 @@ const Toast = Swal.mixin({
   }
 });
 
-export default function Form(props) {
+export default function Form() {
+  
   const { data, setData, post, processing, errors, reset } = useForm({
     firstname: null,
     lastname: null,
@@ -42,15 +48,45 @@ export default function Form(props) {
     attachments: null
   });
 
+  const [phone, setPhone] = useState('');
+  const [countryPhone, setCountryPhone] = useState('us');
+
   const { t } = useTranslation();
+  
   const recaptchaRef = useRef();
   const { selectedReferences, setSelectedReferences } = useSelectReferences();
-  
+
   useEffect(() => {
     if (JSON.stringify(selectedReferences) !== JSON.stringify(data.attachments)) {
       setData(prevData => ({ ...prevData, attachments: selectedReferences }));
     }
   }, [selectedReferences, setData, data.attachments]);
+
+  const countryPhoneMapping = {
+    'it': 'it', 
+    'en': 'gb',
+    'pt': 'br',
+  };
+
+  useEffect(() => {
+
+    const fetchLanguage = async () => {
+      try {
+        const response = await axios.get(route('site.currentLanguage'));
+        
+        if (response.status === 200) {
+          const mappedCountry = countryPhoneMapping[response.data.lang] || 'us';
+          setCountryPhone(mappedCountry);
+        }
+      } catch (error) {
+        
+      }
+
+    };
+    fetchLanguage();
+
+    
+  }, [setCountryPhone]);
 
   const onChangeRecaptcha = (e) => {
     const recaptchaValue = recaptchaRef.current.getValue();
@@ -70,16 +106,15 @@ export default function Form(props) {
 
   const formSubmit = async (e) => {
     e.preventDefault();
-    
+
     post(route('contact.store'), {
       data: data,
       preserveScroll: true,
       preserveState: true,
       onSuccess: () => {
-        Swal.fire({
-          title: t("Thank you!"),
-          text: t("Soon I'll be in touch to discuss about your project"),
-          icon: "success"
+        Toast.fire({
+          icon: "success",
+          title: t("Soon I'll be in touch to discuss about your project")
         });
 
         setData([]);
@@ -183,7 +218,7 @@ export default function Form(props) {
 
             <TextInput
               usedefaultclass={false}
-              className="appearance-none text-gray-900 block w-full border border-[#7d3636] py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+              className="appearance-none text-gray-900 block w-full border py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
               type="text"
               placeholder={t("Arm, Forearm")}
               onChange={(e) => setData(prevData => ({ ...prevData, body_location: e.target.value }))}
@@ -205,7 +240,7 @@ export default function Form(props) {
 
             <TextInput
               usedefaultclass={false}
-              className="appearance-none text-gray-900 block w-full border border-[#7d3636] py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+              className="appearance-none text-gray-900 block w-full border py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
               type="text"
               placeholder={t("email@email.com")}
               onChange={(e) => setData(prevData => ({ ...prevData, email: e.target.value }))}
@@ -223,12 +258,14 @@ export default function Form(props) {
               className='block uppercase tracking-wide text-xl font-bold mb-2 text-white'
             />
 
-            <TextInput
-              usedefaultclass={false}
-              className="appearance-none text-gray-900 block w-full border border-[#7d3636] py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-              type="text"
-              placeholder={t("+39 389 748 2409")}
-              onChange={(e) => setData(prevData => ({ ...prevData, phone: e.target.value }))}
+            <PhoneInput
+              country={countryPhone}
+              value={phone}
+              onChange={(phone) => setData(prevData => ({ ...prevData, phone }))}
+              inputProps={{
+                className: "appearance-none text-gray-900 block w-full border py-3 px-12 mb-3 leading-tight focus:outline-none focus:bg-white text-black",
+                placeholder: t("+39 389 748 2409"),
+              }}
             />
 
             {errors.phone &&
@@ -245,7 +282,7 @@ export default function Form(props) {
 
             <TextInput
               usedefaultclass={false}
-              className="appearance-none text-gray-900 block w-full border border-[#7d3636] py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+              className="appearance-none text-gray-900 w- block w-full border py-3 px- mb-3 leading-tight focus:outline-none focus:bg-white"
               type="text"
               placeholder={t("Jane")}
               onChange={(e) => setData(prevData => ({ ...prevData, firstname: e.target.value }))}
@@ -265,7 +302,7 @@ export default function Form(props) {
 
             <TextInput
               usedefaultclass={false}
-              className="appearance-none text-gray-900 block w-full border border-[#7d3636] py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+              className="appearance-none text-gray-900 block w-full border py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
               type="text"
               placeholder={t("Joseph")}
               onChange={(e) => setData(prevData => ({ ...prevData, lastname: e.target.value }))}
@@ -303,7 +340,7 @@ export default function Form(props) {
               <div className="flex items-center gap-x-3">
                 <TextInput
                   usedefaultclass={false}
-                  className="appearance-none text-gray-900 block w-full border border-[#7d3636] py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                  className="appearance-none text-gray-900 block w-full border py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                   id="otherPronoun"
                   type="text"
                   placeholder={t('other')}
@@ -324,7 +361,7 @@ export default function Form(props) {
 
             <TextInput
               usedefaultclass={false}
-              className="appearance-none text-gray-900 block w-full border border-[#7d3636] py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+              className="appearance-none text-gray-900 block w-full border py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
               type="text"
               placeholder={t('city')}
               onChange={(e) => setData(prevData => ({ ...prevData, city: e.target.value }))}
@@ -385,7 +422,7 @@ export default function Form(props) {
 
           {selectedReferences.length ? (
             <Attachments />
-          ): null}
+          ) : null}
 
           <div className="w-full">
             <ReCAPTCHA

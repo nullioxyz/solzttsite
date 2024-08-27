@@ -45,4 +45,9 @@ class TranslationController extends Controller
             return response()->json(['error' => 'Failed to set language'], 500);
         }
     }
+
+    public function getCurrentTranslation()
+    {
+        return response()->json(['lang' => Cookie::get('locale') ?? App::getLocale()]);
+    }
 }
