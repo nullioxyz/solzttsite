@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Cookie;
 use Spatie\MediaLibrary\HasMedia;
@@ -51,6 +52,11 @@ class Portfolio extends Model implements HasMedia
     public function category(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function contacts(): MorphToMany
+    {
+        return $this->morphedByMany(Contact::class, 'referenceable', 'contact_reference');
     }
 
     public function contentType(): \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -18,6 +18,7 @@ use App\Repositories\Portfolio\PortfolioRepository;
 use App\Strategies\Files\MediaUploadStrategy;
 use App\Strategies\Translation\Portfolio\PortfolioLangStrategy;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class ContactRequestController extends Controller
@@ -31,7 +32,9 @@ class ContactRequestController extends Controller
 
     public function index()
     {
-        $contacts = Contact::orderBy('created_at', 'desc')->paginate();
+        $contacts = $this->contactRepo
+            ->with(['portfolioReferences', 'reservedDesign'])
+            ->orderBy('created_at', 'desc')->paginate();
 
         return Inertia::render('Contact/Index', [
             'contacts' => $contacts
@@ -40,6 +43,8 @@ class ContactRequestController extends Controller
 
     public function view(Contact $contact)
     {
+        $contact->load('reservedDesign.media', 'portfolioReferences.media');
+        
         return Inertia::render('Contact/View', [
             'contact' => $contact,
         ]);

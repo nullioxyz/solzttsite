@@ -105,7 +105,7 @@ class ContactService  {
             }
 
             if ($referencesToAttach) {
-                $contact->references()->attach($referencesToAttach);
+                $contact->portfolioReferences()->attach($referencesToAttach);
             }
 
             if ($reservedDesignsToAttach) {

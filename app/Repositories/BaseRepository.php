@@ -51,6 +51,13 @@ abstract class BaseRepository implements BaseRepositoryInterface {
         return $this;
     }
 
+    public function orderBy($field, $direction)
+    {
+        $this->model = $this->model->orderBy($field, $direction);
+
+        return $this;
+    }
+
     public function whereIn($field, array $data)
     {
         $this->model = $this->model->whereIn($field, $data);

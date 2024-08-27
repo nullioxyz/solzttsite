@@ -13,6 +13,7 @@ use App\Http\Controllers\Site\ContactController;
 use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\PortfolioController as PortfolioSiteController;
 use App\Http\Controllers\Site\TranslationController;
+use App\Models\AvailableDesign;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -76,6 +77,7 @@ Route::prefix('justiceroom')->group(function() {
         Route::post('/store', [AvailableController::class, 'store'])->name('available_design.store');
         Route::get('/edit/{available_design}', [AvailableController::class, 'edit'])->name('available_design.edit');
         Route::post('/save/{available_design}', [AvailableController::class, 'update'])->name('available_design.update');
+        Route::post('/availability/{available_design}', [AvailableController::class, 'changeAvailability'])->name('available_design.changeAvailability');
         Route::delete('/delete/{available_design}', [AvailableController::class, 'destroy'])->name('available_design.delete');
         Route::delete('/delete-file/{fileId}/{available_design}', [AvailableController::class, 'destroyFile'])->name('available.removeFile');
     });

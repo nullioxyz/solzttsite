@@ -1,16 +1,11 @@
-import { useForm } from '@inertiajs/react';
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import { useState } from 'react';
-import { Gallery } from '../Files/Gallery';
+import React from 'react';
+import PrimaryButton from '../PrimaryButton';
+import axios from '@/Services/requests';
 import Swal from 'sweetalert2';
-
 
 export default function Form(props) {
 
-  const { data, setData, post, processing, errors, reset } = useForm({
+  const data = {
     read: props.data ? props.data.read : false,
     firstname: props.data.firstname,
     lastname: props.data.lastname,
@@ -24,31 +19,43 @@ export default function Form(props) {
     gender: props.data.gender,
     city: props.data.city,
     availability: props.data.availability,
-  });
-
-  const submit = (e) => {
-    e.preventDefault();
-    post(route('contact.update', props.data.slug), {
-      preserveScroll: true,
-      data: data,
-      onSuccess: () => {
-        Swal.fire({
-          title: "Saved!",
-          text: "Your record has been saved.",
-          icon: "success"
-        });
-      },
-      onError: (errors) => {
-        console.log(errors);
-      },
-    });
+    portfolioReferences: props.data.portfolio_references,
+    reservedDesign: props.data.reserved_design
   };
 
+  const getReservedDesign = () => {
+    return data.reservedDesign.find(() => true);
+  }
+
+  const reservedDesign = getReservedDesign();
+
+  const handleUnavailableDesign = async () => {
+    Swal.fire({
+      title: "Do you confirm unavailability of this design?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        
+        axios.post(route('available_design.changeAvailability', getReservedDesign().slug), {
+          available: false
+        });
+
+        Swal.fire({
+          title: "design unavailable!",
+          text: "You have changed the design's availability.",
+          icon: "success"
+        });
+      }
+    });
+  }
+
   return (
-    <form onSubmit={submit}>
+    <>
       <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-
-
         <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
           <div className="space-y-6">
             <div className="item">
@@ -105,9 +112,67 @@ export default function Form(props) {
               <h3 className="font-semibold text-lg">Availability:</h3>
               <p className="text-gray-700">{data.availability}</p>
             </div>
+
+            {data.portfolioReferences && data.portfolioReferences.length ? (
+              <div className="item">
+                <h3 className="font-semibold text-lg">
+                  Portfolio References
+                </h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {data.portfolioReferences?.map((design, index) => (
+                    <React.Fragment key={index}>
+                      {design.media?.map((image, imgIndex) => (
+                        <div key={imgIndex} className="p-2">
+                          <img
+                            src={image.original_url} 
+                            alt={`Reserved Design Image ${imgIndex + 1}`}
+                            className="w-full h-[200px] object-cover rounded"
+                          />
+                        </div>
+                      ))}
+                    </React.Fragment>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
+            {data.reservedDesign && data.reservedDesign.length ? (
+              <div className="item">
+                <h3 className="font-semibold text-lg">
+                  Reserved Design
+                </h3>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {data.reservedDesign?.map((design, index) => (
+                    <React.Fragment key={index}>
+                      {design.media?.map((image, imgIndex) => (
+                        <div key={imgIndex} className="p-2">
+                          <img
+                            src={image.original_url}
+                            alt={`Reserved Design Image ${imgIndex + 1}`}
+                            className="w-full h-[200px] object-cover rounded"
+                          />
+                        </div>
+                      ))}
+                    </React.Fragment>
+                  ))}
+                </div>
+
+                {reservedDesign.available ? (
+                  <div className="mt-5 ml-2">
+                    <PrimaryButton onClick={() => handleUnavailableDesign() }>Change availability of this design</PrimaryButton>
+                  </div>
+                ) :
+                  <div className="mt-5 ml-2">
+                    <PrimaryButton disabled={true}>Unavailable design</PrimaryButton>
+                  </div>
+                }
+
+              </div>
+            ): null}
           </div>
         </div>
       </div>
-    </form>
+    </>
   )
 }

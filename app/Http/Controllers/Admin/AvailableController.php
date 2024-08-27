@@ -13,6 +13,7 @@ use App\Repositories\AvailableDesign\AvailableDesignRepository;
 use App\Repositories\Category\CategoryRepository;
 use App\Strategies\Files\MediaUploadStrategy;
 use App\Strategies\Translation\AvailableDesign\AvailableDesignLangStrategy;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
@@ -140,6 +141,20 @@ class AvailableController extends Controller
         }
         
         return redirect()->route('available_design.index')->with('success', __('Saved with success'));
+    }
+
+    public function changeAvailability(Request $request, AvailableDesign $availableDesign)
+    {
+        try {
+            DB::beginTransaction();
+
+            $availableDesign->available = $request->get('available');
+            $availableDesign->save();
+            
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+        }
     }
 
     public function destroy(AvailableDesign $availableDesign)
