@@ -94,7 +94,7 @@ export default function AvailableDesign() {
         </div>
 
         <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-4 mt-10 mb-24">
-          {designs.length > 0 && designs.map((item, index) => (
+          {designs.length > 0 ? designs.map((item, index) => (
             <LazyImageModalComponent
               key={item.id}
               book={true}
@@ -108,7 +108,7 @@ export default function AvailableDesign() {
               alt={`Image ${index + 1}`}
               reference={el => boxRefs.current[index] = el}
             />
-          ))}
+          )): null}
         </div>
 
         {pagination.current_page < pagination.last_page && (

@@ -2,13 +2,7 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Site\StoreContactRequest;
-use App\Models\AvailableDesign;
-use App\Models\ContentType;
-use App\Models\Portfolio;
-use App\Repositories\Contact\ContactRepository;
 use App\Services\ContactService;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class ContactController extends Controller

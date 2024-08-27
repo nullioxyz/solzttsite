@@ -74,7 +74,7 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, descripti
             onClick={toggleModal}
             className={`object-cover w-full h-full ${!available ? 'grayscale' : ''}`}
           />
-          {book && available && (
+          {book && available ? (
             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-full flex justify-center">
               <button
                 onClick={onBookNow}
@@ -83,7 +83,7 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, descripti
                 {t('book_now')}
               </button>
             </div>
-          )}
+          ) : null}
         </div>
       </Card>
 
