@@ -16,6 +16,8 @@ jobs:
     - name: Set up Laravel Sail environment locally
       run: |
         cp .env.example .env
+        composer require laravel/sail --dev
+        php artisan sail:install
         ./vendor/bin/sail up -d
         ./vendor/bin/sail composer install --optimize-autoloader --no-dev
         ./vendor/bin/sail npm install --production
@@ -39,8 +41,8 @@ jobs:
         cd /path/to/laravel-app
         docker-compose down
         docker-compose up -d --build
-        docker exec -it <container_name> php artisan migrate --force
-        docker exec -it <container_name> php artisan config:cache
-        docker exec -it <container_name> php artisan route:cache
-        docker exec -it <container_name> php artisan view:cache
+        docker exec -it laravel.test php artisan migrate --force
+        docker exec -it laravel.test php artisan config:cache
+        docker exec -it laravel.test php artisan route:cache
+        docker exec -it laravel.test php artisan view:cache
         EOF

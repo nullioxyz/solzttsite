@@ -16,7 +16,7 @@ class LanguageTableSeeder extends Seeder
         Language::create(
             [
                 'name' => 'Português Brasil',
-                'slug' => 'pt-br'
+                'slug' => 'pt'
             ]
         );
 
@@ -30,7 +30,7 @@ class LanguageTableSeeder extends Seeder
         Language::create(
             [
                 'name' => 'English',
-                'slug' => 'english'
+                'slug' => 'en'
             ]
         );
     }
