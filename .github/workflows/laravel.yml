@@ -1,0 +1,46 @@
+name: Deploy to DigitalOcean with Sail
+
+on:
+  push:
+    branches:
+      - main  #
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Laravel Sail environment locally
+      run: |
+        cp .env.example .env
+        ./vendor/bin/sail up -d
+        ./vendor/bin/sail composer install --optimize-autoloader --no-dev
+        ./vendor/bin/sail npm install --production
+        ./vendor/bin/sail npm run build
+
+    - name: Optimize application locally
+      run: |
+        ./vendor/bin/sail artisan config:cache
+        ./vendor/bin/sail artisan route:cache
+        ./vendor/bin/sail artisan view:cache
+
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.DO_SSH_KEY }}
+
+    - name: Deploy application to DigitalOcean
+      run: |
+        scp -r . root@your_droplet_ip:/path/to/laravel-app
+        ssh root@your_droplet_ip << 'EOF'
+        cd /path/to/laravel-app
+        docker-compose down
+        docker-compose up -d --build
+        docker exec -it <container_name> php artisan migrate --force
+        docker exec -it <container_name> php artisan config:cache
+        docker exec -it <container_name> php artisan route:cache
+        docker exec -it <container_name> php artisan view:cache
+        EOF
