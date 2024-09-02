@@ -1,0 +1,11 @@
+[
+    {
+      "name": "digitalocean",
+      "ip": "188.166.85.77",
+      "username": "your_droplet_username",
+      "password":"your_droplet_password",
+      "beforeHooks": "",
+      "afterHooks": "",
+      "path": "path_to_your_project"
+    }
+  ]
