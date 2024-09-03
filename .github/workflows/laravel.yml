@@ -85,21 +85,20 @@ jobs:
         ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
           set -e
           DEPLOY_PATH="${{ secrets.DEPLOY_PATH }}"
-          ARTIFACT_NAME="${GITHUB_SHA}.tar.gz"
+          ARTIFACT_NAME="${{ github.sha }}.tar.gz"
 
           # Extrair o artefato
           cd $DEPLOY_PATH
           tar -xzf artifacts/$ARTIFACT_NAME -C .
 
-          # Restart PHP e Apache
-
-          sudo systemctl apache2 stop
-
           # Setar permissões
           sudo chown -R www-data:www-data $DEPLOY_PATH
           sudo chmod -R 777 $DEPLOY_PATH/storage
+          docker-compose down
           docker-compose -f docker-compose-prod.yml up -d
-          docker-compose exec laravel.test chmod -f 777 $DEPLOY_PATH/storage
+          docker-compose exec laravel.test chmod -R 777 storage/
+          docker-compose exec laravel.test php artisan key:generate
+          docker-compose exec laravel.test php artisan migrate --force
 
           echo "Deploy completed successfully."
         EOF

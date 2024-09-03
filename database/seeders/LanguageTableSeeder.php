@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Language;
 
@@ -30,7 +29,8 @@ class LanguageTableSeeder extends Seeder
         Language::create(
             [
                 'name' => 'English',
-                'slug' => 'en'
+                'slug' => 'en',
+                'default' => 1
             ]
         );
     }

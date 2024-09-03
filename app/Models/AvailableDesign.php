@@ -36,7 +36,7 @@ class AvailableDesign extends Model implements HasMedia
     {
         return $this->hasOne(AvailableDesignLang::class, 'available_design_id')
             ->whereHas('language', function ($query) {
-                $query->where('default', true);
+                $query->where('default', 1);
             });
     }
 
