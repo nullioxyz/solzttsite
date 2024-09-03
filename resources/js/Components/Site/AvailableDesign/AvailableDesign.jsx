@@ -1,4 +1,4 @@
-import { lazy, useEffect, useRef, useState } from 'react'
+import { lazy, useEffect, useRef, useState, Suspense } from 'react'
 import axios from '@/Services/requests'
 import { Spinner } from "@material-tailwind/react";
 import anime from 'animejs';
@@ -94,21 +94,23 @@ export default function AvailableDesign() {
         </div>
 
         <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-4 mt-10 mb-24">
-          {designs.length > 0 ? designs.map((item, index) => (
-            <LazyImageModalComponent
-              key={item.id}
-              book={true}
-              description={item.translation ? item.translation.description : item.default_translation.description}
-              coverImage={item.media[0].original_url}
-              images={item.media}
-              onAddReference={() => handleAddAsReference(item)}
-              onBookNow={() => handleBookNow(item)}
-              itemId={item.id}
-              available={item.available}
-              alt={`Image ${index + 1}`}
-              reference={el => boxRefs.current[index] = el}
-            />
-          )): null}
+          <Suspense fallback={<Spinner />}>
+            {designs.length > 0 && designs.map((item, index) => (
+              <LazyImageModalComponent
+              key={`available_${item.id}`}
+                book={true}
+                description={item.translation ? item.translation.description : item.default_translation.description}
+                coverImage={route('file.index', {uuid: item.media[0].uuid})}
+                images={item.media}
+                onAddReference={() => handleAddAsReference(item)}
+                onBookNow={() => handleBookNow(item)}
+                itemId={item.id}
+                available={item.available}
+                alt={`Image ${index + 1}`}
+                reference={el => boxRefs.current[index] = el}
+              />
+            ))}
+          </Suspense>
         </div>
 
         {pagination.current_page < pagination.last_page && (
