@@ -103,7 +103,7 @@ export default function Works() {
                 key={`portfolio_${item.id}`} // Use item.id instead of index for a more stable key
                 book={false}
                 description={item.translation ? item.translation.description : item.default_translation.description}
-                coverImage={item.media[0].original_url}
+                coverImage={route('file.index', {uuid: item.media[0].uuid})}
                 images={item.media}
                 onAddReference={() => handleAddAsReference(item)}
                 itemId={item.id}

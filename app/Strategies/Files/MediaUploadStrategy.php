@@ -18,7 +18,7 @@ class MediaUploadStrategy implements FileUploadStrategyInterface
 
         foreach($files as $file) {
             $modelInstance->addMedia($file)
-                ->toMediaCollection($collection);
+            ->toMediaCollection($collection);
         }
 
         return $model;
@@ -43,8 +43,6 @@ class MediaUploadStrategy implements FileUploadStrategyInterface
                 $mediaItem->update([
                     'order_column' => (int)$item['order_column']
                 ]);
-
-                //dd($mediaItem, $item['order_column']);
             }
         }
     }

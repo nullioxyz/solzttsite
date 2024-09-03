@@ -78,6 +78,7 @@ class InstitucionalController extends Controller
             return redirect()->route('institucional.index')->with('success', __('Saved with success'));
         } catch (\Exception $e) {
             DB::rollback();
+            
             return redirect()->route('institucional.create')->with('warning', __('Try again'));
         }        
     }
@@ -86,7 +87,7 @@ class InstitucionalController extends Controller
     {
         $institucional->getMedia('institucional');
         $institucional->load('langs');
-
+        
         return Inertia::render('Institucional/Edit', [
             'institucional' => $institucional,
             'languages' => Language::get(),
@@ -120,6 +121,7 @@ class InstitucionalController extends Controller
 
             DB::commit();
         } catch (\Exception $e) {
+            dd($e);
             DB::rollBack();
 
             return redirect()->route('institucional.edit', $institucional)->with('warning', __('Something wrong. Please try again'));

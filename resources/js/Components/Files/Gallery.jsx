@@ -4,7 +4,6 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 export function Gallery({ files, onDelete, onReorder }) {
-
   const handleOnDragEnd = (result) => {
     if (!result.destination) return;
 
@@ -31,7 +30,7 @@ export function Gallery({ files, onDelete, onReorder }) {
             ref={provided.innerRef}
             {...provided.droppableProps}
           >
-            {files.map(({ original_url, name, uid, id }, index) => (
+            {files.map(({ original_url, name, uuid, id }, index) => (
               <Draggable key={id} draggableId={id.toString()} index={index}>
                 {(provided) => (
                   <div
@@ -42,7 +41,7 @@ export function Gallery({ files, onDelete, onReorder }) {
                   >
                     <img
                       className="h-40 max-w-full rounded-lg object-cover object-center shadow-md transition-transform duration-300 ease-in-out transform hover:scale-105"
-                      src={original_url}
+                      src={route('file.index', {'uuid': uuid})}
                       alt={name || "Image"}
                     />
                     <div className="flex space-x-2 mt-2">

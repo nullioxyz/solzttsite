@@ -6,7 +6,7 @@ export default function About({ institucional }) {
 
   const sanitizedDescription = DOMPurify.sanitize(institucionalTranslation.description);
   const hasMedia = institucional.media.length > 0;
-  const imageUrl = hasMedia ? institucional.media[0].original_url : '';
+  const imageUrl = hasMedia ? route('file.index', {'uuid': institucional.media[0].uuid}) : '';
 
   return (
     <section id="about" className="flex flex-col justify-between h-auto mx-auto p-5 overflow-hidden">
