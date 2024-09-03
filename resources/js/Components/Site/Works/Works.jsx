@@ -56,7 +56,7 @@ export default function Works() {
 
     const data = {
       id: item.id,
-      image: item.media[0].original_url,
+      image: route('file.index', {uuid: item.media[0].uuid}),
       name: item.translation ? item.translation.title : item.default_translation.title,
       type: 'portfolio'
     }
