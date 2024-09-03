@@ -20,8 +20,6 @@ class HomeController extends Controller
             ->with('defaultTranslation', 'translation', 'media')
             ->first();
         
-        $institucional->getMedia();
-
         $appointmentTexts = Institucional::with(
             'defaultTranslation', 'translation'
         )->whereIn('slug', [
