@@ -94,11 +94,12 @@ jobs:
           # Setar permissões
           sudo chown -R www-data:www-data $DEPLOY_PATH
           sudo chmod -R 777 $DEPLOY_PATH/storage
-          docker-compose down
-          docker-compose -f docker-compose-prod.yml up -d
-          docker-compose exec laravel.test composer install
-          docker-compose exec laravel.test chmod -R 777 storage/
-          docker-compose exec laravel.test php artisan key:generate
+
+
+          # Atualizar apenas o serviço necessário sem parar tudo
+          docker-compose -f docker-compose-prod.yml up -d --build --no-deps laravel.test
+
+          docker-compose exec laravel.test composer install --optimize-autoloader
           docker-compose exec laravel.test php artisan migrate --force
 
           echo "Deploy completed successfully."
