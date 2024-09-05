@@ -9,8 +9,7 @@ import './i18n';
 import React, { useState, useEffect } from 'react';
 
 import Loader from './Components/Loader/Index';
-
-const appName = 'Solztt';
+const appName = 'Solztt - Tatto artist';
 
 function InertiaAppWrapper({ App, props }) {
   const [loading, setLoading] = useState(false);
@@ -59,12 +58,11 @@ function InertiaAppWrapper({ App, props }) {
 
 
 createInertiaApp({
-  title: (title) => `${title} - ${appName}`,
+  title: (title) => `${appName}`,
   resolve: (name) => resolvePageComponent(`./Pages/${name}.jsx`, import.meta.glob('./Pages/**/*.jsx')),
   setup({ el, App, props }) {
     const root = createRoot(el);
 
-    // Renderizando o InertiaAppWrapper, que agora gerencia o estado de loading
     root.render(<InertiaAppWrapper App={App} props={props} />);
   },
   progress: {

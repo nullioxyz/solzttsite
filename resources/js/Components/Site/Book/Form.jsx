@@ -15,7 +15,6 @@ import { useEffect } from "react";
 import { useState } from 'react';
 import axios from '@/Services/requests';
 
-
 const Toast = Swal.mixin({
   toast: true,
   position: "top-end",
@@ -437,6 +436,8 @@ export default function Form() {
           <button
             className="w-full uppercase rounded-md bg-[#272533] px-3 py-2 text-xl font-semibold text-white shadow-sm hover:bg-[#9a7cae] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
             onClick={(e) => formSubmit(e)}
+            aria-label={t('requestquote')}
+            title={t('requestquote')}
           >
             {t('requestquote')}
           </button>

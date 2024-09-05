@@ -121,6 +121,8 @@ export default function Works() {
               className="px-6 py-3 bg-[#272533] text-white text-lg rounded-full hover:bg-[#9a7cae] transition duration-300 uppercase"
               onClick={handleLoadMore}
               disabled={loadingMore}
+              aria-label={t('load_more')}
+              title={t('load_more')}
             >
               {!loadingMore ? t('load_more') : <Spinner />}
             </button>

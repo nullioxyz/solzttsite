@@ -39,7 +39,10 @@ export default function How({ texts, warning }) {
         <div className="flex justify-center mt-20 mb-10">
           <button 
             onClick={scrollToNextSection}
-            className="px-6 py-3 bg-[#FFF] text-black text-2xl rounded-full hover:bg-[#7c8f77] hover:text-white transition duration-300 uppercase">
+            className="px-6 py-3 bg-[#FFF] text-black text-2xl rounded-full hover:bg-[#7c8f77] hover:text-white transition duration-300 uppercase"
+            aria-label={t('requestquote')}
+            title={t('requestquote')}
+            >
             {t('requestquote')}
           </button>
         </div>

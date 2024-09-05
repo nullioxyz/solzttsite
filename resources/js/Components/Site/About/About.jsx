@@ -65,7 +65,8 @@ export default function About({ institucional }) {
               <img 
                 src={imageUrl} 
                 alt="Image 1"  
-                className="h-auto w-[620px] xl:max-w-[1000px] lg:max-w-[1000px] xl:left-0 lg:relative lg:left-[-120px] sm:max-w-[1000px] md:max-w-[1300px] object-cover md:ml-[-14px] sm:ml-[-34px] xs:ml-[-50px]" 
+                className="h-auto w-[620px] xl:max-w-[1000px] lg:max-w-[1000px] xl:left-0 lg:relative lg:left-[-120px] sm:max-w-[1000px] md:max-w-[1300px] object-cover md:ml-[-14px] sm:ml-[-34px] xs:ml-[-50px]"
+                loading='lazy'
               />
             )}
         </div>

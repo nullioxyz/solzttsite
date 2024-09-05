@@ -83,19 +83,19 @@ export default function Index({ languages, defaultLang, currentLanguage }) {
 
           <ul className="uppercase flex flex-col space-y-4 p-4 text-[20px]">
             <li className="border-b border-gray-300 py-2">
-              <a href="javascript:void(0)" onClick={() => scrollToNextSection('about')} className="text-black MontSerratMedium">{t('about')}</a>
+              <a href="#about" onClick={() => scrollToNextSection('about')} className="text-black MontSerratMedium">{t('about')}</a>
             </li>
             <li className="border-b border-gray-300 py-2">
-              <a href="javascript:void(0)" onClick={() => scrollToNextSection('works')} className="text-black MontSerratMedium">{t('portfolio')}</a>
+              <a href="#works" onClick={() => scrollToNextSection('works')} className="text-black MontSerratMedium">{t('portfolio')}</a>
             </li>
             <li className="border-b border-gray-300 py-2">
-              <a href="javascript:void(0)" onClick={() => scrollToNextSection('available')} className="text-black MontSerratMedium">{t('available')}</a>
+              <a href="#available" onClick={() => scrollToNextSection('available')} className="text-black MontSerratMedium">{t('available')}</a>
             </li>
             <li className="border-b border-gray-300 py-2">
-              <a href="javascript:void(0)" onClick={() => scrollToNextSection('how')} className="text-black MontSerratMedium">{t('appointment')}</a>
+              <a href="#how" onClick={() => scrollToNextSection('how')} className="text-black MontSerratMedium">{t('appointment')}</a>
             </li>
             <li className="border-b border-gray-300 py-2">
-              <a href="javascript:void(0)" onClick={() => scrollToNextSection('book')} className="text-black MontSerratMedium">{t('contact')}</a>
+              <a href="#book" onClick={() => scrollToNextSection('book')} className="text-black MontSerratMedium">{t('contact')}</a>
             </li>
           </ul>
 

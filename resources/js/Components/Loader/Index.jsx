@@ -7,7 +7,6 @@ const Loader = ({ progress, fadingOut }) => (
     aria-label="Carregando"
   >
     <div className="text-black text-center">
-      <div className="mt-2 w-10 h-10 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
       <div className="mt-4 text-lg">{progress}%</div>
     </div>
   </div>

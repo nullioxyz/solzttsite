@@ -3,7 +3,7 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vite build"
+        "build": "vite build --minify"
     },
     "devDependencies": {
         "@headlessui/react": "^1.4.2",

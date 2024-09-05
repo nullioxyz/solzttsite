@@ -14,6 +14,7 @@ export function Gallery({ images}) {
             src={route('file.index', {uuid: image.uuid})}
             alt="image 1"
             className="h-full w-full object-cover object-center"
+            loading="lazy"
           />
         </div>
       ))}

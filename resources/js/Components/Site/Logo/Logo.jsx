@@ -1,21 +1,23 @@
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 
-export default function Logo(...props) {
+export default function Logo() {
+
+  const svgRef = useRef(null);
 
   useEffect(() => {
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const svg = document.getElementById('solztt-logo');
+    const svg = svgRef.current;
+    if (svg) {
       const path = svg.querySelector('path');
-      const length = path.getTotalLength();
+      if (path) {
+        const length = path.getTotalLength();
+        path.style.strokeDasharray = length;
+        path.style.strokeDashoffset = length;
 
-      // Inicializando as propriedades para animação
-      path.style.strokeDasharray = length;
-      path.style.strokeDashoffset = length;
-    });
-
-  }, [])
-
+        path.style.transition = "stroke-dashoffset 2s ease-in-out";
+        path.style.strokeDashoffset = '0';
+      }
+    }
+  }, []);
 
   return (
     <>

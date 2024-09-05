@@ -1,4 +1,3 @@
-
 import { useSelectReferences } from "@/Contexts/SelectReferencesContext"
 import { useTranslation } from "react-i18next";
 
@@ -33,6 +32,8 @@ export default function Attachments() {
                   <button
                     className="text-[#7d3636] hover:text-[#7d3636] font-bold text-xs block "
                     onClick={() => setSelectedReferences(prevRefs => prevRefs.filter(r => r.id !== ref.id))}
+                    aria-label={t('remove')}
+                    title={t('remove')}
                   >
                     {t('remove')}
                   </button>

@@ -48,6 +48,8 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, descripti
           color="red"
           size="sm"
           onClick={() => setSelectedReferences(prevRefs => prevRefs.filter(ref => ref.id !== itemId))}
+          aria-label={!book ? t('remove_reference') : t('choose_another')}
+          title={!book ? t('remove_reference') : t('choose_another')}
         >
           {!book ? t('remove_reference') : t('choose_another')}
         </Button>
@@ -55,7 +57,13 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, descripti
     }
 
     return (
-      <Button color="gray" size="sm" onClick={handleClick}>
+      <Button
+        color="gray"
+        size="sm"
+        onClick={handleClick}
+        aria-label={!book ? t('use_as_reference') : t('book_now')}
+        title={!book ? t('use_as_reference') : t('book_now')}
+        >
         {!book ? t('use_as_reference') : t('book_now')}
       </Button>
     );
@@ -73,12 +81,14 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, descripti
             alt={alt}
             onClick={toggleModal}
             className={`object-cover w-full h-full ${!available ? 'grayscale' : ''}`}
+            loading="lazy"
           />
           {book && available ? (
             <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-full flex justify-center">
               <button
                 onClick={onBookNow}
                 className="px-6 py-3 bg-[#272533] text-white text-lg rounded-full hover:bg-[#9a7cae] transition duration-300 uppercase"
+                aria-label={t('book_now')}
               >
                 {t('book_now')}
               </button>

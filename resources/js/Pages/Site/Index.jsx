@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 
 import Nav from '@/Components/Site/Nav/Index';
 import Highlight from '@/Components/Site/Highlight/Index';
 import About from '@/Components/Site/About/About';
-import Works from '@/Components/Site/Works/Works';
-import AvailableDesign from '@/Components/Site/AvailableDesign/AvailableDesign';
+import { Spinner } from "@material-tailwind/react";
 import Book from '@/Components/Site/Book/Book';
 import How from '@/Components/Site/How/How';
 import { SelectReferencesProvider } from '@/Contexts/SelectReferencesContext';
+
+const AvailableDesign = lazy(() => import('@/Components/Site/AvailableDesign/AvailableDesign'))
+const Works = lazy(() => import('@/Components/Site/Works/Works'));
+
 
 export default function Index({
   institucional,
@@ -21,26 +24,30 @@ export default function Index({
   defaultLang,
   currentLanguage
 }) {
-
-
   return (
 
-    <SelectReferencesProvider>  
+    <SelectReferencesProvider>
       <div className="flex flex-col min-h-screen text-white bg-[#7c8f77]">
         <header className="w-full mt-5">
           <Nav languages={languages} defaultLang={defaultLang} currentLanguage={currentLanguage} />
         </header>
 
         <main>
-          <Highlight />
+          <Suspense fallback={<Spinner />}>
+            <Highlight />
+          </Suspense>
 
           <About
             institucional={institucional}
           />
 
-          <Works />
+          <Suspense fallback={<Spinner />}>
+            <Works />
+          </Suspense>
 
-          <AvailableDesign />
+          <Suspense fallback={<Spinner />}>
+            <AvailableDesign />
+          </Suspense>
 
           <How
             texts={appointmentTexts}
