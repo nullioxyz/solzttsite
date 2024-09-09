@@ -7,7 +7,7 @@ use App\Http\Controllers\Admin\InstitucionalController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\PortfolioController;
 use App\Http\Controllers\Admin\ContactRequestController;
-
+use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Site\AvailableController as SiteAvailableController;
 use App\Http\Controllers\Site\ContactController;
 use App\Http\Controllers\Site\FileController;
@@ -35,7 +35,7 @@ Route::prefix('/images')->group(function() {
     Route::get('/', [FileController::class, 'index'])->name('file.index');
 });
 
-Route::prefix('justiceroom')->group(function() {
+Route::prefix('hall-of-justice')->group(function() {
     Route::get('/', function () {
         return redirect()->route('login');
     });
@@ -43,6 +43,15 @@ Route::prefix('justiceroom')->group(function() {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->middleware(['auth', 'verified'])->name('dashboard');
+
+    Route::prefix('site-settings')->group(function() {
+        Route::get('/', [SiteSettingController::class, 'index'])->name('site.setting.index');
+        Route::get('/create', [SiteSettingController::class, 'create'])->name('site.setting.create');
+        Route::post('/store', [SiteSettingController::class, 'store'])->name('site.setting.store');
+        Route::get('/edit/{site_setting}', [SiteSettingController::class, 'edit'])->name('site.setting.edit');
+        Route::post('/save/{site_setting}', [SiteSettingController::class, 'update'])->name('site.setting.update');
+        Route::delete('/delete/{site_setting}', [SiteSettingController::class, 'destroy'])->name('site.setting.delete');
+    });
 
     Route::prefix('institucional')->group(function() {
         Route::get('/', [InstitucionalController::class, 'index'])->name('institucional.index');

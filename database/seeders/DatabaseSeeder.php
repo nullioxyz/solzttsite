@@ -34,7 +34,8 @@ class DatabaseSeeder extends Seeder
             CategoryTableSeeder::class,
             InstitucionalTableSeeder::class,
             PortfolioTableSeeder::class,
-            AvailableDesignTableSeeder::class
+            AvailableDesignTableSeeder::class,
+            ThemeTableSeeder::class
         ]);
     }
 }

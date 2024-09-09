@@ -1,5 +1,3 @@
-import { Select, Option } from "@material-tailwind/react";
-
 export default function SelectDefault(props) {
   const setCategoryValue = (value) => {
     props.handleCategory(value);
