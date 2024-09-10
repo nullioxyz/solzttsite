@@ -169,7 +169,7 @@ class AvailableController extends Controller
             return redirect()->route('available_design.edit', $availableDesign)->with('warning', __('Something wrong. Please try again'));
         }
 
-        return redirect()->route('available_design.index')->with('success', __('Deleted with success'));
+        return Inertia::location(route('available_design.index'));
     }
 
     public function destroyFile($fileId, AvailableDesign $availableDesign)

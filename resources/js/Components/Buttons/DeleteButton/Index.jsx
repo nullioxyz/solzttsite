@@ -18,6 +18,8 @@ export default function DeleteButton ({  deleteUrl }) {
     }).then((result) => {
       if (result.isConfirmed) {
         Inertia.delete(deleteUrl, {
+          preserveScroll: true,
+          preserveState: false,
           onSuccess: () => {
             setIsDialogOpen(false);
           }

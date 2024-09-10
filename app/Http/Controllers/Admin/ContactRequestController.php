@@ -89,6 +89,6 @@ class ContactRequestController extends Controller
             return redirect()->route('contact.edit', $contact)->with('warning', __('Something wrong. Please try again'));
         }
 
-        return redirect()->route('contact.index')->with('success', __('Deleted with success'));
+        return Inertia::location(route('contact.index'));
     }
 }

@@ -1,4 +1,4 @@
-import Table from '@/Components/Category/Table';
+import Table from '@/Components/Social/Table';
 
 export default function List({ items }) {
 

@@ -19,7 +19,6 @@ class MediaController extends Controller
     public function sort(Request $request)
     {
         try {
-
             DB::beginTransaction();
             $this->mediaStrategyUpload->sortMedia($request->except(['preserveState', 'preserveScroll']));
             DB::commit();

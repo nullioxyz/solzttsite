@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\PortfolioController;
 use App\Http\Controllers\Admin\ContactRequestController;
 use App\Http\Controllers\Admin\SiteSettingController;
+use App\Http\Controllers\Admin\SocialController;
 use App\Http\Controllers\Site\AvailableController as SiteAvailableController;
 use App\Http\Controllers\Site\ContactController;
 use App\Http\Controllers\Site\FileController;
@@ -51,6 +52,15 @@ Route::prefix('hall-of-justice')->group(function() {
         Route::get('/edit/{site_setting}', [SiteSettingController::class, 'edit'])->name('site.setting.edit');
         Route::post('/save/{site_setting}', [SiteSettingController::class, 'update'])->name('site.setting.update');
         Route::delete('/delete/{site_setting}', [SiteSettingController::class, 'destroy'])->name('site.setting.delete');
+    });
+
+    Route::prefix('social')->group(function() {
+        Route::get('/', [SocialController::class, 'index'])->name('social.index');
+        Route::get('/create', [SocialController::class, 'create'])->name('social.create');
+        Route::post('/store', [SocialController::class, 'store'])->name('social.store');
+        Route::get('/edit/{social}', [SocialController::class, 'edit'])->name('social.edit');
+        Route::post('/save/{social}', [SocialController::class, 'update'])->name('social.update');
+        Route::delete('/delete/{social}', [SocialController::class, 'destroy'])->name('social.delete');
     });
 
     Route::prefix('institucional')->group(function() {

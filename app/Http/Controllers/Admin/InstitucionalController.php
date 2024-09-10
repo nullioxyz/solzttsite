@@ -141,7 +141,7 @@ class InstitucionalController extends Controller
             return redirect()->route('institucional.edit', $institucional)->with('warning', __('Something wrong. Please try again'));
         }
 
-        return redirect()->route('institucional.index')->with('success', __('Deleted with success'));
+        return Inertia::location(route('institucional.index'));
     }
 
     public function destroyFile($fileId, Institucional $institucional)

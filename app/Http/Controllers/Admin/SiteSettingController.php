@@ -133,6 +133,6 @@ class SiteSettingController extends Controller
             return redirect()->route('site.setting.edit', $siteSetting)->with('warning', __('Something wrong. Please try again'));
         }
 
-        return redirect()->route('site.setting.index')->with('success', __('Deleted with success'));
+        return Inertia::location(route('site.setting.index'));
     }
 }

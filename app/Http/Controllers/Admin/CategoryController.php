@@ -127,6 +127,6 @@ class CategoryController extends Controller
             return redirect()->route('category.edit', $category)->with('warning', __('Something wrong. Please try again'));
         }
 
-        return redirect()->route('category.index')->with('success', __('Deleted with success'));
+        return Inertia::location(route('category.index'));
     }
 }

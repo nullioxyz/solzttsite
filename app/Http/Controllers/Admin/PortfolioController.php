@@ -154,7 +154,7 @@ class PortfolioController extends Controller
             return redirect()->route('portfolio.edit', $portfolio)->with('warning', __('Something wrong. Please try again'));
         }
 
-        return redirect()->route('portfolio.index')->with('success', __('Deleted with success'));
+        return Inertia::location(route('portfolio.index'));
     }
 
     public function destroyFile($fileId, Portfolio $portfolio)

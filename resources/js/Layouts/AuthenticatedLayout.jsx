@@ -47,6 +47,9 @@ export default function Authenticated({ user, header, children }) {
                 <NavLink href={route('site.setting.index')} active={route().current('site.setting.index')}>
                   Site Setting
                 </NavLink>
+                <NavLink href={route('social.index')} active={route().current('social.index')}>
+                  Social
+                </NavLink>
               </div>
             </div>
 
@@ -135,6 +138,9 @@ export default function Authenticated({ user, header, children }) {
             </ResponsiveNavLink>
             <ResponsiveNavLink href={route('site.setting.index')} active={route().current('site.setting.index')}>
               Site Settings
+            </ResponsiveNavLink>
+            <ResponsiveNavLink href={route('social.index')} active={route().current('social.index')}>
+              Social
             </ResponsiveNavLink>
           </div>
 
