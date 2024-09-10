@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', request()->cookie('locale') ?? app()->getLocale()) }}">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Solztt tattoo artist. Abstract and figuratives artworks">
-    
+    @inertiaHead
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-L1M0C8JWXT"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -22,7 +21,7 @@
     @routes
     @viteReactRefresh
     @vite(['resources/js/app.jsx'])
-    @inertiaHead
+    
 
     <style>
         @keyframes spin {

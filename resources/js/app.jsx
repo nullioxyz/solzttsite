@@ -2,14 +2,17 @@ import './bootstrap';
 import '../css/app.css';
 
 import { createRoot } from 'react-dom/client';
-import { createInertiaApp } from '@inertiajs/react';
+import { createInertiaApp, Head } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import './i18n';
 
 import React, { useState, useEffect } from 'react';
 
 import Loader from './Components/Loader/Index';
+
 const appName = 'Solztt - Tatto artist';
+
+let root = null;
 
 function InertiaAppWrapper({ App, props }) {
   const [loading, setLoading] = useState(false);
@@ -46,7 +49,8 @@ function InertiaAppWrapper({ App, props }) {
   return (
     <>
       {loading ? (
-        <Loader progress={progress}  fadingOut={fadingOut} />
+         
+        <Loader progress={progress} fadingOut={fadingOut} />
       ) : (
         <App {...props} />
       )}
@@ -55,10 +59,12 @@ function InertiaAppWrapper({ App, props }) {
 }
 
 createInertiaApp({
-  title: (title) => `${appName}`,
   resolve: (name) => resolvePageComponent(`./Pages/${name}.jsx`, import.meta.glob('./Pages/**/*.jsx')),
   setup({ el, App, props }) {
-    const root = createRoot(el);
+    if (!root) {
+      root = createRoot(el);
+    }
+
     root.render(<InertiaAppWrapper App={App} props={props} />);
   },
   progress: {

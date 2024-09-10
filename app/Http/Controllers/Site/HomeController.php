@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Site;
 use App\Http\Controllers\Controller;
 use App\Models\Institucional;
 use App\Models\Language;
+use App\Models\SiteSetting;
 use App\Models\Social;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cookie;
@@ -53,6 +54,8 @@ class HomeController extends Controller
         $socials = Social::get()->keyBy('name');
         $social['instagram'] = $socials->get('instagram');
         $social['facebook'] = $socials->get('facebook');
+
+        $metatags = SiteSetting::with(['defaultTranslation', 'translation'])->where('slug', 'default-conf')->first();
         
         return Inertia::render('Site/Index', [
             'institucional' => $institucional,
@@ -65,6 +68,7 @@ class HomeController extends Controller
             'languages' => $availableLangs,
             'defaultLang' => $defaultLang,
             'social' => $social,
+            'metatags' => $metatags,
             'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? App::getLocale()
         ]);
     }
