@@ -6,7 +6,7 @@ import LanguageSelection from '../Components/LanguageSelection/Index';
 import { useTranslation } from 'react-i18next';
 import logo from '@/Assets/Images/logo.png';
 
-export default function Index({ languages, defaultLang, currentLanguage }) {
+export default function Index({ languages, defaultLang, currentLanguage, social }) {
   const [open, setOpen] = useState(false);
   const [showFixedMenu, setShowFixedMenu] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -47,7 +47,6 @@ export default function Index({ languages, defaultLang, currentLanguage }) {
 
   return (
     <div>
-      {/* Fixed menu that appears on scroll up */}
       {showFixedMenu && (
         <div className="fixed top-0 left-0 w-full bg-white shadow-md z-50 transition-transform duration-300 ease-in-out transform translate-x-0">
           <div className="flex justify-between items-center h-16 px-4 max-w-[1240px] mx-auto text-black">
@@ -66,7 +65,6 @@ export default function Index({ languages, defaultLang, currentLanguage }) {
         </div>
       )}
 
-      {/* Main menu and content */}
       <div className={`relative flex justify-between items-center h-32 max-w-[1240px] mx-auto text-black`}>
         <LanguageSelection languages={languages} defaultLang={defaultLang} currentLanguage={currentLanguage} />
 
@@ -100,12 +98,17 @@ export default function Index({ languages, defaultLang, currentLanguage }) {
           </ul>
 
           <div className="flex justify-start space-x-3 mt-4 px-4">
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
-              <FaInstagram size={20} className="text-black" />
-            </a>
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-              <FaFacebookF size={20} className="text-black" />
-            </a>
+            {social.instagram && (
+              <a href={social.instagram.url} target="_blank" rel="noopener noreferrer">
+                <FaInstagram size={20} className="text-black" />
+              </a>
+            )}
+
+            {social.facebook && (
+              <a href={social.facebook.url} target="_blank" rel="noopener noreferrer">
+                <FaFacebookF size={20} className="text-black" />
+              </a>
+            )}
           </div>
         </div>
       </div>

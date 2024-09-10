@@ -16,9 +16,7 @@ function InertiaAppWrapper({ App, props }) {
   const [progress, setProgress] = useState(0);
   const [fadingOut, setFadingOut] = useState(false);
 
-
   const { initialPage } = props;
-
   const shouldShowLoader = initialPage.component === 'Site/Index';
 
   useEffect(() => {
@@ -56,13 +54,11 @@ function InertiaAppWrapper({ App, props }) {
   );
 }
 
-
 createInertiaApp({
   title: (title) => `${appName}`,
   resolve: (name) => resolvePageComponent(`./Pages/${name}.jsx`, import.meta.glob('./Pages/**/*.jsx')),
   setup({ el, App, props }) {
     const root = createRoot(el);
-
     root.render(<InertiaAppWrapper App={App} props={props} />);
   },
   progress: {

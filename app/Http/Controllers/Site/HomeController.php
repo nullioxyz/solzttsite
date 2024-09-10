@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Site;
 use App\Http\Controllers\Controller;
 use App\Models\Institucional;
 use App\Models\Language;
+use App\Models\Social;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cookie;
 use Inertia\Inertia;
@@ -49,7 +50,10 @@ class HomeController extends Controller
         $availableLangs = Language::select('slug', 'name', 'default')->get();
         $defaultLang = $availableLangs->firstWhere('default', 1);
         
-
+        $socials = Social::get()->keyBy('name');
+        $social['instagram'] = $socials->get('instagram');
+        $social['facebook'] = $socials->get('facebook');
+        
         return Inertia::render('Site/Index', [
             'institucional' => $institucional,
             'appointmentTexts' => $appointmentTexts,
@@ -60,6 +64,7 @@ class HomeController extends Controller
             'paymentMethods' => $paymentMethods,
             'languages' => $availableLangs,
             'defaultLang' => $defaultLang,
+            'social' => $social,
             'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? App::getLocale()
         ]);
     }
