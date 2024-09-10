@@ -11,7 +11,7 @@ export function Gallery({ images}) {
           className="relative w-full h-full flex items-center justify-center"
           >
           <img
-            src={route('file.index', {uuid: image.uuid})}
+            src={route('file.index', {locale: 'lang', uuid: image.uuid})}
             alt="image 1"
             className="h-full w-full object-cover object-center"
             loading="lazy"

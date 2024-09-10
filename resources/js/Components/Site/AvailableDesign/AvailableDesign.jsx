@@ -21,7 +21,7 @@ export default function AvailableDesign() {
     setLoadingMore(true);
     
     try {
-      const response = await axios.get(pagination.next_page_url ?? route('site.available_designs'));
+      const response = await axios.get(pagination.next_page_url ?? route('site.available_designs', 'lang'));
       
       if (response.data) {
         const { data, first_page, current_page, last_page, next_page_url } = response.data.designs;
@@ -48,7 +48,7 @@ export default function AvailableDesign() {
     
     addAsReference({
       id: item.id,
-      image: route('file.index', {uuid: item.media[0].uuid}),
+      image: route('file.index', {locale: 'lang', uuid: item.media[0].uuid}),
       name: item.translation ? item.translation.title : item.default_translation.title,
       type: 'available_design',
     });

@@ -16,14 +16,14 @@ class HomeController extends Controller
     /**
      * Display the user's profile form.
      */
-    public function index()
+    public function index($locale)
     {
         $institucional = Institucional::where('slug', 'solztt-universe')
-            ->with('defaultTranslation', 'translation', 'media')
+            ->with('defaultTranslation.language', 'translation.language', 'media')
             ->first();
         
         $appointmentTexts = Institucional::with(
-            'defaultTranslation', 'translation'
+            'defaultTranslation.language', 'translation.language'
         )->whereIn('slug', [
             'appointment-1',
             'appointment-2',
@@ -31,7 +31,7 @@ class HomeController extends Controller
         ])->get();
         
 
-        $institucionalTexts = Institucional::with('defaultTranslation', 'translation')
+        $institucionalTexts = Institucional::with('defaultTranslation.language', 'translation.language')
             ->whereIn('slug', [
                 'tattoo-book-text',
                 'criative-process',
@@ -55,7 +55,7 @@ class HomeController extends Controller
         $social['instagram'] = $socials->get('instagram');
         $social['facebook'] = $socials->get('facebook');
 
-        $metatags = SiteSetting::with(['defaultTranslation', 'translation'])->where('slug', 'default-conf')->first();
+        $metatags = SiteSetting::with(['defaultTranslation.language', 'translation.language'])->where('slug', 'default-conf')->first();
         
         return Inertia::render('Site/Index', [
             'institucional' => $institucional,

@@ -15,13 +15,21 @@ use App\Http\Controllers\Site\FileController;
 use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\PortfolioController as PortfolioSiteController;
 use App\Http\Controllers\Site\TranslationController;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 
 Route::prefix('/')->group(function() {
-    Route::get('/', [HomeController::class, 'index'])->name('site.index');
+    Route::get('/', function () {
+        $locale = Cookie::get('locale') ?? 'en'; // Pega do cookie ou define 'en' como padrão
+        return redirect("/$locale");
+    });
     
+    Route::get('/{locale}', [HomeController::class, 'index'])->name('home.index');
+});
+
+Route::prefix('/{locale}')->group(function() {
     Route::get('/portfolio', [PortfolioSiteController::class, 'index'])->name('site.portfolio');
     Route::get('/available-designs', [SiteAvailableController::class, 'index'])->name('site.available_designs');
     Route::post('/save-contact', [ContactController::class, 'store'])->name('contact.store');
@@ -29,12 +37,13 @@ Route::prefix('/')->group(function() {
     Route::get('translations', [TranslationController::class, 'getTranslations'])->name('site.translations');
     Route::post('set-language', [TranslationController::class, 'setLanguage'])->name('site.setLanguage');
     Route::get('current-language', [TranslationController::class, 'getCurrentTranslation'])->name('site.currentLanguage');
-    
+
+    Route::prefix('/images')->group(function() {
+        Route::get('/', [FileController::class, 'index'])->name('file.index');
+    });
 });
 
-Route::prefix('/images')->group(function() {
-    Route::get('/', [FileController::class, 'index'])->name('file.index');
-});
+
 
 Route::prefix('hall-of-justice')->group(function() {
     Route::get('/', function () {

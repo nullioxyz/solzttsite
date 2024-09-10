@@ -44,6 +44,7 @@ export default function Index({
         <meta property="og:image" content={logoUrl} />
         <meta property="og:url" content={window.location.href} />
         <meta property="og:type" content="website" />
+        <link rel="canonical" href={window.location.href} />
       </Head>
 
       <div className="flex flex-col min-h-screen text-white bg-[#7c8f77]">

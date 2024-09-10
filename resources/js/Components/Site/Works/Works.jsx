@@ -22,7 +22,7 @@ export default function Works() {
     setLoadingMore(true);
 
     try {
-      const response = await axios.get(pagination.next_page_url ?? route('site.portfolio'));
+      const response = await axios.get(pagination.next_page_url ?? route('site.portfolio', 'lang'));
 
       if (response.data) {
         const { data, first_page, current_page, last_page, next_page_url } = response.data.portfolio;
@@ -56,7 +56,7 @@ export default function Works() {
 
     const data = {
       id: item.id,
-      image: route('file.index', {uuid: item.media[0].uuid}),
+      image: route('file.index', {locale: 'lang', uuid: item.media[0].uuid}),
       name: item.translation ? item.translation.title : item.default_translation.title,
       type: 'portfolio'
     }
@@ -103,7 +103,7 @@ export default function Works() {
                 key={`portfolio_${item.id}`} // Use item.id instead of index for a more stable key
                 book={false}
                 description={item.translation ? item.translation.description : item.default_translation.description}
-                coverImage={route('file.index', {uuid: item.media[0].uuid})}
+                coverImage={route('file.index', {locale: 'lang', uuid: item.media[0].uuid})}
                 images={item.media}
                 onAddReference={() => handleAddAsReference(item)}
                 itemId={item.id}

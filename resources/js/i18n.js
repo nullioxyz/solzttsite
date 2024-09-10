@@ -16,7 +16,7 @@ i18n
     },
 
     backend: {
-      loadPath: '/translations',
+      loadPath: '/pt/translations',
     },
   });
 

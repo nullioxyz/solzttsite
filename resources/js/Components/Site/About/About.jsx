@@ -3,10 +3,10 @@ import DOMPurify from 'dompurify';
 export default function About({ institucional }) {
   
   const institucionalTranslation = institucional.translation ?? institucional.default_translation;
-
+  
   const sanitizedDescription = DOMPurify.sanitize(institucionalTranslation.description);
   const hasMedia = institucional.media.length > 0;
-  const imageUrl = hasMedia ? route('file.index', {'uuid': institucional.media[0].uuid}) : '';
+  const imageUrl = hasMedia ? route('file.index', {locale: institucionalTranslation.language.slug, uuid: institucional.media[0].uuid}) : '';
 
   return (
     <section id="about" className="flex flex-col justify-between h-auto mx-auto p-5 overflow-hidden">
@@ -65,6 +65,8 @@ export default function About({ institucional }) {
               <img 
                 src={imageUrl} 
                 alt="Image 1"  
+                width="620px"
+                height={'auto'}
                 className="h-auto w-[620px] xl:max-w-[1000px] lg:max-w-[1000px] xl:left-0 lg:relative lg:left-[-120px] sm:max-w-[1000px] md:max-w-[1300px] object-cover md:ml-[-14px] sm:ml-[-34px] xs:ml-[-50px]"
                 loading='lazy'
               />

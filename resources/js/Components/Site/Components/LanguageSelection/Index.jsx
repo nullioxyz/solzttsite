@@ -27,8 +27,8 @@ export default function LanguageSelection({ languages, defaultLang, currentLangu
   const handleSelectLanguage = async (lang) => {
     try {
 
-      await axios.post(route('site.setLanguage'), { lang: lang });
-      location.reload();
+      await axios.post(route('site.setLanguage', { locale: currentLanguage.slug }), { lang: lang });
+      window.location.replace(`/${lang}`);
 
     } catch {
 

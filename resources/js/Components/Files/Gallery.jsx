@@ -41,7 +41,7 @@ export function Gallery({ files, onDelete, onReorder }) {
                   >
                     <img
                       className="h-40 max-w-full rounded-lg object-cover object-center shadow-md transition-transform duration-300 ease-in-out transform hover:scale-105"
-                      src={route('file.index', {'uuid': uuid})}
+                      src={route('file.index', {'locale': 'lang', 'uuid': uuid})}
                       alt={name || "Image"}
                     />
                     <div className="flex space-x-2 mt-2">
