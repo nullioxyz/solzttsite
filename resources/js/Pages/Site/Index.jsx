@@ -79,6 +79,7 @@ export default function Index({
             criativeProcess={criativeProcess}
             consideration={consideration}
             paymentMethod={paymentMethods}
+            currentLanguage={currentLanguage}
           />
         </main>
       </div>

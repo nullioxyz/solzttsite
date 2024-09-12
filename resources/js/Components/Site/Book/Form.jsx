@@ -27,7 +27,7 @@ const Toast = Swal.mixin({
   }
 });
 
-export default function Form() {
+export default function Form({ currentLanguage }) {
   
   const { data, setData, post, processing, errors, reset } = useForm({
     firstname: null,
@@ -71,7 +71,7 @@ export default function Form() {
 
     const fetchLanguage = async () => {
       try {
-        const response = await axios.get(route('site.currentLanguage'));
+        const response = await axios.get(route('site.currentLanguage', {locale: currentLanguage.slug}));
         
         if (response.status === 200) {
           const mappedCountry = countryPhoneMapping[response.data.lang] || 'us';

@@ -3,7 +3,7 @@ import { ReactTyped } from "react-typed";
 import Form from './Form';
 import { useTranslation } from 'react-i18next';
 
-export default function Book({ requestSectionText, criativeProcess, consideration, paymentMethod }) {
+export default function Book({ requestSectionText, criativeProcess, consideration, paymentMethod, currentLanguage }) {
   const { t } = useTranslation();
 
   const requestSectionTextTranslation = requestSectionText.translation ?? requestSectionText.default_translation;
@@ -69,7 +69,7 @@ export default function Book({ requestSectionText, criativeProcess, consideratio
               )}
 
             </div>
-            <Form />
+            <Form currentLanguage={currentLanguage}/>
           </div>
         </div>
       </div>
