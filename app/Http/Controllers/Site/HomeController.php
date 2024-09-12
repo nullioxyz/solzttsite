@@ -69,7 +69,7 @@ class HomeController extends Controller
             'defaultLang' => $defaultLang,
             'social' => $social,
             'metatags' => $metatags,
-            'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? App::getLocale()
+            'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? $defaultLang
         ]);
     }
 }

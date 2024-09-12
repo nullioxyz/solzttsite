@@ -26,14 +26,17 @@ export default function LanguageSelection({ languages, defaultLang, currentLangu
 
   const handleSelectLanguage = async (lang) => {
     try {
+      if (!currentLanguage || !currentLanguage.slug) {
+        throw new Error("language is not defined");
+      }
 
       await axios.post(route('site.setLanguage', { locale: currentLanguage.slug }), { lang: lang });
       window.location.replace(`/${lang}`);
-
-    } catch {
-
+      
+    } catch (error) {
+      
     }
-  }
+};
 
   const languageName = currentLanguage ? currentLanguage.name : defaultLang.name;
 
