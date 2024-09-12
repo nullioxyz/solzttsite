@@ -6,13 +6,11 @@ import TextArea from "@/Components/TextArea";
 import TextInput from "@/Components/TextInput";
 import { useForm } from "@inertiajs/react";
 import Swal from "sweetalert2";
-import ReCAPTCHA from "react-google-recaptcha";
-import { useRef } from "react";
+import ReCAPTCHA from 'react-google-recaptcha';
+import { useRef, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelectReferences } from "@/Contexts/SelectReferencesContext";
 import Attachments from "../Components/Attachments/Index";
-import { useEffect } from "react";
-import { useState } from 'react';
 import axios from '@/Services/requests';
 
 const Toast = Swal.mixin({
@@ -28,7 +26,6 @@ const Toast = Swal.mixin({
 });
 
 export default function Form({ currentLanguage }) {
-  
   const { data, setData, post, processing, errors, reset } = useForm({
     firstname: null,
     lastname: null,
@@ -51,7 +48,7 @@ export default function Form({ currentLanguage }) {
   const [countryPhone, setCountryPhone] = useState('us');
 
   const { t } = useTranslation();
-  
+
   const recaptchaRef = useRef();
   const { selectedReferences, setSelectedReferences } = useSelectReferences();
 
@@ -62,7 +59,7 @@ export default function Form({ currentLanguage }) {
   }, [selectedReferences, setData, data.attachments]);
 
   const countryPhoneMapping = {
-    'it': 'it', 
+    'it': 'it',
     'en': 'gb',
     'pt': 'br',
   };
@@ -71,20 +68,20 @@ export default function Form({ currentLanguage }) {
 
     const fetchLanguage = async () => {
       try {
-        const response = await axios.get(route('site.currentLanguage', {locale: currentLanguage.slug}));
-        
+        const response = await axios.get(route('site.currentLanguage', { locale: currentLanguage.slug }));
+
         if (response.status === 200) {
           const mappedCountry = countryPhoneMapping[response.data.lang] || 'us';
           setCountryPhone(mappedCountry);
         }
       } catch (error) {
-        
+
       }
 
     };
+
     fetchLanguage();
 
-    
   }, [setCountryPhone]);
 
   const onChangeRecaptcha = (e) => {
@@ -106,7 +103,12 @@ export default function Form({ currentLanguage }) {
   const formSubmit = async (e) => {
     e.preventDefault();
 
-    post(route('contact.store'), {
+    if (!data.recaptcha) {
+      alert(t('Complete the recaptcha'));
+      return;
+    }
+
+    post(route('contact.store', { locale: currentLanguage.slug }), {
       data: data,
       preserveScroll: true,
       preserveState: true,
@@ -120,7 +122,7 @@ export default function Form({ currentLanguage }) {
         document.getElementById("contactForm").reset();
         setSelectedReferences([]);
       },
-      onError: () => {
+      onError: (error) => {
         Toast.fire({
           icon: "warning",
           title: t("Check your information and submit the form again")
@@ -426,7 +428,7 @@ export default function Form({ currentLanguage }) {
           <div className="w-full">
             <ReCAPTCHA
               ref={recaptchaRef}
-              sitekey="6Ld72ikqAAAAAAmt1MyYV29nLzR_bVW450-yrWnu"
+              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
               onChange={(e) => onChangeRecaptcha()}
             />
           </div>

@@ -50,7 +50,7 @@ class ContactService  {
     {
         if (env('APP_ENV') !== 'local') {
             $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-                'secret' => env('G_RECAPCHA'),
+                'secret' => config('services.recaptcha.secret_key'),
                 'response' => $recaptchaResponse,
                 'remoteip' => $ip,
             ]);
@@ -59,6 +59,7 @@ class ContactService  {
 
             return $body->success;
         }
+        
         return true;
     }
 

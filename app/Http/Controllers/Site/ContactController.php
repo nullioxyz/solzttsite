@@ -18,7 +18,7 @@ class ContactController extends Controller
     {
         $validatedData = $request->validated();
 
-        if (!$this->contactService->verifyRecaptcha($request->input('g-recaptcha-response'), $request->ip())) {
+        if (!$this->contactService->verifyRecaptcha($request->input('recaptcha'), $request->ip())) {
             return back()->withErrors(['captcha' => __('ReCAPTCHA validation failed, please try again')]);
         }
 
@@ -26,10 +26,10 @@ class ContactController extends Controller
             
             $this->contactService->storeContact($validatedData);
 
-            return redirect()->route('site.index');
+            return redirect()->route('home.index', $request->cookie('locale'));
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->route('site.index')->withErrors(['error' => 'Something went wrong. Please try again.']);
+            return redirect()->route('home.index')->withErrors(['error' => 'Something went wrong. Please try again.']);
         }
     }
 }
