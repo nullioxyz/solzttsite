@@ -26,6 +26,7 @@ const Toast = Swal.mixin({
 });
 
 export default function Form({ currentLanguage }) {
+  
   const { data, setData, post, processing, errors, reset } = useForm({
     firstname: null,
     lastname: null,
@@ -130,6 +131,9 @@ export default function Form({ currentLanguage }) {
       },
     });
   }
+
+  //TODO: FIX THIS.
+  const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY ?? "6LczDUEqAAAAAKoD4bTeyfKynwGmZZLpw3XU2ekL";
 
   return (
     <div className="form lg:mt-20 md:mt-10 sm:mt-5 p-5">
@@ -428,7 +432,7 @@ export default function Form({ currentLanguage }) {
           <div className="w-full">
             <ReCAPTCHA
               ref={recaptchaRef}
-              sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+              sitekey={siteKey}
               onChange={(e) => onChangeRecaptcha()}
             />
           </div>
