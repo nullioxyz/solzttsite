@@ -96,7 +96,7 @@ Route::prefix('hall-of-justice')->group(function() {
         Route::post('/sort', [MediaController::class, 'sort'])->name('media.sort');
     });
     
-    Route::prefix('portfolio')->group(function() {
+    Route::prefix('portfilio-works')->group(function() {
         Route::get('/', [PortfolioController::class, 'index'])->name('portfolio.index');
         Route::get('/create', [PortfolioController::class, 'create'])->name('portfolio.create');
         Route::post('/store', [PortfolioController::class, 'store'])->name('portfolio.store');
