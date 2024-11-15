@@ -17,8 +17,8 @@ class FileController extends Controller
             abort(404);
         }
 
-        if (!env('local') && Storage::disk('s3')->exists($media->getPath())) {
-            $file = Storage::disk('s3')->get($media->getPath());
+        if (!env('local') && Storage::disk('spaces')->exists($media->getPath())) {
+            $file = Storage::disk('spaces')->get($media->getPath());
             
             $finfo = new \finfo(FILEINFO_MIME_TYPE);
             $mimeType = $finfo->buffer($file);
