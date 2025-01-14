@@ -100,7 +100,7 @@ export default function AvailableDesign() {
               key={`available_${item.id}`}
                 book={true}
                 description={item.translation ? item.translation.description : item.default_translation.description}
-                coverImage={route('file.index', {uuid: item.media[0].uuid})}
+                coverImage={route('file.index', {locale: 'lang', uuid: item.media[0].uuid})}
                 images={item.media}
                 onAddReference={() => handleAddAsReference(item)}
                 onBookNow={() => handleBookNow(item)}
