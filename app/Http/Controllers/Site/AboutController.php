@@ -1,26 +1,19 @@
-<?php namespace App\Http\Controllers\Site;
+<?php
+
+namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Site\StoreContactRequest;
 use App\Models\Institucional;
 use App\Models\Language;
 use App\Models\Portfolio;
 use App\Models\SiteSetting;
 use App\Models\Social;
-use App\Services\ContactService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
-class ContactController extends Controller
+class AboutController extends Controller
 {
-    protected $contactService;
-
-    public function __construct(ContactService $contactService)
-    {
-        $this->contactService = $contactService;
-    }
-
     public function index()
     {
         $institucional = Institucional::where('slug', 'solztt-universe')
@@ -76,7 +69,7 @@ class ContactController extends Controller
             }
         )->paginate(4);
 
-        return Inertia::render('Site/Contact/Index', [
+        return Inertia::render('Site/About/Index', [
             'institucional' => $institucional,
             'appointmentTexts' => $appointmentTexts,
             'appointmentWarning' => $appointmentWarning,
@@ -91,24 +84,5 @@ class ContactController extends Controller
             'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? $defaultLang,
             'portfolio' => $portfolio
         ]);
-    }
-
-    public function store(StoreContactRequest $request)
-    {
-        $validatedData = $request->validated();
-
-        if (!$this->contactService->verifyRecaptcha($request->input('recaptcha'), $request->ip())) {
-            return back()->withErrors(['captcha' => __('ReCAPTCHA validation failed, please try again')]);
-        }
-
-        try {
-            
-            $this->contactService->storeContact($validatedData);
-
-            return redirect()->route('home.index', $request->cookie('locale'));
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
-            return redirect()->route('home.index')->withErrors(['error' => 'Something went wrong. Please try again.']);
-        }
-    }
+    }    
 }

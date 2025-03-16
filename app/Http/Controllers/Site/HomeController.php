@@ -50,7 +50,7 @@ class HomeController extends Controller
 
         $availableLangs = Language::select('slug', 'name', 'default')->get();
         $defaultLang = $availableLangs->firstWhere('default', 1);
-        
+
         $socials = Social::get()->keyBy('name');
         $social['instagram'] = $socials->get('instagram');
         $social['facebook'] = $socials->get('facebook');

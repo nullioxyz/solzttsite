@@ -17,7 +17,6 @@ import CurrentLanguage from '../CurrentLanguage/Index';
 
 
 export default function LanguageSelection({ languages, defaultLang, currentLanguage, textColor }) {
-  
   const [langSelectOpen, setlangSelectOpen] = React.useState(false);
   const handleLangSelectOpen = () => setlangSelectOpen((cur) => !cur);
   const textColorDefault = textColor ?? 'text-white';
@@ -39,6 +38,7 @@ export default function LanguageSelection({ languages, defaultLang, currentLangu
 };
 
   const languageName = currentLanguage ? currentLanguage.name : defaultLang.name;
+  console.log(currentLanguage);
 
 
   return (

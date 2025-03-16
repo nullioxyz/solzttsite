@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\PortfolioController;
 use App\Http\Controllers\Admin\ContactRequestController;
 use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Admin\SocialController;
+use App\Http\Controllers\Site\AboutController;
 use App\Http\Controllers\Site\AvailableController as SiteAvailableController;
 use App\Http\Controllers\Site\ContactController;
 use App\Http\Controllers\Site\FileController;
@@ -31,7 +32,14 @@ Route::prefix('/')->group(function() {
 
 Route::prefix('/{locale}')->group(function() {
     Route::get('/portfolio', [PortfolioSiteController::class, 'index'])->name('site.portfolio');
+    Route::get('/portfolio/load', [PortfolioSiteController::class, 'load'])->name('site.portfolio.load');
+
+    Route::get('/about', [AboutController::class, 'index'])->name('site.about');
+
+    Route::get('/contact', [ContactController::class, 'index'])->name('site.contact');
+    
     Route::get('/available-designs', [SiteAvailableController::class, 'index'])->name('site.available_designs');
+    Route::get('/load-available-designs', [SiteAvailableController::class, 'load'])->name('site.available_designs.load');
     Route::post('/save-contact', [ContactController::class, 'store'])->name('contact.store');
 
     Route::get('translations', [TranslationController::class, 'getTranslations'])->name('site.translations');

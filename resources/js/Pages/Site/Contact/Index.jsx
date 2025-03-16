@@ -9,10 +9,9 @@ import How from '@/Components/Site/How/How';
 import MainLayout from '@/Layouts/Site/MainLayout';
 import { SelectReferencesProvider } from '@/Contexts/SelectReferencesContext';
 import { Head } from '@inertiajs/react';
+import Works from '@/Components/Site/Works/Works';
 
 const AvailableDesign = lazy(() => import('@/Components/Site/AvailableDesign/AvailableDesign'))
-const Works = lazy(() => import('@/Components/Site/Works/Works'));
-
 const logoUrl = `${window.location.origin}/images/logo.jpg`;
 
 const  stripHtmlTags = (html) => {
@@ -31,37 +30,19 @@ export default function Index({
   defaultLang,
   currentLanguage,
   social,
-  metatags
+  metatags,
+  portfolio
 }) {
   return (
 
     <MainLayout languages={languages} defaultLang={defaultLang} social={social} metatags={metatags} currentLanguage={currentLanguage}>
-      <main>
-        <About
-          institucional={institucional}
-        />
-
-        <Suspense fallback={<Spinner />}>
-          <Works />
-        </Suspense>
-
-        <Suspense fallback={<Spinner />}>
-          <AvailableDesign />
-        </Suspense>
-
-        <How
-          texts={appointmentTexts}
-          warning={appointmentWarning}
-        />
-
         <Book
-          requestSectionText={requestSectionText}
-          criativeProcess={criativeProcess}
-          consideration={consideration}
-          paymentMethod={paymentMethods}
-          currentLanguage={currentLanguage}
+            requestSectionText={requestSectionText}
+            criativeProcess={criativeProcess}
+            consideration={consideration}
+            paymentMethod={paymentMethods}
+            currentLanguage={currentLanguage}
         />
-      </main>
     </MainLayout>
   )
 }

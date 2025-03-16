@@ -21,7 +21,7 @@ export default function AvailableDesign() {
     setLoadingMore(true);
     
     try {
-      const response = await axios.get(pagination.next_page_url ?? route('site.available_designs', 'lang'));
+      const response = await axios.get(pagination.next_page_url ?? route('site.available_designs.load', 'lang'));
       
       if (response.data) {
         const { data, first_page, current_page, last_page, next_page_url } = response.data.designs;

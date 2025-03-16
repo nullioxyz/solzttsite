@@ -8,6 +8,7 @@ import { useSelectReferences } from '@/Contexts/SelectReferencesContext';
 const LazyImageModalComponent = lazy(() => import('@/Components/Site/Components/ImageToModal'));
 
 export default function Works() {
+
   const boxRefs = useRef([]);
   const [portfolio, setPortfolio] = useState([]);
   const [pagination, setPagination] = useState({});
@@ -22,8 +23,8 @@ export default function Works() {
     setLoadingMore(true);
 
     try {
-      const response = await axios.get(pagination.next_page_url ?? route('site.portfolio', 'lang'));
-
+      const response = await axios.get(pagination.next_page_url ?? route('site.portfolio.load', 'lang'));
+      console.log(response);
       if (response.data) {
         const { data, first_page, current_page, last_page, next_page_url } = response.data.portfolio;
 
@@ -100,7 +101,7 @@ export default function Works() {
           <Suspense fallback={<Spinner />}>
             {portfolio.length > 0 && portfolio.map((item, index) => (
               <LazyImageModalComponent
-                key={`portfolio_${item.id}`} // Use item.id instead of index for a more stable key
+                key={`portfolio_${item.id}`}
                 book={false}
                 description={item.translation ? item.translation.description : item.default_translation.description}
                 coverImage={route('file.index', {locale: 'lang', uuid: item.media[0].uuid})}
