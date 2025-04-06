@@ -10,6 +10,7 @@ import MainLayout from '@/Layouts/Site/MainLayout';
 import { SelectReferencesProvider } from '@/Contexts/SelectReferencesContext';
 import { Head } from '@inertiajs/react';
 import Works from '@/Components/Site/Works/Works';
+import MainLayoutInternal from '@/Layouts/Site/MainLayoutInternal';
 
 const AvailableDesign = lazy(() => import('@/Components/Site/AvailableDesign/AvailableDesign'))
 const logoUrl = `${window.location.origin}/images/logo.jpg`;
@@ -35,7 +36,7 @@ export default function Index({
 }) {
   return (
 
-    <MainLayout languages={languages} defaultLang={defaultLang} social={social} metatags={metatags} currentLanguage={currentLanguage}>
+    <MainLayoutInternal languages={languages} defaultLang={defaultLang} social={social} metatags={metatags} currentLanguage={currentLanguage}>
         <Suspense fallback={<Spinner />}>
           <Works
             portfolio={portfolio}
@@ -48,6 +49,6 @@ export default function Index({
             paymentMethods={paymentMethods}
           />
         </Suspense>
-    </MainLayout>
+    </MainLayoutInternal>
   )
 }

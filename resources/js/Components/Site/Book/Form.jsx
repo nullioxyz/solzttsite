@@ -12,6 +12,8 @@ import { useTranslation } from "react-i18next";
 import { useSelectReferences } from "@/Contexts/SelectReferencesContext";
 import Attachments from "../Components/Attachments/Index";
 import axios from '@/Services/requests';
+import { motion } from "framer-motion";
+
 
 const Toast = Swal.mixin({
   toast: true,
@@ -26,6 +28,10 @@ const Toast = Swal.mixin({
 });
 
 export default function Form({ currentLanguage }) {
+
+  const [stepIndex, setStepIndex] = useState(0);
+  const [answers, setAnswers] = useState({ name: "", tattooIdea: "", size: "", bodyPart: "" });
+
   
   const { data, setData, post, processing, errors, reset } = useForm({
     firstname: null,
@@ -101,6 +107,38 @@ export default function Form({ currentLanguage }) {
   ];
 
 
+const steps = [
+  { id: "instructions", question: t('instructions'), placeholder: "Instructions"},
+  { id: "firstname", question: t('firstname'), placeholder: "Digite seu nome..." },
+  { id: "lastname", question: t('lastname'), placeholder: "last name..." },
+  { id: "tattooIdea", question: t('tattoo_idea'), placeholder: "Descreva sua ideia..." },
+  { id: "pronouns", question: t('pronouns'), placeholder: "Pronouns"},
+  { id: "references", question: t('references'), placeholder: "References"},
+  { id: "size", question: t('size'), placeholder: "Ex: 10cm x 5cm" },
+  { id: "bodyPart", question: t('body_location'), placeholder: "Ex: Braço, perna..." },
+  { id: "email", question: t('email'), placeholder: "example@gmail.com"},
+  { id: "phone", question: t('phone'), placeholder: "kfdjfkj"},
+  { id: "city", question: t('city'), placeholder: "city"},
+  { id: "availability", question: t('availability'), placeholder: t('availability')},
+  { id: "contact_preference", question: t('contact_preference'), placeholder: t('contact_preference')},
+  { id: "recaptcha", question: t('recaptcha'), placeholder: t('recaptcha')}
+];
+
+  const handleNext = () => {
+    if (stepIndex < steps.length - 1) {
+      setStepIndex(stepIndex + 1);
+    } else {
+      alert("Formulário enviado! 🎉");
+    }
+  };
+
+  const handleBack = () => {
+    if (stepIndex > 0) {
+      setStepIndex(stepIndex - 1);
+    }
+  };
+
+
   const formSubmit = async (e) => {
     e.preventDefault();
 
@@ -136,317 +174,260 @@ export default function Form({ currentLanguage }) {
   const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY ?? "6LczDUEqAAAAAKoD4bTeyfKynwGmZZLpw3XU2ekL";
 
   return (
-    <div className="form lg:mt-20 md:mt-10 sm:mt-5 p-5">
+    <div className="form lg:mt-20 md:mt-10">
       <form id="contactForm">
-        <div className="flex flex-wrap space-y-5">
-          <div className="w-full">
-            <InputLabel
-              htmlFor='tatto-idea'
-              value={t('tattoo_idea')}
-              className='block uppercase tracking-wide text-xl font-bold mb-2 text-white'
-            />
-
-            <div className="mt-2">
-              <TextArea
-                id="tatto-idea"
-                name="idea"
-                rows="3"
-                className={`block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6 ${errors.tattoo_idea ? 'border-red-500' : ''}`}
-                onChange={(e) => setData(prevData => ({ ...prevData, tattoo_idea: e.target.value }))}
-
+        <div>
+          {stepIndex === 0 ? (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <p className="text-lg">Oi! Antes de começarmos, aqui está como eu trabalho:</p>
+              <p className="text-sm text-gray-600 mt-2">
+                - Preciso de um sinal para criar o desenho.  
+                - O design será aprovado antes de tatuar.  
+                - O tamanho e detalhes influenciam no valor final.  
+              </p>
+              <button
+                onClick={() => setStepIndex(1)}
+                className="mt-4 bg-black text-white px-4 py-2 rounded"
+              >
+                Vamos iniciar?
+              </button>
+            </motion.div>
+          ) : (
+            <motion.div
+              key={steps[stepIndex].id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <InputLabel
+                htmlFor={steps[stepIndex].question}
+                value={steps[stepIndex].question}
+                className='block uppercase tracking-wide text-xl font-bold mb-2'
               />
-            </div>
 
-            {errors.tattoo_idea &&
-              <p className="text-[#7d3636] text-lg italic">{errors.tattoo_idea}</p>
-            }
-          </div>
+              <div className="w-full">
+                {steps[stepIndex].id == 'tattooIdea' ? (
+                  <div className="mt-2">
+                    <TextArea
+                      id="tatto-idea"
+                      name="idea"
+                      rows="4"
+                      className={`block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6 ${errors.tattoo_idea ? 'border-red-500' : ''}`}
+                      onChange={(e) => setData(prevData => ({ ...prevData, tattoo_idea: e.target.value }))}
 
-          <div className="w-full">
-            <InputLabel
-              htmlFor='refenrences'
-              value={t('references')}
-              className='block uppercase tracking-wide text-xl font-bold mb-2 text-white'
-            />
+                    />
+                  </div>
+                ) : null}
 
-            <div className="mt-2">
-              <TextArea
-                id="references"
-                name="references"
-                rows="3"
-                className={`block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6 ${errors.references ? 'border-red-500' : ''}`}
-                onChange={(e) => setData(prevData => ({ ...prevData, references: e.target.value }))}
-              />
-            </div>
+                {steps[stepIndex].id == 'references' ? (
+                  <div className="mt-2">
+                    <TextArea
+                      id="references"
+                      name="references"
+                      rows="3"
+                      className={`block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6 ${errors.references ? 'border-red-500' : ''}`}
+                      onChange={(e) => setData(prevData => ({ ...prevData, references: e.target.value }))}
+                      />
+      
+                      {selectedReferences.length ? (
+                        <Attachments />
+                      ) : null}
+                  </div>
+                ) : null}
 
-            {errors.references &&
-              <p className="text-[#7d3636] text-lg italic">{errors.references}</p>
-            }
-          </div>
+                {steps[stepIndex].id == 'size' ? (
+                  <div className="space-y-6 mb-5">
+                    {Object.entries(sizeOptions).map(([key, value]) => (
+                      <div key={key} className="flex items-center gap-x-3">
+                        <InputRadio
+                          id={key}
+                          name="size"
+                          type="radio"
+                          value={key}
+                          usedefaultclass={true}
+                          onChange={(e) => setData(prevData => ({ ...prevData, size: e.target.value }))}
+                        />
+                        <label htmlFor={key} className="block text-lg font-medium leading-6">
+                          {value}
+                        </label>
+                      </div>
+                    ))}
+      
+                    {errors.size &&
+                      <p className="text-[#7d3636] text-lg italic">{errors.size}</p>
+                    }
+                  </div>
+                ) : null}
 
-          <div className='w-full'>
-            <InputLabel
-              htmlFor='size'
-              value={t('size')}
-              className='block uppercase tracking-wide text-xl font-bold mb-2 text-white'
-            />
-
-            <div className="space-y-6 mb-5">
-              {Object.entries(sizeOptions).map(([key, value]) => (
-                <div key={key} className="flex items-center gap-x-3">
-                  <InputRadio
-                    id={key}
-                    name="size"
-                    type="radio"
-                    value={key}
-                    usedefaultclass={true}
-                    onChange={(e) => setData(prevData => ({ ...prevData, size: e.target.value }))}
+                {steps[stepIndex].id == 'bodyPart' ? (
+                  <TextInput
+                    usedefaultclass={false}
+                    className="appearance-none text-gray-900 block w-full border py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                    type="text"
+                    placeholder={t("Arm, Forearm")}
+                    onChange={(e) => setData(prevData => ({ ...prevData, body_location: e.target.value }))}
                   />
-                  <label htmlFor={key} className="block text-lg font-medium leading-6">
-                    {value}
-                  </label>
-                </div>
-              ))}
+                ) : null}
 
-              {errors.size &&
-                <p className="text-[#7d3636] text-lg italic">{errors.size}</p>
-              }
-            </div>
-          </div>
-
-          <div className="w-full">
-            <InputLabel
-              htmlFor='part-of-the-body'
-              value={t('body_location')}
-              className='block uppercase tracking-wide text-xl font-bold mb-2 text-white'
-            />
-
-            <TextInput
-              usedefaultclass={false}
-              className="appearance-none text-gray-900 block w-full border py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-              type="text"
-              placeholder={t("Arm, Forearm")}
-              onChange={(e) => setData(prevData => ({ ...prevData, body_location: e.target.value }))}
-            />
-
-            {errors.body_location &&
-              <p className="text-[#7d3636] text-lg italic">{errors.body_location}</p>
-            }
-          </div>
-
-          <hr className="border-1 w-full" />
-
-          <div className="w-full">
-            <InputLabel
-              htmlFor='email'
-              value={t('email')}
-              className='block uppercase tracking-wide text-xl font-bold mb-2 text-white'
-            />
-
-            <TextInput
-              usedefaultclass={false}
-              className="appearance-none text-gray-900 block w-full border py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-              type="text"
-              placeholder={t("email@email.com")}
-              onChange={(e) => setData(prevData => ({ ...prevData, email: e.target.value }))}
-            />
-
-            {errors.email &&
-              <p className="text-[#7d3636] text-lg italic">{errors.email}</p>
-            }
-          </div>
-
-          <div className="w-full">
-            <InputLabel
-              htmlFor='phone'
-              value={t('phone')}
-              className='block uppercase tracking-wide text-xl font-bold mb-2 text-white'
-            />
-
-            <PhoneInput
-              country={countryPhone}
-              value={phone}
-              onChange={(phone) => setData(prevData => ({ ...prevData, phone }))}
-              inputProps={{
-                className: "appearance-none text-gray-900 block w-full border py-3 px-12 mb-3 leading-tight focus:outline-none focus:bg-white text-black",
-                placeholder: t("+39 389 748 2409"),
-              }}
-            />
-
-            {errors.phone &&
-              <p className="text-[#7d3636] text-lg italic">{errors.phone}</p>
-            }
-          </div>
-
-          <div className="w-full ">
-            <InputLabel
-              htmlFor='firstname'
-              value={t('firstname')}
-              className='block uppercase tracking-wide text-xl font-bold mb-2 text-white'
-            />
-
-            <TextInput
-              usedefaultclass={false}
-              className="appearance-none text-gray-900 w- block w-full border py-3 px- mb-3 leading-tight focus:outline-none focus:bg-white"
-              type="text"
-              placeholder={t("Jane")}
-              onChange={(e) => setData(prevData => ({ ...prevData, firstname: e.target.value }))}
-            />
-
-            {errors.firstname &&
-              <p className="text-[#7d3636] text-lg italic">{errors.firstname}</p>
-            }
-          </div>
-
-          <div className="w-full">
-            <InputLabel
-              htmlFor='lastname'
-              value={t('lastname')}
-              className='block uppercase tracking-wide text-xl font-bold mb-2 text-white'
-            />
-
-            <TextInput
-              usedefaultclass={false}
-              className="appearance-none text-gray-900 block w-full border py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-              type="text"
-              placeholder={t("Joseph")}
-              onChange={(e) => setData(prevData => ({ ...prevData, lastname: e.target.value }))}
-            />
-
-            {errors.lastname &&
-              <p className="text-[#7d3636] text-lg italic">{errors.lastname}</p>
-            }
-          </div>
-
-          <div className='w-full'>
-            <InputLabel
-              htmlFor='pronouns'
-              value={t('pronouns')}
-              className='block uppercase tracking-wide text-xl font-bold mb-2 text-white'
-            />
-
-            <div className="mt-6 space-y-6">
-              {Object.entries(pronounsOpt).map(([key, value]) => (
-                <div key={key} className="flex items-center gap-x-3">
-                  <InputRadio
-                    id={key}
-                    name="pronouns"
-                    type="radio"
-                    className="h-4 w-4 border-gray-300 text-[#d3c1b2]"
-                    value={value}
-                    onChange={(e) => setData(prevData => ({ ...prevData, gender: e.target.value }))}
+                {steps[stepIndex].id == 'email' ? (
+                  <TextInput
+                    usedefaultclass={false}
+                    className="appearance-none text-gray-900 block w-full border py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                    type="text"
+                    placeholder={t("email@email.com")}
+                    onChange={(e) => setData(prevData => ({ ...prevData, email: e.target.value }))}
                   />
-                  <label htmlFor={key} className="block text-lg font-medium leading-6">
-                    {value}
-                  </label>
-                </div>
-              ))}
+                ) : null}
 
-              <div className="flex items-center gap-x-3">
-                <TextInput
-                  usedefaultclass={false}
-                  className="appearance-none text-gray-900 block w-full border py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                  id="otherPronoun"
-                  type="text"
-                  placeholder={t('other')}
-                  value={data.otherPronoun}
-                  onChange={(e) => setData({ ...data, gender: e.target.value })}
-                />
+                {steps[stepIndex].id == 'phone' ? (
+                  <PhoneInput
+                    country={countryPhone}
+                    value={phone}
+                    onChange={(phone) => setData(prevData => ({ ...prevData, phone }))}
+                    inputProps={{
+                      className: "appearance-none text-gray-900 block w-full border py-3 px-12 mb-3 leading-tight focus:outline-none focus:bg-white text-black",
+                      placeholder: t("+39 389 748 2409"),
+                    }}
+                  />
+                ) : null}
+
+                {steps[stepIndex].id == 'firstname' ? (
+                  <TextInput
+                    usedefaultclass={false}
+                    className="appearance-none text-gray-900 w- block w-full border py-3 px- mb-3 leading-tight focus:outline-none focus:bg-white"
+                    type="text"
+                    placeholder={t("Jane")}
+                    onChange={(e) => setData(prevData => ({ ...prevData, firstname: e.target.value }))}
+                  />
+                ) : null}
+
+                {steps[stepIndex].id == 'lastname' ? (
+                  <TextInput
+                    usedefaultclass={false}
+                    className="appearance-none text-gray-900 block w-full border py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                    type="text"
+                    placeholder={t("Joseph")}
+                    onChange={(e) => setData(prevData => ({ ...prevData, lastname: e.target.value }))}
+                  />
+                ) : null}
+
+
+                {steps[stepIndex].id == 'pronouns' ? (
+                  <div className="mt-6 space-y-6">
+                    {Object.entries(pronounsOpt).map(([key, value]) => (
+                      <div key={key} className="flex items-center gap-x-3">
+                        <InputRadio
+                          id={key}
+                          name="pronouns"
+                          type="radio"
+                          className="h-4 w-4 border-gray-300 text-[#d3c1b2]"
+                          value={value}
+                          onChange={(e) => setData(prevData => ({ ...prevData, gender: e.target.value }))}
+                        />
+                        <label htmlFor={key} className="block text-lg font-medium leading-6">
+                          {value}
+                        </label>
+                      </div>
+                    ))}
+      
+                    <div className="flex items-center gap-x-3">
+                      <TextInput
+                        usedefaultclass={false}
+                        className="appearance-none text-gray-900 block w-full border py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                        id="otherPronoun"
+                        type="text"
+                        placeholder={t('other')}
+                        value={data.otherPronoun}
+                        onChange={(e) => setData({ ...data, gender: e.target.value })}
+                      />
+                    </div>
+      
+                  </div>
+                ) : null}
+
+                {steps[stepIndex].id == 'city' ? (
+                  <TextInput
+                    usedefaultclass={false}
+                    className="appearance-none text-gray-900 block w-full border py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                    type="text"
+                    placeholder={t('city')}
+                    onChange={(e) => setData(prevData => ({ ...prevData, city: e.target.value }))}
+                  />
+                ) : null}
+
+                {steps[stepIndex].id == 'availability' ? (
+                  <div className="mt-2">
+                    <TextArea
+                      id="availability"
+                      name="availability"
+                      rows="3"
+                      className="block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6"
+                      onChange={(e) => setData(prevData => ({ ...prevData, availability: e.target.value }))}
+                    />
+                  </div>
+                ) : null}
+
+                {steps[stepIndex].id == 'contact_preference' ? (
+                  <div className="space-y-6 mb-5">
+                    {contactOptions.map((option) => (
+                      <div key={option.id} className="flex items-center gap-x-3">
+                        <InputRadio
+                          id={option.id}
+                          name="contact_me_by"
+                          type="radio"
+                          value={option.value}
+                          usedefaultclass={true}
+                          onChange={(e) => setData({ ...data, contact_me_by: e.target.value })}
+                        />
+                        <label htmlFor={option.id} className="block text-lg font-medium leading-6">
+                          {option.label}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                ) : null}
+              
+                {steps[stepIndex].id == 'recaptcha' ? (
+                  <ReCAPTCHA
+                    ref={recaptchaRef}
+                    sitekey={siteKey}
+                    onChange={(e) => onChangeRecaptcha()}
+                  />
+                ) : null}
               </div>
 
-            </div>
-          </div>
+              {stepIndex > 1 && (
+                <button
+                  onClick={handleBack}
+                  className="bg-black text-white px-4 py-2 mr-2 rounded"
+                >
+                  {t('back')}
+                </button>
+              )}
 
-          <div className='w-full'>
-            <InputLabel
-              htmlFor='city'
-              value={t('city')}
-              className='block uppercase tracking-wide text-xl font-bold mb-2 text-white'
-            />
-
-            <TextInput
-              usedefaultclass={false}
-              className="appearance-none text-gray-900 block w-full border py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-              type="text"
-              placeholder={t('city')}
-              onChange={(e) => setData(prevData => ({ ...prevData, city: e.target.value }))}
-            />
-
-            {errors.city &&
-              <p className="text-[#7d3636] text-lg italic">{errors.city}</p>
-            }
-          </div>
-
-          <div className="w-full">
-            <InputLabel
-              htmlFor='availability'
-              value={t('availability')}
-              className='block uppercase tracking-wide text-xl font-bold mb-2 text-white'
-            />
-
-            <div className="mt-2">
-              <TextArea
-                id="availability"
-                name="availability"
-                rows="3"
-                className="block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6"
-                onChange={(e) => setData(prevData => ({ ...prevData, availability: e.target.value }))}
-              />
-            </div>
-
-            {errors.availability &&
-              <p className="text-[#7d3636] text-lg italic">{errors.availability}</p>
-            }
-          </div>
-
-          <div className='w-full'>
-            <InputLabel
-              htmlFor='contact_me_by'
-              value={t('contact_preference')}
-              className='block uppercase tracking-wide text-xl font-bold mb-2 text-white'
-            />
-
-            <div className="space-y-6 mb-5">
-              {contactOptions.map((option) => (
-                <div key={option.id} className="flex items-center gap-x-3">
-                  <InputRadio
-                    id={option.id}
-                    name="contact_me_by"
-                    type="radio"
-                    value={option.value}
-                    usedefaultclass={true}
-                    onChange={(e) => setData({ ...data, contact_me_by: e.target.value })}
-                  />
-                  <label htmlFor={option.id} className="block text-lg font-medium leading-6">
-                    {option.label}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {selectedReferences.length ? (
-            <Attachments />
-          ) : null}
-
-          <div className="w-full">
-            <ReCAPTCHA
-              ref={recaptchaRef}
-              sitekey={siteKey}
-              onChange={(e) => onChangeRecaptcha()}
-            />
-          </div>
-        </div>
-
-        <div className="w-full mt-10">
-          <button
-            className="w-full uppercase rounded-md bg-[#272533] px-3 py-2 text-xl font-semibold text-white shadow-sm hover:bg-[#9a7cae] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-            onClick={(e) => formSubmit(e)}
-            aria-label={t('requestquote')}
-            title={t('requestquote')}
-          >
-            {t('requestquote')}
-          </button>
+              {steps[stepIndex].id == 'recaptcha' ? (
+                  <button
+                    onClick={(e) => formSubmit(e)}
+                    className="mt-4 bg-black text-white px-4 py-2 rounded"
+                  >
+                    {t('requestquote')}
+                  </button>
+                ) : 
+                
+                <button
+                  onClick={() => handleNext()}
+                  className="mt-4 bg-black text-white px-4 py-2 rounded"
+                >
+                  {t('next')}
+                </button>
+              }
+              
+            </motion.div>
+          )}
         </div>
       </form>
     </div>

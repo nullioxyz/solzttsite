@@ -39,7 +39,7 @@
         "ckeditor5": "^43.0.0",
         "country-flag-icons": "^1.5.13",
         "dompurify": "^3.1.6",
-        "framer-motion": "^11.3.20",
+        "framer-motion": "^11.18.2",
         "i18next": "^23.14.0",
         "i18next-browser-languagedetector": "^8.0.0",
         "i18next-http-backend": "^2.6.0",

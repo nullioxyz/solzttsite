@@ -10,7 +10,7 @@ export default function About({ institucional }) {
 
   return (
     <section id="about" className="flex flex-col justify-between h-auto mx-auto p-5 overflow-hidden">
-      <div className="max-w-[1240px] mx-auto mt-44">
+      <div className="max-w-[1240px] mx-auto">
         <div className="lg:text-left sm:text-center custom:text-center md:text-center">
           <div className="title">
             <h1 className='text-6xl tracking-tight montSerratBold text-black'>{institucionalTranslation.title}</h1>

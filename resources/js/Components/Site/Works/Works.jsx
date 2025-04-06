@@ -24,7 +24,6 @@ export default function Works() {
 
     try {
       const response = await axios.get(pagination.next_page_url ?? route('site.portfolio.load', 'lang'));
-      console.log(response);
       if (response.data) {
         const { data, first_page, current_page, last_page, next_page_url } = response.data.portfolio;
 
@@ -89,11 +88,13 @@ export default function Works() {
   }, [newItems, portfolio.length]);
 
   return (
-    <section id="works" className="flex flex-col justify-between h-auto mt-44 mx-auto p-5 text-black bg-white">
-      <div className="max-w-[1240px] mx-auto mt-44">
-        <div className="lg:text-left sm:text-center custom:text-center md:text-center">
-          <div className="title uppercase">
-            <h1 className='text-5xl tracking-tight montSerratBold'>{t('portfolio')}</h1>
+    <section id="works" className="mx-auto text-black bg-white">
+      <div className="max-w-[1240px] mx-auto">
+        <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-4 mb-24">
+          <div className="lg:text-left sm:text-center custom:text-center md:text-center">
+            <div className="title uppercase">
+              <h1 className='text-5xl tracking-tight montSerratBold'>{t('portfolio')}</h1>
+            </div>
           </div>
         </div>
 

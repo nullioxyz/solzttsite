@@ -17,7 +17,11 @@ class FileController extends Controller
             abort(404);
         }
 
-        if (!env('local') && Storage::disk('spaces')->exists($media->getPath())) {
+        if (app()->environment() !== 'local') {
+            if(! Storage::disk('spaces')->exists($media->getPath())) {
+                return;
+            }
+
             $file = Storage::disk('spaces')->get($media->getPath());
             
             $finfo = new \finfo(FILEINFO_MIME_TYPE);
@@ -26,12 +30,11 @@ class FileController extends Controller
             return response($file, 200)->header('Content-Type', $mimeType);
         }
 
-        $file = Storage::get($media->id . '/' . $media->file_name);
-        
+        $file = Storage::disk($media->disk)->get($media->id . '/' . $media->file_name);
+
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
         $mimeType = $finfo->buffer($file);
-    
-        // Retornar a resposta com o conteúdo do arquivo e o cabeçalho correto de MIME type
+        
         return response($file, 200)->header('Content-Type', $mimeType);
     }
 }
