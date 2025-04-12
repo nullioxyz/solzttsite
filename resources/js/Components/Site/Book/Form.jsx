@@ -27,12 +27,9 @@ const Toast = Swal.mixin({
   }
 });
 
-export default function Form({ currentLanguage }) {
-
+export default function Form({ currentLanguage, criativeProcessTranslation, considerationTranslation, paymentMethodTranslation }) {
   const [stepIndex, setStepIndex] = useState(0);
-  const [answers, setAnswers] = useState({ name: "", tattooIdea: "", size: "", bodyPart: "" });
 
-  
   const { data, setData, post, processing, errors, reset } = useForm({
     firstname: null,
     lastname: null,
@@ -108,21 +105,24 @@ export default function Form({ currentLanguage }) {
 
 
 const steps = [
-  { id: "instructions", question: t('instructions'), placeholder: "Instructions"},
-  { id: "firstname", question: t('firstname'), placeholder: "Digite seu nome..." },
-  { id: "lastname", question: t('lastname'), placeholder: "last name..." },
-  { id: "tattooIdea", question: t('tattoo_idea'), placeholder: "Descreva sua ideia..." },
-  { id: "pronouns", question: t('pronouns'), placeholder: "Pronouns"},
-  { id: "references", question: t('references'), placeholder: "References"},
-  { id: "size", question: t('size'), placeholder: "Ex: 10cm x 5cm" },
-  { id: "bodyPart", question: t('body_location'), placeholder: "Ex: Braço, perna..." },
-  { id: "email", question: t('email'), placeholder: "example@gmail.com"},
-  { id: "phone", question: t('phone'), placeholder: "kfdjfkj"},
-  { id: "city", question: t('city'), placeholder: "city"},
+  { id: "instructions", question: t('instructions'), placeholder: t('instructionsPlaceholder') },
+  { id: "firstname", question: t('firstname'), placeholder: t('firstnamePlaceholder') },
+  { id: "lastname", question: t('lastname'), placeholder: t('lastnamePlaceholder') },
+  { id: "tattooIdea", question: t('tattoo_idea'), placeholder: t('tattooIdeaPlaceholder') },
+  { id: "pronouns", question: t('pronouns'), placeholder: t('pronounsPlaceholder') },
+  { id: "references", question: t('references'), placeholder: t('referencesPlaceholder') },
+  { id: "size", question: t('size'), placeholder: t('sizePlaceholder') },
+  { id: "bodyPart", question: t('body_location'), placeholder: t('bodyLocationPlaceholder') },
+  { id: "email", question: t('email'), placeholder: t('emailPlaceholder') },
+  { id: "phone", question: t('phone'), placeholder: t('phonePlaceholder') },
+  { id: "city", question: t('city'), placeholder: t('cityPlaceholder') },
   { id: "availability", question: t('availability'), placeholder: t('availability')},
   { id: "contact_preference", question: t('contact_preference'), placeholder: t('contact_preference')},
-  { id: "recaptcha", question: t('recaptcha'), placeholder: t('recaptcha')}
+  { id: "recaptcha", question: t('data_check_and_recaptcha'), placeholder: t('recaptcha')}
 ];
+
+
+
 
   const handleNext = () => {
     if (stepIndex < steps.length - 1) {
@@ -162,6 +162,7 @@ const steps = [
         setSelectedReferences([]);
       },
       onError: (error) => {
+        console.log(error);
         Toast.fire({
           icon: "warning",
           title: t("Check your information and submit the form again")
@@ -183,17 +184,17 @@ const steps = [
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <p className="text-lg">Oi! Antes de começarmos, aqui está como eu trabalho:</p>
-              <p className="text-sm text-gray-600 mt-2">
-                - Preciso de um sinal para criar o desenho.  
-                - O design será aprovado antes de tatuar.  
-                - O tamanho e detalhes influenciam no valor final.  
-              </p>
+              <div className="text-xl text-gray-600 mt-2" dangerouslySetInnerHTML={{ __html: criativeProcessTranslation.description }} />
+
+              <div className="text-xl text-gray-600 mt-2" dangerouslySetInnerHTML={{ __html: considerationTranslation.description }} />
+
+              <div className="text-xl text-gray-600 mt-2" dangerouslySetInnerHTML={{ __html: paymentMethodTranslation.description }} />
+
               <button
                 onClick={() => setStepIndex(1)}
                 className="mt-4 bg-black text-white px-4 py-2 rounded"
               >
-                Vamos iniciar?
+                {t('btnStart')}
               </button>
             </motion.div>
           ) : (
@@ -216,6 +217,7 @@ const steps = [
                       id="tatto-idea"
                       name="idea"
                       rows="4"
+                      value={data.tattoo_idea}
                       className={`block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6 ${errors.tattoo_idea ? 'border-red-500' : ''}`}
                       onChange={(e) => setData(prevData => ({ ...prevData, tattoo_idea: e.target.value }))}
 
@@ -229,6 +231,7 @@ const steps = [
                       id="references"
                       name="references"
                       rows="3"
+                      value={data.references}
                       className={`block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6 ${errors.references ? 'border-red-500' : ''}`}
                       onChange={(e) => setData(prevData => ({ ...prevData, references: e.target.value }))}
                       />
@@ -248,6 +251,7 @@ const steps = [
                           name="size"
                           type="radio"
                           value={key}
+                          checked={key == data.size}
                           usedefaultclass={true}
                           onChange={(e) => setData(prevData => ({ ...prevData, size: e.target.value }))}
                         />
@@ -268,6 +272,7 @@ const steps = [
                     usedefaultclass={false}
                     className="appearance-none text-gray-900 block w-full border py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                     type="text"
+                    value={data.body_location}
                     placeholder={t("Arm, Forearm")}
                     onChange={(e) => setData(prevData => ({ ...prevData, body_location: e.target.value }))}
                   />
@@ -279,6 +284,7 @@ const steps = [
                     className="appearance-none text-gray-900 block w-full border py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                     type="text"
                     placeholder={t("email@email.com")}
+                    value={data.email}
                     onChange={(e) => setData(prevData => ({ ...prevData, email: e.target.value }))}
                   />
                 ) : null}
@@ -286,7 +292,7 @@ const steps = [
                 {steps[stepIndex].id == 'phone' ? (
                   <PhoneInput
                     country={countryPhone}
-                    value={phone}
+                    value={data.phone}
                     onChange={(phone) => setData(prevData => ({ ...prevData, phone }))}
                     inputProps={{
                       className: "appearance-none text-gray-900 block w-full border py-3 px-12 mb-3 leading-tight focus:outline-none focus:bg-white text-black",
@@ -301,6 +307,7 @@ const steps = [
                     className="appearance-none text-gray-900 w- block w-full border py-3 px- mb-3 leading-tight focus:outline-none focus:bg-white"
                     type="text"
                     placeholder={t("Jane")}
+                    value={data.firstname}
                     onChange={(e) => setData(prevData => ({ ...prevData, firstname: e.target.value }))}
                   />
                 ) : null}
@@ -311,6 +318,7 @@ const steps = [
                     className="appearance-none text-gray-900 block w-full border py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                     type="text"
                     placeholder={t("Joseph")}
+                    value={data.lastname}
                     onChange={(e) => setData(prevData => ({ ...prevData, lastname: e.target.value }))}
                   />
                 ) : null}
@@ -324,6 +332,7 @@ const steps = [
                           id={key}
                           name="pronouns"
                           type="radio"
+                          checked={value == data.gender}
                           className="h-4 w-4 border-gray-300 text-[#d3c1b2]"
                           value={value}
                           onChange={(e) => setData(prevData => ({ ...prevData, gender: e.target.value }))}
@@ -341,7 +350,7 @@ const steps = [
                         id="otherPronoun"
                         type="text"
                         placeholder={t('other')}
-                        value={data.otherPronoun}
+                        value={data.gender}
                         onChange={(e) => setData({ ...data, gender: e.target.value })}
                       />
                     </div>
@@ -355,6 +364,7 @@ const steps = [
                     className="appearance-none text-gray-900 block w-full border py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                     type="text"
                     placeholder={t('city')}
+                    value={data.city}
                     onChange={(e) => setData(prevData => ({ ...prevData, city: e.target.value }))}
                   />
                 ) : null}
@@ -365,6 +375,7 @@ const steps = [
                       id="availability"
                       name="availability"
                       rows="3"
+                      value={data.availability}
                       className="block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6"
                       onChange={(e) => setData(prevData => ({ ...prevData, availability: e.target.value }))}
                     />
@@ -381,6 +392,7 @@ const steps = [
                           type="radio"
                           value={option.value}
                           usedefaultclass={true}
+                          checked={option.value == data.contact_me_by}
                           onChange={(e) => setData({ ...data, contact_me_by: e.target.value })}
                         />
                         <label htmlFor={option.id} className="block text-lg font-medium leading-6">
@@ -405,7 +417,7 @@ const steps = [
                   onClick={handleBack}
                   className="bg-black text-white px-4 py-2 mr-2 rounded"
                 >
-                  {t('back')}
+                  {t('previous')}
                 </button>
               )}
 
@@ -428,6 +440,105 @@ const steps = [
               
             </motion.div>
           )}
+
+          {steps[stepIndex].id == 'recaptcha' ? (
+            <div id="dataCheck"> 
+              <div className="mt-20 max-w-full overflow-hidden space-y-4">
+                
+                <div className="text-xl break-words flex flex-col">
+                  <strong>{t('firstname')}:</strong>
+                  <span>{data.firstname}</span>
+                  {errors.firstname &&
+                    <p className="text-[#7d3636] text-lg italic">{errors.firstname}</p>
+                  }
+                </div>
+
+                <div className="text-xl break-words flex flex-col">
+                  <strong>{t('lastname')}:</strong>
+                  <span>{data.lastname}</span>
+                  {errors.lastname &&
+                    <p className="text-[#7d3636] text-lg italic">{errors.lastname}</p>
+                  }
+                </div>
+
+                <div className="text-xl break-words flex flex-col">
+                  <strong>{t('tattoo_idea')}:</strong>
+                  <span>{data.tattoo_idea}</span>
+                </div>
+
+                <div className="text-xl break-words flex flex-col">
+                  <strong>{t('pronouns')}:</strong>
+                  <span>{data.gender}</span>
+                </div>
+
+                <div className="text-xl break-words flex flex-col">
+                  <strong>{t('references')}:</strong>
+                  <span>{data.references}</span>
+                </div>
+
+                <div className="text-xl break-words flex flex-col">
+                  <strong>{t('size')}:</strong>
+                  <span>{data.size}</span>
+                  {errors.size &&
+                    <p className="text-[#7d3636] text-lg italic">{errors.size}</p>
+                  }
+                </div>
+
+                <div className="text-xl break-words flex flex-col">
+                  <strong>{t('body_location')}:</strong>
+                  <span>{data.body_location}</span>
+                  {errors.body_location &&
+                    <p className="text-[#7d3636] text-lg italic">{errors.body_location}</p>
+                  }
+                </div>
+
+                <div className="text-xl break-words flex flex-col">
+                  <strong>{t('email')}:</strong>
+                  <span>{data.email}</span>
+                  {errors.email &&
+                    <p className="text-[#7d3636] text-lg italic">{errors.email}</p>
+                  }
+                </div>
+
+                <div className="text-xl break-words flex flex-col">
+                  <strong>{t('phone')}:</strong>
+                  <span>{data.phone}</span>
+                  {errors.phone &&
+                    <p className="text-[#7d3636] text-lg italic">{errors.phone}</p>
+                  }
+                </div>
+
+                <div className="text-xl break-words flex flex-col">
+                  <strong>{t('city')}:</strong>
+                  <span>{data.city}</span>
+                  {errors.city &&
+                    <p className="text-[#7d3636] text-lg italic">{errors.city}</p>
+                  }
+                </div>
+
+                <div className="text-xl break-words flex flex-col">
+                  <strong>{t('availability')}:</strong>
+                  <span>{data.availability}</span>
+                  {errors.availability &&
+                    <p className="text-[#7d3636] text-lg italic">{errors.availability}</p>
+                  }
+                </div>
+
+                <div className="text-xl break-words flex flex-col">
+                  <strong>{t('contact_preference')}:</strong>
+                  <span>{data.contact_me_by}</span>
+                </div>
+
+              </div>
+
+
+              {selectedReferences.length ? (
+                <Attachments />
+              ) : null}
+
+            </div>
+          ) : null}
+
         </div>
       </form>
     </div>

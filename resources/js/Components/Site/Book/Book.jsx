@@ -1,5 +1,4 @@
 import React from 'react';
-import { ReactTyped } from "react-typed";
 import Form from './Form';
 import { useTranslation } from 'react-i18next';
 
@@ -11,19 +10,23 @@ export default function Book({ requestSectionText, criativeProcess, consideratio
   const considerationTranslation = consideration.translation ?? consideration.default_translation;
   const paymentMethodTranslation = paymentMethod.translation ?? paymentMethod.default_translation;
 
-
   return (
     <section id="book" className="flex flex-col justify-between h-auto mx-auto p-5">
       <div className="max-w-[1240px] mx-auto">
         <div className="lg:text-left sm:text-center">
           <div className="title uppercase">
-            <ReactTyped className='text-5xl tracking-tight montSerratBold text-black' startWhenVisible showCursor={false} strings={[`<h2>${t('requestatatto')}</h2>`]} typeSpeed={40} />
+            <h1 className='text-6xl tracking-tight montSerratBold text-black'>{t('requestatatto')}</h1>
           </div>
         </div>
 
         <div>
           <div className="grid lg:grid-cols-1 md:grid-cols-1 sm:grid-cols-1">
-            <Form currentLanguage={currentLanguage}/>
+            <Form
+              currentLanguage={currentLanguage}
+              criativeProcessTranslation={criativeProcessTranslation}
+              considerationTranslation={considerationTranslation}
+              paymentMethodTranslation={paymentMethodTranslation}
+              />
           </div>
         </div>
       </div>

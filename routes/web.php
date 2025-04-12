@@ -30,7 +30,7 @@ Route::prefix('/')->group(function() {
     Route::get('/{locale}', [HomeController::class, 'index'])->name('home.index');
 });
 
-Route::prefix('/{locale}')->group(function() {
+Route::middleware(['lang'])->prefix('/{locale}')->group(function() {
     Route::get('/portfolio', [PortfolioSiteController::class, 'index'])->name('site.portfolio');
     Route::get('/portfolio/load', [PortfolioSiteController::class, 'load'])->name('site.portfolio.load');
 

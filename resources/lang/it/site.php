@@ -11,7 +11,7 @@ return [
     
     //sections
     'how_to_book' => 'Come prenotare un appuntamento',
-    'requestatatto' => 'Richiedi un preventivo per tatuaggio',
+    'requestatatto' => 'Richiedi un preventivo',
     'book_now' => 'Prenota ora',
 
     //contact form
@@ -68,6 +68,10 @@ return [
 
     "not available" => "Non disponibile",
     "remove_reference" => "Rimuovere riferimento",
-    "choose_another" => "Scegline un altro disegno"
+    "choose_another" => "Scegline un altro disegno",
+    'btnStart' => 'Richiedi un preventivo',
+    'next' => 'Prossimo',
+    'previous' => 'Indietro',
+    'data_check_and_recaptcha' => 'Ricontrolla i tuoi dati e dimostra che non sei un robot 🤖✨',
 
 ];

@@ -105,10 +105,10 @@ class ContactController extends Controller
             
             $this->contactService->storeContact($validatedData);
 
-            return redirect()->route('home.index', $request->cookie('locale'));
+            return redirect()->route('site.contact', $request->cookie('locale'));
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->route('home.index')->withErrors(['error' => 'Something went wrong. Please try again.']);
+            return redirect()->route('site.contact')->withErrors(['error' => 'Something went wrong. Please try again.']);
         }
     }
 }

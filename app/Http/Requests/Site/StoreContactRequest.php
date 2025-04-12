@@ -12,7 +12,7 @@ class StoreContactRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tattoo_idea' => 'required|min:300',
+            'tattoo_idea' => 'required|min:30',
             'references' => 'required',
             'size' => 'required',
             'body_location' => 'required',
@@ -28,22 +28,21 @@ class StoreContactRequest extends FormRequest
         ];
     }
 
-
     public function messages(): array
     {
         return [
-            'tattoo_idea.required' => __('Your tattoo idea is very important'),
-            'tattoo_idea.min' => __('300 characters in the minimum text size'),
-            'references.required' => __('References is required'),
-            'size.required' => __('Size of tatto is required'),
-            'body_location.required' => __('The body location is required'),
-            'email.required' => __('Your best e-mail is required'),
-            'email.email' => __('Inform a valid e-mail'),
-            'phone.required' => __('Your phone number is required'),
-            'firstname.required' => __('Please, tell me your name'),
-            'lastname.required' => ('Your lastname is required'),
-            'city.required' => __('City is required'),
-            'availability.required' => __('Availability is required')
+            'tattoo_idea.required' => trans("validation.tattoo_idea.required"),
+            'tattoo_idea.min' => trans("validation.tattoo_idea.min"),
+            'references.required' => trans("validation.references.required"),
+            'size.required' => trans("validation.size.required"),
+            'body_location.required' => trans("validation.body_location.required"),
+            'email.required' => trans("validation.email.required"),
+            'email.email' => trans('validation.email.required'),
+            'phone.required' => trans("validation.firstname.required"),
+            'firstname.required' => trans('validation.firstname.required'),
+            'lastname.required' => trans("validation.lastname.required"),
+            'city.required' => trans("validation.city.required"),
+            'availability.required' => trans('validation.availability.required')
         ];
     }
 }

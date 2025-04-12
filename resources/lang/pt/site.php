@@ -11,7 +11,7 @@ return [
     
     //sections
     'how_to_book' => 'Como agendar um horário', 
-    'requestatatto' => 'Solicitar orçamento de tatuagem', 
+    'requestatatto' => 'Solicitar orçamento', 
     'book_now' => 'Agende agora', 
 
     //contact form
@@ -69,5 +69,10 @@ return [
 
     "not available" => "Não Disponível",
     "remove_reference" => "Remover referência",
-    "choose_another" => "Escolher outro desenho"
+    "choose_another" => "Escolher outro desenho",
+    'btnStart' => 'Quero solicitar um orçamento',
+    'next' => 'Próximo',
+    'previous' => 'Anterior',
+    'data_check_and_recaptcha' => 'Confira seus dados e prove que você não é um robô 🤖✨',
+    
 ];
