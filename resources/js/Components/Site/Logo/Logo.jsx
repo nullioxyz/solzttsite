@@ -21,12 +21,12 @@ export default function Logo() {
 
   return (
     <>
-      <div className="svg-container flex justify-center items-center lg:mt-0 lg:w-[100vh] md:w-[80vh] sm:w-[70vh] xs:w-[60vh] xs:mt-20 xs:ml-10 custom:w-[50vh] w-full h-full">
+      <div className="svg-container">
         <svg
           id="solztt-logo"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 800 600"
-          className="w-full h-auto max-w-full max-h-full"
+          className="w-44"
         >
           <g transform="translate(0.000000,416.000000) scale(0.1222222 -0.1)"
             fill="#000000" stroke="none">

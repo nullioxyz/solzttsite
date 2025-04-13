@@ -1,35 +1,34 @@
-import { useEffect, useState, useRef, lazy, Suspense } from "react";
-import axios from '@/Services/requests';
+import { lazy, useEffect, useRef, useState, Suspense } from 'react'
+import axios from '@/Services/requests'
 import { Spinner } from "@material-tailwind/react";
 import anime from 'animejs';
-import { useTranslation } from 'react-i18next';
 import { useSelectReferences } from '@/Contexts/SelectReferencesContext';
+import { useTranslation } from 'react-i18next';
 
-const LazyImageModalComponent = lazy(() => import('@/Components/Site/Components/ImageToModal'));
+const LazyImageModalComponent = lazy(() => import('@/Components/Site/Components/ImageToModal'))
 
-export default function Works({ currentLanguage }) {
-
+export default function AvailableDesignHome({ currentLanguage }) {
   const boxRefs = useRef([]);
-  const [portfolio, setPortfolio] = useState([]);
+  const [designs, setDesigns] = useState([]);
   const [pagination, setPagination] = useState({});
   const [loadingMore, setLoadingMore] = useState(false);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [newItems, setNewItems] = useState([]);
-
   const { t } = useTranslation();
+
   const { addAsReference, setSelectedReferences } = useSelectReferences();
 
-  const handlePortfolio = async () => {
+  const handleDesigns = async () => {
     setLoadingMore(true);
-
+    
     try {
-      const response = await axios.get(pagination.next_page_url ?? route('site.portfolio.load', 'lang'));
+      const response = await axios.get(pagination.next_page_url ?? route('site.available_designs.load', 'lang'));
+      
       if (response.data) {
-        const { data, first_page, current_page, last_page, next_page_url } = response.data.portfolio;
-
+        const { data, first_page, current_page, last_page, next_page_url } = response.data.designs;
+        
         setNewItems(data);
-        setPortfolio(prevPortfolio => [...prevPortfolio, ...data]);
-
+        setDesigns(prevDesigns => [...prevDesigns, ...data]);
+        
         setPagination({
           current_page,
           first_page,
@@ -38,41 +37,26 @@ export default function Works({ currentLanguage }) {
         });
       }
     } catch (error) {
-      console.error("Failed to fetch portfolio data:", error);
+      console.error("Error fetching designs:", error);
     } finally {
       setLoadingMore(false);
     }
   };
 
-  const handleLoadMore = async () => {
-    await handlePortfolio();
-  };
-
   const handleAddAsReference = (item) => {
+    setSelectedReferences([]);
     
-    setSelectedReferences(prevRefs =>
-      prevRefs.filter(ref => ref.type !== 'available_design')
-    );
-
-    const data = {
+    addAsReference({
       id: item.id,
       image: route('file.index', {locale: 'lang', uuid: item.media[0].uuid}),
       name: item.translation ? item.translation.title : item.default_translation.title,
-      type: 'portfolio'
-    }
-
-    addAsReference(data);
+      type: 'available_design',
+    });
   };
 
   useEffect(() => {
-    if (isInitialLoad) {
-      handlePortfolio().finally(() => setIsInitialLoad(false));
-    }
-  }, [isInitialLoad]);
-
-  useEffect(() => {
     if (newItems.length > 0) {
-      boxRefs.current = boxRefs.current.slice(0, portfolio.length);
+      boxRefs.current = boxRefs.current.slice(0, designs.length);
 
       anime({
         targets: boxRefs.current.slice(-newItems.length),
@@ -85,31 +69,45 @@ export default function Works({ currentLanguage }) {
 
       setNewItems([]);
     }
-  }, [newItems, portfolio.length]);
+  }, [newItems, designs.length]);
+
+  useEffect(() => {
+    handleDesigns();
+  }, []);
+
+  const handleBookNow = (item) => {
+    handleAddAsReference(item);
+    
+    const nextSection = document.getElementById('book');
+    if (nextSection) {
+      nextSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
 
   return (
-    <section id="works" className="mx-auto text-black bg-white">
+    <section id="available" className="flex flex-col justify-between h-auto mx-auto p-5">
       <div className="max-w-[1240px] mx-auto">
-        <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-4 mb-24">
-          <div className="lg:text-left sm:text-center custom:text-center md:text-center">
+        <div className="grid lg:grid-cols-1 md:grid-cols-1 gap-4 mb-24">
+          <div className="lg:text-left">
             <div className="title uppercase">
-              <h1 className='text-5xl tracking-tight montSerratBold'>{t('portfolio')}</h1>
+              <h1 className='text-5xl tracking-tight montSerratBold text-black'>{t('available')}</h1>
             </div>
           </div>
         </div>
 
         <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-4 mt-10 mb-24">
           <Suspense fallback={<Spinner />}>
-            {portfolio.length > 0 && portfolio.map((item, index) => (
+            {designs.length > 0 && designs.map((item, index) => (
               <LazyImageModalComponent
-                key={`portfolio_${item.id}`}
-                book={false}
+              key={`available_${item.id}`}
+                book={true}
                 description={item.translation ? item.translation.description : item.default_translation.description}
                 coverImage={route('file.index', {locale: 'lang', uuid: item.media[0].uuid})}
                 images={item.media}
                 onAddReference={() => handleAddAsReference(item)}
+                onBookNow={() => handleBookNow(item)}
                 itemId={item.id}
-                available={true}
+                available={item.available}
                 alt={`Image ${index + 1}`}
                 reference={el => boxRefs.current[index] = el}
               />
@@ -119,18 +117,15 @@ export default function Works({ currentLanguage }) {
 
         {pagination.current_page < pagination.last_page && (
           <div className="flex justify-center mb-10">
-            <button
+            <a
+              href={route('site.available_designs', currentLanguage.slug)}
               className="px-6 py-3 bg-[#272533] text-white text-lg rounded-full hover:bg-[#9a7cae] transition duration-300 uppercase"
-              onClick={handleLoadMore}
-              disabled={loadingMore}
-              aria-label={t('load_more')}
-              title={t('load_more')}
             >
               {!loadingMore ? t('load_more') : <Spinner />}
-            </button>
+            </a>
           </div>
         )}
       </div>
     </section>
-  );
+  )
 }

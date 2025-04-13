@@ -47,6 +47,7 @@ export default function Index({
             criativeProcess={criativeProcess}
             consideration={consideration}
             paymentMethods={paymentMethods}
+            currentLanguage={currentLanguage}
           />
         </Suspense>
     </MainLayoutInternal>

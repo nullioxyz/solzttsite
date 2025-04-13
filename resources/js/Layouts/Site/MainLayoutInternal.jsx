@@ -3,6 +3,7 @@ import React from 'react';
 import { SelectReferencesProvider } from '@/Contexts/SelectReferencesContext';
 import { Head } from '@inertiajs/react';
 import FixedMenu from '@/Components/Site/Nav/FixedMenu';
+import Footer from '@/Components/Site/Footer/Index';
 
 const logoUrl = `${window.location.origin}/images/logo.jpg`;
 
@@ -33,13 +34,17 @@ export default function MainLayoutInternal({
         <link rel="canonical" href={window.location.href} />
       </Head>
 
-      <div className="flex flex-col min-h-screen">
+      <div className="min-h-screen flex flex-col">
         <header className="w-full mt-5">
           <FixedMenu languages={languages} defaultLang={defaultLang} currentLanguage={currentLanguage} social={social} />
         </header>
-        <main>
+        
+        <main className="flex-grow">
           {children}
         </main>
+        
+        <Footer social={social} />
+
       </div>
     </SelectReferencesProvider>
   )

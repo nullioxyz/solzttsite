@@ -5,6 +5,7 @@ import { FaInstagram, FaFacebookF } from "react-icons/fa";
 import LanguageSelection from '../Components/LanguageSelection/Index';
 import { useTranslation } from 'react-i18next';
 import logo from '@/Assets/Images/logo.png';
+import Logo from '../Logo/Logo';
 
 export default function FixedMenu({ languages, defaultLang, currentLanguage, social }) {
   const [open, setOpen] = useState(false);
@@ -29,9 +30,9 @@ export default function FixedMenu({ languages, defaultLang, currentLanguage, soc
     <div>
       <div className="fixed top-0 left-0 w-full bg-white shadow-md z-50 transition-transform duration-300 ease-in-out transform translate-x-0">
         <div className="flex justify-between items-center h-24 px-4 max-w-[1240px] mx-auto text-black">
-          <div className="text-lg font-bold">
-            <a href="#">
-              <img src={logo} className='w-10' alt="Logo" />
+          <div className="text-lg font-bold mt-12">
+            <a href={route('home.index', currentLanguage.slug)}>
+              <Logo />
             </a>
           </div>
 

@@ -7,7 +7,7 @@ import { useSelectReferences } from '@/Contexts/SelectReferencesContext';
 
 const LazyImageModalComponent = lazy(() => import('@/Components/Site/Components/ImageToModal'));
 
-export default function Works({ currentLanguage }) {
+export default function WorksHome({ currentLanguage }) {
 
   const boxRefs = useRef([]);
   const [portfolio, setPortfolio] = useState([]);
@@ -119,15 +119,12 @@ export default function Works({ currentLanguage }) {
 
         {pagination.current_page < pagination.last_page && (
           <div className="flex justify-center mb-10">
-            <button
+            <a
+              href={route('site.portfolio', currentLanguage.slug)}
               className="px-6 py-3 bg-[#272533] text-white text-lg rounded-full hover:bg-[#9a7cae] transition duration-300 uppercase"
-              onClick={handleLoadMore}
-              disabled={loadingMore}
-              aria-label={t('load_more')}
-              title={t('load_more')}
             >
               {!loadingMore ? t('load_more') : <Spinner />}
-            </button>
+            </a>
           </div>
         )}
       </div>

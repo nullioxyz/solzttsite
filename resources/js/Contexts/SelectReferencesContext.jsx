@@ -1,11 +1,19 @@
 import React, {createContext, useContext} from 'react';
+import { useEffect } from 'react';
 import { useState } from 'react';
 
 const SelectReferencesContext = createContext();
 
-export function SelectReferencesProvider({children}) {
+export function SelectReferencesProvider({ children }) {
   
-  const [selectedReferences, setSelectedReferences] = useState([]);
+  const [selectedReferences, setSelectedReferences] = useState(() => {
+    const stored = localStorage.getItem('selectedReferences');
+    return stored ? JSON.parse(stored) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('selectedReferences', JSON.stringify(selectedReferences));
+  }, [selectedReferences]);
 
   const addAsReference = (data) => {
 

@@ -95,4 +95,6 @@ return [
     'Availability' => 'Disponibilidade',
 
     'Complete the recaptcha' => 'Complete o recaptcha',
+
+    'footer_information' => 'Solztt. Todos os direitos reservados.'
 ];

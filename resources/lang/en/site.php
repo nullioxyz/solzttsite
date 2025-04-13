@@ -105,6 +105,7 @@ return [
     'City' => 'City',
     'Availability' => 'Availability',
 
-    'Complete the recaptcha' => 'Complete the recaptcha'
+    'Complete the recaptcha' => 'Complete the recaptcha',
+    'footer_information' => 'Solztt. All rights reserved.'
 
 ];

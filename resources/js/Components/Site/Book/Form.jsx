@@ -423,7 +423,7 @@ export default function Form({ currentLanguage, criativeProcessTranslation, cons
             </motion.div>
           )}
 
-          {steps[stepIndex].id == 'recaptcha' && data.length > 0 ? (
+          {steps[stepIndex].id == 'recaptcha' && data.firstname !== null ? (
             <div id="dataCheck"> 
               <div className="mt-20 max-w-full overflow-hidden space-y-4">
                 

@@ -3,6 +3,8 @@ import React from 'react';
 import Nav from '@/Components/Site/Nav/Index';
 import { SelectReferencesProvider } from '@/Contexts/SelectReferencesContext';
 import { Head } from '@inertiajs/react';
+import { FaFacebookF, FaInstagram } from 'react-icons/fa';
+import Footer from '@/Components/Site/Footer/Index';
 
 const logoUrl = `${window.location.origin}/images/logo.jpg`;
 
@@ -33,14 +35,16 @@ export default function MainLayout({
         <link rel="canonical" href={window.location.href} />
       </Head>
 
-      <div className="flex flex-col min-h-screen text-white bg-[#7c8f77]">
+      <div className="flex flex-col min-h-screen bg-white">
         <header className="w-full mt-5">
           <Nav languages={languages} defaultLang={defaultLang} currentLanguage={currentLanguage} social={social} />
         </header>
 
-        <main>
+        <main className="flex-grow">
           {children}
         </main>
+        
+        <Footer social={social} />
       </div>
     </SelectReferencesProvider>
   )

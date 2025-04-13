@@ -84,7 +84,7 @@
             <p><strong>{{ __('Tattoo Idea:') }}</strong> {{ $contact['tattoo_idea'] }}</p>
             <p><strong>{{ __('References:') }}</strong> {{ $contact['references'] }}</p>
             <p><strong>{{ __('Size:') }}</strong> {{ $contact['size'] }}</p>
-            <p><strong>{{ __('Body Location:') }}</strong> {{ $contact['body_location'] }}</p>
+            <p><strong>{{ __('Body part:') }}</strong> {{ $contact['body_location'] }}</p>
             <p><strong>{{ __('Pronouns:') }}</strong> {{ $contact['gender'] }}</p>
             <p><strong>{{ __('City:') }}</strong> {{ $contact['city'] }}</p>
             <p><strong>{{ __('Availability:') }}</strong> {{ $contact['availability'] }}</p>

@@ -1,32 +1,18 @@
 import React, { lazy, Suspense } from 'react';
 
-import Nav from '@/Components/Site/Nav/Index';
-import Highlight from '@/Components/Site/Highlight/Index';
-import About from '@/Components/Site/About/About';
 import { Spinner } from "@material-tailwind/react";
 import Book from '@/Components/Site/Book/Book';
 import How from '@/Components/Site/How/How';
 import MainLayout from '@/Layouts/Site/MainLayout';
-import { SelectReferencesProvider } from '@/Contexts/SelectReferencesContext';
-import { Head } from '@inertiajs/react';
+import AboutHome from '@/Components/Site/About/AboutHome';
 
-const AvailableDesign = lazy(() => import('@/Components/Site/AvailableDesign/AvailableDesign'))
-const Works = lazy(() => import('@/Components/Site/Works/Works'));
+const AvailableDesign = lazy(() => import('@/Components/Site/AvailableDesign/AvailableDesignHome'))
+const Works = lazy(() => import('@/Components/Site/Works/WorksHome'));
 
 const logoUrl = `${window.location.origin}/images/logo.jpg`;
 
-const  stripHtmlTags = (html) => {
-  return html.replace(/<[^>]*>/g, '');
-}
-
 export default function Index({
   institucional,
-  appointmentTexts,
-  appointmentWarning,
-  requestSectionText,
-  criativeProcess,
-  consideration,
-  paymentMethods,
   languages,
   defaultLang,
   currentLanguage,
@@ -37,30 +23,21 @@ export default function Index({
 
     <MainLayout languages={languages} defaultLang={defaultLang} social={social} metatags={metatags} currentLanguage={currentLanguage}>
       <main>
-        <About
-          institucional={institucional}
-        />
+        <AboutHome institucional={institucional}/>
+
 
         <Suspense fallback={<Spinner />}>
-          <Works />
+          <Works currentLanguage={currentLanguage}/>
         </Suspense>
 
         <Suspense fallback={<Spinner />}>
-          <AvailableDesign />
+          <AvailableDesign currentLanguage={currentLanguage} />
         </Suspense>
 
         <How
-          texts={appointmentTexts}
-          warning={appointmentWarning}
-        />
-
-        <Book
-          requestSectionText={requestSectionText}
-          criativeProcess={criativeProcess}
-          consideration={consideration}
-          paymentMethod={paymentMethods}
           currentLanguage={currentLanguage}
         />
+
       </main>
     </MainLayout>
   )

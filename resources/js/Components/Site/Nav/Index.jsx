@@ -5,20 +5,13 @@ import { FaInstagram, FaFacebookF } from "react-icons/fa";
 import LanguageSelection from '../Components/LanguageSelection/Index';
 import { useTranslation } from 'react-i18next';
 import logo from '@/Assets/Images/logo.png';
+import Logo from '../Logo/Logo';
 
 export default function Index({ languages, defaultLang, currentLanguage, social }) {
   const [open, setOpen] = useState(false);
   const [showFixedMenu, setShowFixedMenu] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const { t } = useTranslation();
-
-  const scrollToNextSection = (section) => {
-    const nextSection = document.getElementById(section);
-    if (nextSection) {
-      nextSection.scrollIntoView({ behavior: 'smooth' });
-      setOpen(false);
-    }
-  };
 
   const onclickMenu = () => {
     setOpen(!open);
@@ -49,11 +42,9 @@ export default function Index({ languages, defaultLang, currentLanguage, social 
     <div>
       {showFixedMenu && (
         <div className="fixed top-0 left-0 w-full bg-white shadow-md z-50 transition-transform duration-300 ease-in-out transform translate-x-0">
-          <div className="flex justify-between items-center h-16 px-4 max-w-[1240px] mx-auto text-black">
-            <div className="text-lg font-bold">
-              <a href="#">
-                <img src={logo} className='w-10' alt="Logo" />
-              </a>
+          <div className="flex justify-between items-center h-16 px-4 p-10 max-w-[1240px] mx-auto text-black">
+            <div className="text-lg font-bold mt-10 p-10">
+              <Logo />
             </div>
 
             <LanguageSelection languages={languages} defaultLang={defaultLang} currentLanguage={currentLanguage} textColor="text-black" />
@@ -64,11 +55,15 @@ export default function Index({ languages, defaultLang, currentLanguage, social 
           </div>
         </div>
       )}
+      
 
       <div className={`relative flex justify-between items-center h-32 max-w-[1240px] mx-auto text-black`}>
+        <div className="text-lg font-bold mt-10">
+          <Logo />
+        </div>
         <LanguageSelection languages={languages} defaultLang={defaultLang} currentLanguage={currentLanguage} />
 
-        <div className="iconMenu flex mr-2 cursor-pointer text-white" onClick={onclickMenu}>
+        <div className="iconMenu flex mr-2 cursor-pointer " onClick={onclickMenu}>
           {!open ? <TiThMenu size={30} /> : <IoCloseSharp size={30} />}
         </div>
 
