@@ -18,11 +18,12 @@ class FileController extends Controller
         }
 
         if (app()->environment() !== 'local') {
-            if(! Storage::disk('spaces')->exists($media->getPath())) {
+
+            if(! Storage::disk($media->disk)->exists($media->id . '/' . $media->file_name)) {
                 return;
             }
 
-            $file = Storage::disk('spaces')->get($media->getPath());
+            $file = Storage::get($media->id . '/' . $media->file_name);
             
             $finfo = new \finfo(FILEINFO_MIME_TYPE);
             $mimeType = $finfo->buffer($file);

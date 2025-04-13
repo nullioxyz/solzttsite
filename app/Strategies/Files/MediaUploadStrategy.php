@@ -18,7 +18,7 @@ class MediaUploadStrategy implements FileUploadStrategyInterface
 
         foreach($files as $file) {
             $modelInstance->addMedia($file)
-            ->toMediaCollection($collection);
+            ->toMediaCollection($collection, config('filesystems.default'));
         }
 
         return $model;

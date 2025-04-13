@@ -62,7 +62,9 @@ return [
             'secret' => env('DO_SPACE_SECRET'),
             'region' => env('DO_SPACE_REGION'),
             'bucket' => env('DO_SPACE_BUCKET'),
-            'endpoint' => env('DO_SPACE_URL'),
+            'endpoint' => env('DO_SPACE_BUCKET'),
+            'url' => env('DO_SPACE_URL'),
+            'visibility' => 'public',
         ]
 
     ],
