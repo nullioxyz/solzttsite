@@ -22,8 +22,8 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         .header {
-            background-color: #7c8f77;
-            color: #ffffff;
+            background-color: #f4f4f4;
+            color: #000000;
             text-align: center;
             padding: 20px;
         }
@@ -59,8 +59,8 @@
             display: inline-block;
             padding: 10px 20px;
             margin-top: 20px;
-            background-color: #7c8f77;
-            color: #ffffff;
+            background-color: #f4f4f4;
+            color: #000000;
             text-decoration: none;
             border-radius: 5px;
             font-size: 16px;
@@ -88,12 +88,9 @@
             <p><strong>{{ __('Pronouns:') }}</strong> {{ $contact['gender'] }}</p>
             <p><strong>{{ __('City:') }}</strong> {{ $contact['city'] }}</p>
             <p><strong>{{ __('Availability:') }}</strong> {{ $contact['availability'] }}</p>
-
-            <a href="mailto:{{ $contact['email'] }}" class="btn">{{ __('Reply to') }} {{ $contact['firstname'] }}</a>
         </div>
 
         <div class="footer">
-            <p>{{ __('If you have any questions, feel free to') }} <a href="mailto:your-email@example.com">{{ __('contact me') }}</a>.</p>
             <p>&copy; {{ date('Y') }} {{ __('Solztt. All rights reserved.') }}</p>
         </div>
     </div>

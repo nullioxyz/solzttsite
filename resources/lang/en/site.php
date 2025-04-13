@@ -15,9 +15,12 @@ return [
     'book_now' => 'Book now',
 
     //contact form
-    'tattoo_idea' => 'Your tattoo idea',
-    'references' => 'Examples of my portfolio and other references',
-    'size' => 'Size in centimeters',
+    'tattoo_idea' => '<span class="M7eMe"><b>✦ About the design you want ✦</b><br><br><strong>What is the meaning or feeling you want your tattoo to convey?</strong><br><em>(Feel free to share any emotions, ideas, or personal significance behind the design.)</em></span>',
+    'tattoTattoIdeaPlaceholder' => 'Tatto Idea',
+    'references' => 'Do you have any reference images or links? (Feel free to paste links, upload images of my work you like, or anything that inspires your tattoo idea!)',
+    'referencesPlaceholder' => 'Your references',
+    'size' => '<strong>What size do you envision for your tattoo (in cm)?</strong>',
+    'sizePlaceholder' => 'Size of your tattoo',
     'sizes' => [
         'Upto15cm' => 'Up to 15 m',
         '16cmto20cm' => '16cm to 20cm',
@@ -27,19 +30,24 @@ return [
     ],
     'body_location' => 'Part of the body',
     'email' => 'Your best e-mail',
-    'phone' => 'Telephone number',
-    'firstname' => 'First name',
-    'lastname' => 'Last name',
+    'phone' => 'Telephone/WhatsApp',
+    'firstname' => 'Tell me your first name',
+    'firstnamePlaceholder' => 'Your name',
+    'lastnamePlaceholder' => 'Your Lastname',
+    'lastname' => 'Now your last name',
     'pronouns' => 'What are your pronouns',
     'pronouns_opt' => [
         'neuter' => 'Neuter',
         'feminine' => 'Feminine',
         'masculine' => 'Masculine',
+        'other' => 'Prefer not to say',
     ],
     'all' => 'All',
     'other' => 'Other',
-    'city' => 'Your city',
-    'availability' => 'What is your availability for the entire week, from Monday to Sunday?',
+    'city' => "<span class='M7eMe'><b>Which city do you want to meet me?</b></span>",
+    'cityPlaceholder' => 'Your city',
+    'availability' => '<strong>What are your available dates and times for your session?</strong>',
+    'availabilityPlaceholder' => 'Availability',
     'contact_preference' => 'Contact preference',
     'allopt' => 'All options',
     'requestquote' => 'Request a quote',
@@ -84,5 +92,19 @@ return [
     "Your lastname is required" => "I need your last name, don't be shy!",
     "City is required" => "Where are you from? Tell me your city!",
     "Availability is required" => "Let me know your availability so I can fit into your schedule.",
+
+    //Email
+    'Name' => 'Name',
+    'Email' => 'Email',
+    'Phone' => 'Phone',
+    'Preferred Contact Method' => 'Preferred Contact Method',
+    'Tattoo Idea' => 'Tattoo idea',
+    'References' => 'References',
+    'Size' => 'Size',
+    'Body part' => 'Body Location',
+    'City' => 'City',
+    'Availability' => 'Availability',
+
+    'Complete the recaptcha' => 'Complete the recaptcha'
 
 ];

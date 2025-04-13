@@ -18,15 +18,17 @@ class ContactMailable extends Mailable
     public $contact;
     public $subject;
     public $view;
+    public $sendTo;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(Contact $contact, $subject, $view)
+    public function __construct(Contact $contact, $subject, $view, $sendTo)
     {
         $this->contact = $contact;
         $this->subject = $subject;
         $this->view = $view;
+        $this->sendTo = $sendTo;
     }
 
     /**
@@ -37,7 +39,7 @@ class ContactMailable extends Mailable
         return new Envelope(
             subject: $this->subject,
             from: new Address($this->contact->email, $this->contact->firstname . ' ' . $this->contact->lastname),
-
+            to: $this->sendTo,
         );
     }
 

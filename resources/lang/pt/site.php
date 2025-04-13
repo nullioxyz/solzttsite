@@ -15,9 +15,9 @@ return [
     'book_now' => 'Agende agora', 
 
     //contact form
-    'tattoo_idea' => 'Sua ideia de tatuagem', 
-    'references' => 'Exemplos do meu portfólio e outras referências', 
-    'size' => 'Tamanho em centímetros', 
+    'tattoo_idea' => '<div><span>Meu processo criativo leva em consideração várias áreas de conhecimento para desenvolver uma tatuagem. Preciso saber o <b>local do corpo</b></span><span>, pois os relevos da pele, seus movimentos contam muito. <b>O </b></span><span><b>sentimento por trás do seu desenho</b></span><span>, é através dele que vou criar a composição simbólica e  a estrutura do desenho. Não economize palavras, as fontes mais diversas de inspirações contam, podem ser <b>músicas, poemas, fotografias, sonhos, memorias, desejos, aqui vale tudo.&nbsp;&nbsp;</b></span><br></div>', 
+    'references' => '<span class="M7eMe"><b>Links de imagens de referência:</b></span>', 
+    'size' => '<span class="M7eMe">Qual o&nbsp;<b>tamanho em centímetros</b>&nbsp;da tatuagem que você quer fazer? É muito importante que você meça com uma régua no local onde você quer tatuar.<br></span>', 
     'sizes' => [
         'Upto15cm' => 'Até 15 cm', 
         '16cmto20cm' => 'De 16 cm a 20 cm', 
@@ -27,22 +27,30 @@ return [
     ],
     'body_location' => 'Parte do corpo', 
     'email' => 'Seu melhor e-mail', 
-    'phone' => 'Número de telefone', 
-    'firstname' => 'Primeiro nome', 
-    'lastname' => 'Sobrenome', 
+    'phone' => 'Telefone/WhatsApp', 
+    'firstname' => 'Qual é seu primeiro nome?', 
+    'lastname' => 'Agora me diga seu sobrenome', 
     'pronouns' => 'Quais são seus pronomes',
     'pronouns_opt' => [
         'neuter' => 'Neutro',
         'feminine' => 'Feminino',
         'masculine' => 'Masculino',
+        'other' => 'Prefiro não informar'
     ],
     'other' => 'Outro', 
-    'city' => 'Sua cidade', 
-    'availability' => 'Qual é a sua disponibilidade para a semana inteira, de segunda a domingo?', 
-    'contact_preference' => 'Preferência de contato',
+    'city' => 'De qual cidade você é?', 
+    'availability' => '<span class="M7eMe">Qual sua&nbsp;<b>disponibilidade de datas e horários</b>?</span>', 
+    'contact_preference' => 'Qual a sua preferência de contato',
     'all' => 'Todas',
     'allopt' => 'Todas as opções', 
-    'requestquote' => 'Solicitar orçamento', 
+    'requestquote' => 'Solicitar orçamento',
+    
+    'firstnamePlaceholder' => 'Seu nome',
+    'lastnamePlaceholder' => 'Seu sobrenome',
+    'sizePlaceholder' => 'Tamanho desejado',
+    'tattoTattoIdeaPlaceholder' => 'Sua ideia',
+    'referencesPlaceholder' => 'Sua referencias',
+    'cityPlaceholder' => 'Sua cidade',
 
     //lang selection
     'select_lang' => 'Selecione um idioma', 
@@ -74,5 +82,17 @@ return [
     'next' => 'Próximo',
     'previous' => 'Anterior',
     'data_check_and_recaptcha' => 'Confira seus dados e prove que você não é um robô 🤖✨',
-    
+
+    'Name' => 'Nome',
+    'Email' => 'Email',
+    'Phone' => 'Telefone',
+    'Preferred Contact Method' => 'Forma de Contato Preferida',
+    'Tattoo Idea' => 'Ideia de Tatuagem',
+    'References' => 'Referências',
+    'Size' => 'Tamanho',
+    'Body part' => 'Local do Corpo',
+    'City' => 'Cidade',
+    'Availability' => 'Disponibilidade',
+
+    'Complete the recaptcha' => 'Complete o recaptcha',
 ];

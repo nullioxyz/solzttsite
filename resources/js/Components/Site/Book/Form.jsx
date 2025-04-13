@@ -104,31 +104,26 @@ export default function Form({ currentLanguage, criativeProcessTranslation, cons
   ];
 
 
-const steps = [
-  { id: "instructions", question: t('instructions'), placeholder: t('instructionsPlaceholder') },
-  { id: "firstname", question: t('firstname'), placeholder: t('firstnamePlaceholder') },
-  { id: "lastname", question: t('lastname'), placeholder: t('lastnamePlaceholder') },
-  { id: "tattooIdea", question: t('tattoo_idea'), placeholder: t('tattooIdeaPlaceholder') },
-  { id: "pronouns", question: t('pronouns'), placeholder: t('pronounsPlaceholder') },
-  { id: "references", question: t('references'), placeholder: t('referencesPlaceholder') },
-  { id: "size", question: t('size'), placeholder: t('sizePlaceholder') },
-  { id: "bodyPart", question: t('body_location'), placeholder: t('bodyLocationPlaceholder') },
-  { id: "email", question: t('email'), placeholder: t('emailPlaceholder') },
-  { id: "phone", question: t('phone'), placeholder: t('phonePlaceholder') },
-  { id: "city", question: t('city'), placeholder: t('cityPlaceholder') },
-  { id: "availability", question: t('availability'), placeholder: t('availability')},
-  { id: "contact_preference", question: t('contact_preference'), placeholder: t('contact_preference')},
-  { id: "recaptcha", question: t('data_check_and_recaptcha'), placeholder: t('recaptcha')}
-];
+  const steps = [
+    { id: "instructions", question: t('instructions'), placeholder: t('instructionsPlaceholder') },
+    { id: "tattooIdea", question: t('tattoo_idea'), placeholder: t('tattooIdeaPlaceholder') },
+    { id: "bodyPart", question: t('body_location'), placeholder: t('bodyLocationPlaceholder') },
+    { id: "size", question: t('size'), placeholder: t('sizePlaceholder') },
+    { id: "references", question: t('references'), placeholder: t('referencesPlaceholder') },
+    { id: "availability", question: t('availability'), placeholder: t('availability')},
+    { id: "firstname", question: t('firstname'), placeholder: t('firstnamePlaceholder') },
+    { id: "lastname", question: t('lastname'), placeholder: t('lastnamePlaceholder') },
+    { id: "pronouns", question: t('pronouns'), placeholder: t('pronounsPlaceholder') },
+    { id: "email", question: t('email'), placeholder: t('emailPlaceholder') },
+    { id: "phone", question: t('phone'), placeholder: t('phonePlaceholder') },
+    { id: "city", question: t('city'), placeholder: t('cityPlaceholder') },
+    { id: "contact_preference", question: t('contact_preference'), placeholder: t('contact_preference')},
+    { id: "recaptcha", question: t('data_check_and_recaptcha'), placeholder: t('recaptcha')}
+  ];
 
-
-
-
-  const handleNext = () => {
+    const handleNext = () => {
     if (stepIndex < steps.length - 1) {
       setStepIndex(stepIndex + 1);
-    } else {
-      alert("Formulário enviado! 🎉");
     }
   };
 
@@ -207,7 +202,7 @@ const steps = [
               <InputLabel
                 htmlFor={steps[stepIndex].question}
                 value={steps[stepIndex].question}
-                className='block uppercase tracking-wide text-xl font-bold mb-2'
+                className='block tracking-wide text-xl font-bold mb-2'
               />
 
               <div className="w-full">
@@ -216,7 +211,7 @@ const steps = [
                     <TextArea
                       id="tatto-idea"
                       name="idea"
-                      rows="4"
+                      rows="10"
                       value={data.tattoo_idea}
                       className={`block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6 ${errors.tattoo_idea ? 'border-red-500' : ''}`}
                       onChange={(e) => setData(prevData => ({ ...prevData, tattoo_idea: e.target.value }))}
@@ -343,18 +338,6 @@ const steps = [
                       </div>
                     ))}
       
-                    <div className="flex items-center gap-x-3">
-                      <TextInput
-                        usedefaultclass={false}
-                        className="appearance-none text-gray-900 block w-full border py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                        id="otherPronoun"
-                        type="text"
-                        placeholder={t('other')}
-                        value={data.gender}
-                        onChange={(e) => setData({ ...data, gender: e.target.value })}
-                      />
-                    </div>
-      
                   </div>
                 ) : null}
 
@@ -363,7 +346,6 @@ const steps = [
                     usedefaultclass={false}
                     className="appearance-none text-gray-900 block w-full border py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                     type="text"
-                    placeholder={t('city')}
                     value={data.city}
                     onChange={(e) => setData(prevData => ({ ...prevData, city: e.target.value }))}
                   />
@@ -441,12 +423,12 @@ const steps = [
             </motion.div>
           )}
 
-          {steps[stepIndex].id == 'recaptcha' ? (
+          {steps[stepIndex].id == 'recaptcha' && data.length > 0 ? (
             <div id="dataCheck"> 
               <div className="mt-20 max-w-full overflow-hidden space-y-4">
                 
                 <div className="text-xl break-words flex flex-col">
-                  <strong>{t('firstname')}:</strong>
+                  <strong>{t('firstnamePlaceholder')}:</strong>
                   <span>{data.firstname}</span>
                   {errors.firstname &&
                     <p className="text-[#7d3636] text-lg italic">{errors.firstname}</p>
@@ -454,7 +436,7 @@ const steps = [
                 </div>
 
                 <div className="text-xl break-words flex flex-col">
-                  <strong>{t('lastname')}:</strong>
+                  <strong>{t('lastnamePlaceholder')}:</strong>
                   <span>{data.lastname}</span>
                   {errors.lastname &&
                     <p className="text-[#7d3636] text-lg italic">{errors.lastname}</p>
@@ -462,7 +444,7 @@ const steps = [
                 </div>
 
                 <div className="text-xl break-words flex flex-col">
-                  <strong>{t('tattoo_idea')}:</strong>
+                  <strong>{t('tattoTattoIdeaPlaceholder')}:</strong>
                   <span>{data.tattoo_idea}</span>
                 </div>
 
@@ -472,12 +454,12 @@ const steps = [
                 </div>
 
                 <div className="text-xl break-words flex flex-col">
-                  <strong>{t('references')}:</strong>
+                  <strong>{t('referencesPlaceholder')}:</strong>
                   <span>{data.references}</span>
                 </div>
 
                 <div className="text-xl break-words flex flex-col">
-                  <strong>{t('size')}:</strong>
+                  <strong>{t('sizePlaceholder')}:</strong>
                   <span>{data.size}</span>
                   {errors.size &&
                     <p className="text-[#7d3636] text-lg italic">{errors.size}</p>
@@ -509,7 +491,7 @@ const steps = [
                 </div>
 
                 <div className="text-xl break-words flex flex-col">
-                  <strong>{t('city')}:</strong>
+                  <strong>{t('cityPlaceholder')}:</strong>
                   <span>{data.city}</span>
                   {errors.city &&
                     <p className="text-[#7d3636] text-lg italic">{errors.city}</p>
@@ -517,7 +499,7 @@ const steps = [
                 </div>
 
                 <div className="text-xl break-words flex flex-col">
-                  <strong>{t('availability')}:</strong>
+                  <strong>{t('availabilityPlaceholder')}:</strong>
                   <span>{data.availability}</span>
                   {errors.availability &&
                     <p className="text-[#7d3636] text-lg italic">{errors.availability}</p>

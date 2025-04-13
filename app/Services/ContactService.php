@@ -24,8 +24,8 @@ class ContactService  {
 
     protected function sendEmail(Contact $contact, $subject, $view, $sendTo = null)
     {
-        Mail::to($sendTo ?? $contact->email)->queue(
-            new ContactMailable($contact, $subject, $view)
+        Mail::to($sendTo)->queue(
+            new ContactMailable($contact, $subject, $view, $sendTo)
         );
     }
 
@@ -36,13 +36,7 @@ class ContactService  {
             $contact,
             __('Contact from website'),
             'emails.contact_to_admin',
-            env('MAIL_FROM_ADDRESS')
-        );
-
-        $this->sendEmail(
-            $contact,
-            __('Contact form website'),
-            'emails.request_confirmation',
+            'frankedeveloper@gmail.com'
         );
     }
 
