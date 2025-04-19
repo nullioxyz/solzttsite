@@ -57,18 +57,24 @@ class AvailableController extends Controller
         try {
             
             DB::beginTransaction();
-
-            $validator = $request->validated();
+            $requestData = $request->getDataToDraft();
             
-            if (!$validator) {
-                return redirect()->route('available_design.create')
-                            ->withErrors($validator)
-                            ->withInput();
+            if($request->get('publish')) {
+                
+                $validator = $request->validated();
+                
+                if (!$validator) {
+                    return redirect()->route('available_design.create')
+                                ->withErrors($validator)
+                                ->withInput();
+                }
+
+                $requestData = $request->validated();
             }
 
             $availableDesigns = $this->availableDesignRepo->create(
                 [
-                    ...$request->validated(),
+                    ...$requestData,
                     'content_type_id' => ContentType::TATTOO
                 ]
             );

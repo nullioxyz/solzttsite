@@ -17,6 +17,7 @@ export default function Form (props) {
 
   const { data, setData, post, processing, errors, reset } = useForm({
       slug: props.data ? props.data.slug : '',
+      title: props.data ? props.data.slug : '',
       active: props.data ? props.data.active : true,
       available: props.data ? props.data.available : true,
       category_id: props.data ? props.data.category_id : null,
@@ -106,20 +107,20 @@ export default function Form (props) {
     <form onSubmit={submit}>
       <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
         <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-            <InputLabel htmlFor="slug" value="Slug" className={`mt-1 block w-full ${errors.slug ? 'text-[red]' : ''}`} />
+            <InputLabel htmlFor="title" value="Title" className={`mt-1 block w-full ${errors.slug ? 'text-[red]' : ''}`} />
 
             <TextInput
-                id="slug"
+                id="title"
                 type="text"
-                name="slug"
-                value={data.slug}
-                className={`mt-1 block w-full ${errors.slug ? 'border-red-500' : ''}`}
-                autoComplete="slug"
-                onChange={(e) => setData('slug', e.target.value)}
+                name="title"
+                value={data.title}
+                className={`mt-1 block w-full ${errors.title ? 'border-red-500' : ''}`}
+                autoComplete="title"
+                onChange={(e) => setData('title', e.target.value)}
             />
 
-            {errors.slug && 
-              <InputError message={errors.slug} className='mt-5'/>
+            {errors.title && 
+              <InputError message={errors.title} className='mt-5'/>
             }
         </div>
 

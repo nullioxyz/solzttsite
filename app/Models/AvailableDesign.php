@@ -25,6 +25,8 @@ class AvailableDesign extends Model implements HasMedia
         'slug'
     ];
 
+    const RANDOM_TITLE = 'Available Design draft';
+
     public $timestamps = true;
 
     public function langs(): \Illuminate\Database\Eloquent\Relations\HasMany
@@ -68,5 +70,10 @@ class AvailableDesign extends Model implements HasMedia
     public function getRouteKeyName()
     {
         return 'slug';
+    }
+
+    public static function randomTitle()
+    {
+        return self::RANDOM_TITLE . '-' . random_int(100000, 999999);
     }
 }

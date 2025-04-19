@@ -4,6 +4,7 @@ namespace App\Strategies\Translation\AvailableDesign;
 
 use App\Repositories\AvailableDesignLang\AvailableDesignLangRepository;
 use App\Strategies\Interfaces\TranslationStrategyInterface;
+use Illuminate\Support\Str;
 
 
 class AvailableDesignLangStrategy implements TranslationStrategyInterface {
@@ -21,6 +22,7 @@ class AvailableDesignLangStrategy implements TranslationStrategyInterface {
             return array_merge($lang, [
                 'language_id' => $id,
                 'available_design_id' => $availableDesign->id,
+                'slug' =>  Str::slug($lang['title'] . '-' . $id),
             ]);
         }, $languages, array_keys($languages));
         
@@ -50,7 +52,7 @@ class AvailableDesignLangStrategy implements TranslationStrategyInterface {
                     [
                         'title' => $lang['title'],
                         'description' => $lang['description'],
-                        'slug' => $lang['slug'],
+                        'slug' =>  Str::slug($lang['title'] . '-' . $id),
                     ],
                     $lang['id']
                 );

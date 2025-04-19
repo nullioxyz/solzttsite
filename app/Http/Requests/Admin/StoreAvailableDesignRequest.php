@@ -2,8 +2,9 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\AvailableDesign;
 use Illuminate\Foundation\Http\FormRequest;
-
+use Illuminate\Support\Str;
 
 class StoreAvailableDesignRequest extends FormRequest
 {
@@ -23,10 +24,10 @@ class StoreAvailableDesignRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'slug' => 'required|string|unique:available_design,slug',
+            'title' => 'required|string',
             'active' => 'nullable',
             'available' => 'nullable',
-            'category_id' => 'required',
+            'category_id' => 'nullable',
             'languages' => 'required|array',
             'languages.*.title' => 'required|string',
             'languages.*.description' => 'string',
@@ -39,9 +40,7 @@ class StoreAvailableDesignRequest extends FormRequest
     public function messages()
     {
         return [
-            'slug.required' => __('Slug is required'),
-            'slug.unique' => __('Slug is already in use'),
-            'category_id.required' => __('Select a category'),
+            'title.required' => __('Title is required'),
             'languages.required' => __('At least one language is mandatory(*)'),
             'languages.*.title.required' => __('Field title is required'),
             'languages.*.slug.required' => __('Field language slug is required'),
@@ -51,5 +50,18 @@ class StoreAvailableDesignRequest extends FormRequest
             'files.*.mimes' => __('Only JPEG, PNG and JPG files are allowed'),
             'files.*.max' => __('Each image must be less than 5MB'),
         ];
+    }
+
+    public function getDataToDraft()
+    {
+
+        $data = [
+            'active' => 0,
+            'is_draft' => 1,
+            'slug' => Str::slug($this->get('title') ?? AvailableDesign::randomTitle()),
+            'available' => $this->get('available') ?? null,
+        ];
+
+        return $data;
     }
 }
