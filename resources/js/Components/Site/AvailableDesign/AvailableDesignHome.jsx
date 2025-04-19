@@ -4,6 +4,8 @@ import { Spinner } from "@material-tailwind/react";
 import anime from 'animejs';
 import { useSelectReferences } from '@/Contexts/SelectReferencesContext';
 import { useTranslation } from 'react-i18next';
+import { router } from '@inertiajs/react'
+
 
 const LazyImageModalComponent = lazy(() => import('@/Components/Site/Components/ImageToModal'))
 
@@ -78,17 +80,14 @@ export default function AvailableDesignHome({ currentLanguage }) {
   const handleBookNow = (item) => {
     handleAddAsReference(item);
     
-    const nextSection = document.getElementById('book');
-    if (nextSection) {
-      nextSection.scrollIntoView({ behavior: 'smooth' });
-    }
+    router.visit(route('site.contact', currentLanguage.slug));
   }
 
   return (
-    <section id="available" className="flex flex-col justify-between h-auto mx-auto p-5">
+    <section id="available" className="mx-auto text-black bg-white">
       <div className="max-w-[1240px] mx-auto">
-        <div className="grid lg:grid-cols-1 md:grid-cols-1 gap-4 mb-24">
-          <div className="lg:text-left">
+        <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-4 mb-24">
+          <div className="lg:text-left sm:text-center custom:text-center md:text-center">
             <div className="title uppercase">
               <h1 className='text-5xl tracking-tight montSerratBold text-black'>{t('available')}</h1>
             </div>

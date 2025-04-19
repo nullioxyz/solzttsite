@@ -49,6 +49,14 @@ class MediaUploadStrategy implements FileUploadStrategyInterface
 
     public function delete($media)
     {
+        if (app()->environment() !== 'local') {
+            if(! Storage::disk($media->disk)->exists($media->id . '/' . $media->file_name)) {
+                return;
+            }
+    
+            Storage::disk($media->disk)->delete($media->id . '/' . $media->file_name);
+        }
+
         $media->delete();
     }
 }

@@ -88,7 +88,7 @@ export default function WorksHome({ currentLanguage }) {
   }, [newItems, portfolio.length]);
 
   return (
-    <section id="works" className="mx-auto text-black bg-white">
+    <section id="works" className="mx-auto text-black bg-white mt-20">
       <div className="max-w-[1240px] mx-auto">
         <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-4 mb-24">
           <div className="lg:text-left sm:text-center custom:text-center md:text-center">

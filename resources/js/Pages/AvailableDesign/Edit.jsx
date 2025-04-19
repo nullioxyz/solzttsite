@@ -1,12 +1,18 @@
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import Form from '@/Components/AvailableDesign/Form';
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import DeleteButton from '@/Components/Buttons/DeleteButton/Index';
 import BackButton from '@/Components/Buttons/BackButton/Index';
 import { LanguageProvider } from '@/Contexts/LanguageContext';
 
 export default function Edit({ auth, design, languages, translationFields, translationValues, categories }) {
+  
+  const handleFileRemoved = () => {
+    console.log('fff');
+    router.reload();
+  };
+
   return (
     <AuthenticatedLayout
       user={auth.user}
@@ -23,7 +29,7 @@ export default function Edit({ auth, design, languages, translationFields, trans
         </div>
 
         <LanguageProvider languages={languages} translationFields={translationFields} translationValues={translationValues}>
-          <Form data={design} categories={categories} />
+          <Form data={design} categories={categories} onFileRemoved={handleFileRemoved} />
         </LanguageProvider>
       </div>
     </AuthenticatedLayout>

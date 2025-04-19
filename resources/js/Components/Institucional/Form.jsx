@@ -1,4 +1,4 @@
-import { useForm } from '@inertiajs/react';
+import { useForm, router } from '@inertiajs/react';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
@@ -8,7 +8,6 @@ import Dropfile from '@/Components/Files/Dropfile';
 import { useState } from 'react';
 import { Gallery } from '../Files/Gallery';
 import Swal from 'sweetalert2';
-import { Inertia } from '@inertiajs/inertia';
 
 
 export default function Form (props) {
@@ -33,8 +32,13 @@ export default function Form (props) {
     setuploadedFiles(updatedList);
   }
 
-  async function removeExistingFile(fileId) {
-    
+  function updateExistingFiles(indexImg) {
+    const updatedList = data.existingFiles.filter((ele, index) => index !== indexImg);
+
+    setData('existingFiles', updatedList);
+  }
+
+  async function removeExistingFile(fileId, index) {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -45,15 +49,18 @@ export default function Form (props) {
       confirmButtonText: "Yes, delete it!"
     }).then((result) => {
       if (result.isConfirmed) {
-        Inertia.delete(route('institucional.removeFile', [fileId, data.slug]), {
-          onSuccess: () => {}
-        })
+        router.delete(route('institucional.removeFile', [fileId, data.slug]), {
+          onSuccess: () => {
+            Swal.fire({
+              title: "Deleted!",
+              text: "Your record has been deleted.",
+              icon: "success"
+            });
 
-        Swal.fire({
-          title: "Deleted!",
-          text: "Your record has been deleted.",
-          icon: "success"
-        });
+            updateExistingFiles(index);
+          },
+          preserveScroll: true
+        })
       }
     });
   }

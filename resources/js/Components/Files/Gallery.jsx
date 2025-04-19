@@ -49,7 +49,7 @@ export function Gallery({ files, onDelete, onReorder }) {
                         size="md"
                         color="red"
                         className="bg-white text-red-500 hover:bg-red-50"
-                        onClick={() => onDelete(id)}
+                        onClick={() => onDelete(id, index)}
                       >
                         <FontAwesomeIcon icon={faTrash} />
                       </IconButton>
