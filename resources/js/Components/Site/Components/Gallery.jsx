@@ -4,16 +4,16 @@ export function Gallery({ images}) {
   return (
     <Carousel
       loop={true} autoplay={false}
-      className="rounded-lg relative w-full h-[700px]">
+      className="rounded-lg relative w-full">
       {images.map((image, index) => (
         <div
           key={index}
-          className="relative w-full h-full flex items-center justify-center"
+          className="relative w-full flex items-center justify-center"
           >
           <img
             src={route('file.index', {locale: 'lang', uuid: image.uuid})}
             alt="image 1"
-            className="h-full w-full object-cover object-center"
+            className="max-h-[80vh] max-w-full object-contain"
             loading="lazy"
           />
         </div>

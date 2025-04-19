@@ -101,7 +101,7 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, descripti
         open={open}
         handler={toggleModal}
         size="md"
-        className="max-w-full max-h-[900px] overflow-y-scroll custom-scrollbar"
+        className="max-w-full overflow-y-scroll custom-scrollbar"
       >
         <DialogHeader className="flex items-center justify-between">
           <div className="flex items-center gap-3">
