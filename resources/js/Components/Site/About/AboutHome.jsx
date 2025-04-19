@@ -25,7 +25,7 @@ export default function AboutHome({ institucional }) {
 
           {/* Imagem */}
           {hasMedia && (
-            <div className="w-full xl:w-1/2 flex justify-center xl:justify-end xl:-mt-10">
+            <div className="w-full xl:w-1/2 flex justify-center xl:justify-end">
               <img 
                 src={imageUrl}
                 alt="Image 1"  
