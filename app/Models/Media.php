@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Storage;
 use Spatie\MediaLibrary\MediaCollections\Models\Media as BaseMedia;
 
 class Media extends BaseMedia
@@ -24,6 +25,10 @@ class Media extends BaseMedia
         'generated_conversions',
         'responsive_images',
         'order_column'
+    ];
+
+    protected $appends = [
+        'url'
     ];
 
     public $timestamps = true;
@@ -49,6 +54,20 @@ class Media extends BaseMedia
             ->whereHas('language', function ($query) use ($locale) {
                 $query->where('slug', $locale);
             });
+    }
+
+    public function getUrlAttribute()
+    {
+        if (app()->environment() !== 'local') {
+
+            if(! Storage::disk($this->disk)->exists($this->id . '/' . $this->file_name)) {
+                return;
+            }
+
+            return Storage::disk($this->disk)->url($this->id . '/' . $this->file_name);
+        }
+
+        return asset('storage/' . $this->id . '/' . $this->file_name);
     }
     
 

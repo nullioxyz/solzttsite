@@ -34,7 +34,7 @@ export function Gallery({ images}) {
           className="relative w-full flex items-center justify-center"
           >
           <img
-            src={route('file.index', {locale: 'lang', uuid: image.uuid})}
+            src={image.url}
             alt="image 1"
             className="max-h-[80vh] max-w-full object-contain"
             loading="lazy"

@@ -6,7 +6,7 @@ export default function AboutHome({ institucional }) {
   
   const sanitizedDescription = DOMPurify.sanitize(institucionalTranslation.description);
   const hasMedia = institucional.media.length > 0;
-  const imageUrl = hasMedia ? route('file.index', {locale: institucionalTranslation.language.slug, uuid: institucional.media[0].uuid}) : '';
+  const imageUrl = hasMedia ? institucional.media[0].url : null;
 
   return (
     <section id="about" className="flex flex-col justify-between h-auto mx-auto p-5 mt-20 overflow-hidden">
