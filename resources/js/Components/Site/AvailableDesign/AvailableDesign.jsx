@@ -118,7 +118,7 @@ export default function AvailableDesign() {
         {pagination.current_page < pagination.last_page && (
           <div className="flex justify-center mb-10">
             <button
-              className="bg-[#272533] text-white hover:bg-[#9a7cae] transition duration-300"
+              className="px-6 py-3 bg-[#272533] text-white text-lg rounded-full hover:bg-[#9a7cae] transition duration-300 uppercase"
               onClick={handleDesigns}
               disabled={loadingMore}
               aria-label={t('load_more')}

@@ -62,7 +62,7 @@ return [
     //modals
     'use_as_reference' => 'Use as reference',
     'want_this' => 'I want this',
-    'load_more' => 'Load more',
+    'load_more' => 'Go to more',
 
     // site static texts and messages
     "Thank you!" => 'Thank you!',
