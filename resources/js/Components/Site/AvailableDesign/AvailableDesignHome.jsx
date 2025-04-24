@@ -99,7 +99,7 @@ export default function AvailableDesignHome({ currentLanguage }) {
             {designs.length > 0 && designs.map((item, index) => (
               <LazyImageModalComponent
               key={`available_${item.id}`}
-                book={true}
+                book={false}
                 description={item.translation ? item.translation.description : item.default_translation.description}
                 coverImage={route('file.index', {locale: 'lang', uuid: item.media[0].uuid})}
                 images={item.media}
