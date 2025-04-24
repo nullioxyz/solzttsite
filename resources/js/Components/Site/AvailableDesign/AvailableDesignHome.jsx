@@ -94,7 +94,7 @@ export default function AvailableDesignHome({ currentLanguage }) {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-4 mt-10 mb-24">
+        <div className="grid grid-cols-3 gap-2 mt-10 mb-24">
           <Suspense fallback={<Spinner />}>
             {designs.length > 0 && designs.map((item, index) => (
               <LazyImageModalComponent

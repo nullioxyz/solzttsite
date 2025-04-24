@@ -8,12 +8,18 @@ use App\Models\Language;
 use App\Models\Portfolio;
 use App\Models\SiteSetting;
 use App\Models\Social;
+use App\Traits\PaginationTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Inertia\Inertia;
 
 class PortfolioController extends Controller
 {
+    use PaginationTrait;
+
+    const PER_PAGE_HOME = 8;
+    const PER_PAGE_INTERNAL = 12;
+
     public function index(Request $request)
     {
         $institucional = Institucional::where('slug', 'solztt-universe')
@@ -67,7 +73,9 @@ class PortfolioController extends Controller
                 'media', function($query) {
                 $query->orderBy('order_column', 'asc');
             }
-        )->paginate(4);
+        )->paginate(
+            $this->perPage($request)
+        );
 
         return Inertia::render('Site/Portfolio/Index', [
             'institucional' => $institucional,
@@ -86,7 +94,7 @@ class PortfolioController extends Controller
         ]);
     }
 
-    public function load()
+    public function load(Request $request)
     {
         $portfolio = Portfolio::with(
             [
@@ -100,11 +108,10 @@ class PortfolioController extends Controller
                 'media', function($query) {
                 $query->orderBy('order_column', 'asc');
             }
-        )->paginate(4);
+        )->paginate(
+            $this->perPage($request)
+        );
 
         return response()->json(['portfolio' => $portfolio]);
     }
-
-    
-
 }

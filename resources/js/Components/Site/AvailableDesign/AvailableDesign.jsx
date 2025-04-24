@@ -95,7 +95,7 @@ export default function AvailableDesign() {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-4 mt-10 mb-24">
+        <div className="grid grid-cols-3 gap-2 mt-10 mb-24">
           <Suspense fallback={<Spinner />}>
             {designs.length > 0 && designs.map((item, index) => (
               <LazyImageModalComponent
@@ -118,7 +118,7 @@ export default function AvailableDesign() {
         {pagination.current_page < pagination.last_page && (
           <div className="flex justify-center mb-10">
             <button
-              className="px-6 py-3 bg-[#272533] text-white text-lg rounded-full hover:bg-[#9a7cae] transition duration-300 uppercase"
+              className="bg-[#272533] text-white hover:bg-[#9a7cae] transition duration-300"
               onClick={handleDesigns}
               disabled={loadingMore}
               aria-label={t('load_more')}

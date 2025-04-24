@@ -23,7 +23,7 @@ export default function WorksHome({ currentLanguage }) {
     setLoadingMore(true);
 
     try {
-      const response = await axios.get(pagination.next_page_url ?? route('site.portfolio.load', 'lang'));
+      const response = await axios.get(pagination.next_page_url ?? route('site.portfolio.load', ['lang', 'home']));
       if (response.data) {
         const { data, first_page, current_page, last_page, next_page_url } = response.data.portfolio;
 
@@ -98,7 +98,7 @@ export default function WorksHome({ currentLanguage }) {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-4 mt-10 mb-24">
+        <div className="grid grid-cols-3 gap-2 mt-10 mb-24">
           <Suspense fallback={<Spinner />}>
             {portfolio.length > 0 && portfolio.map((item, index) => (
               <LazyImageModalComponent

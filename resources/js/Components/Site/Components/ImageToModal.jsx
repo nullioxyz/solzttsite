@@ -72,7 +72,7 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, descripti
   return (
     <>
       <Card
-        className="relative w-full h-[400px] cursor-pointer"
+        className="relative w-full lg:h-[400px] xl:h-[400px] md:h-[400px] sm:w-full sm:h-auto aspect-square cursor-pointer overflow-hidden"
         ref={reference}
       >
         <div className="relative w-full h-full">
@@ -80,7 +80,7 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, descripti
             src={coverImage}
             alt={alt}
             onClick={toggleModal}
-            className={`object-cover w-full h-full ${!available ? 'grayscale' : ''}`}
+            className={`object-cover lg:h-[400px] xl:h-[400px] md:h-[400px] sm:w-full sm:h-auto ${!available ? 'grayscale' : ''}`}
             loading="lazy"
           />
           {book && available ? (

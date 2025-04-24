@@ -9,12 +9,19 @@ use App\Models\Language;
 use App\Models\Portfolio;
 use App\Models\SiteSetting;
 use App\Models\Social;
+use App\Traits\PaginationTrait;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Inertia\Inertia;
 
 class AvailableController extends Controller
 {
-    public function index()
+    use PaginationTrait;
+
+    const PER_PAGE_HOME = 8;
+    const PER_PAGE_INTERNAL = 12;
+
+    public function index(Request $request)
     {
         $institucional = Institucional::where('slug', 'solztt-universe')
             ->with('defaultTranslation.language', 'translation.language', 'media')
@@ -67,7 +74,9 @@ class AvailableController extends Controller
                 'media', function($query) {
                 $query->orderBy('order_column', 'asc');
             }
-        )->paginate(4);
+        )->paginate(
+            $this->perPage($request)
+        );
 
         return Inertia::render('Site/AvailableDesign/Index', [
             'institucional' => $institucional,
@@ -86,7 +95,7 @@ class AvailableController extends Controller
         ]);
     }  
 
-    public function load()
+    public function load(Request $request)
     {
         $designs = AvailableDesign::with(
             [
@@ -101,7 +110,9 @@ class AvailableController extends Controller
             }
         )
         ->active()
-        ->paginate(4);
+        ->paginate(
+            $this->perPage($request)
+        );
 
         return response()->json(['designs' => $designs]);
     }
