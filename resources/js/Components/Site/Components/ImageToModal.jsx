@@ -83,18 +83,18 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, descripti
             className={`object-cover lg:h-[400px] xl:h-[400px] md:h-[400px] sm:w-full sm:h-auto ${!available ? 'grayscale' : ''}`}
             loading="lazy"
           />
-          {book && available ? (
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-full flex justify-center">
-              <button
-                onClick={onBookNow}
-                className="px-6 py-3 bg-[#272533] text-white text-lg rounded-full hover:bg-[#9a7cae] transition duration-300 uppercase"
-                aria-label={t('book_now')}
-              >
-                {t('book_now')}
-              </button>
-            </div>
-          ) : null}
         </div>
+        {book && available ? (
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-full flex justify-center">
+            <button
+              onClick={onBookNow}
+              className="xl:text-lg lg:text-lg md:text-md md:px-5 md:py-1 sm:px-2 sm:py-2 xs:px-1 xs:py-1 sm:text-sm xs:text-[10px] bg-[#272533] break-words whitespace-normal text-white rounded-full hover:bg-[#9a7cae] transition duration-300 uppercase"
+              aria-label={t('book_now')}
+            >
+              {t('book_now')}
+            </button>
+          </div>
+        ) : null}
       </Card>
 
       <Dialog
