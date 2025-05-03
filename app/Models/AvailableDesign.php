@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Session;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -42,7 +43,7 @@ class AvailableDesign extends Model implements HasMedia
 
     public function translation()
     {
-        $locale = Cookie::get('locale');
+        $locale = Session::get('locale') || Cookie::get('locale');
 
         return $this->hasOne(AvailableDesignLang::class, 'available_design_id')
             ->whereHas('language', function ($query) use ($locale) {

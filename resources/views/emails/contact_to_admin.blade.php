@@ -83,6 +83,39 @@
             <p><strong>{{ __('Preferred Contact Method:') }}</strong> {{ $contact['contact_me_by'] }}</p>
             <p><strong>{{ __('Tattoo Idea:') }}</strong> {{ $contact['tattoo_idea'] }}</p>
             <p><strong>{{ __('References:') }}</strong> {{ $contact['references'] }}</p>
+            @if(count($contact['portfolioReferences']) > 0)
+                <p><strong>{{ __('Portfolio References:') }}</strong></p>
+
+                <ul>
+                    @foreach($contact['portfolioReferences'] as $reference)
+                        <li>
+                            <ul>
+                                @foreach($reference->media as $media)
+                                    <li>
+                                        <img src="{{ route('file.index', ['locale' => 'locale', 'uuid' => $media->uuid]) }}" width="100" height="100">
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </li>  
+                    @endforeach
+                </ul>
+            @endif
+            @if(count($contact['reservedDesign']) > 0)
+                <p><strong>{{ __('Reserved Design:') }}</strong></p>
+                <ul>
+                    @foreach($contact['reservedDesign'] as $design)
+                        <li>
+                            <ul>
+                                @foreach($design->media as $media)
+                                    <li>
+                                        <img src="{{ route('file.index', ['locale' => 'locale', 'uuid' => $media->uuid]) }}" width="100" height="100">
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </li>    
+                    @endforeach
+                </ul>
+            @endif
             <p><strong>{{ __('Size:') }}</strong> {{ $contact['size'] }}</p>
             <p><strong>{{ __('Body part:') }}</strong> {{ $contact['body_location'] }}</p>
             <p><strong>{{ __('Pronouns:') }}</strong> {{ $contact['gender'] }}</p>

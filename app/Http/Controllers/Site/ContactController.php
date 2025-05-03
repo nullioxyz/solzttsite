@@ -108,7 +108,7 @@ class ContactController extends Controller
             return redirect()->route('site.contact', $request->cookie('locale'));
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return redirect()->route('site.contact')->withErrors(['error' => 'Something went wrong. Please try again.']);
+            return redirect()->route('site.contact', $request->cookie('locale'))->withErrors(['error' => 'Something went wrong. Please try again.']);
         }
     }
 }

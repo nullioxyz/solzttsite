@@ -31,11 +31,18 @@ class ContactService  {
 
     protected function sendEmails($contact)
     {
+        $contact->load([
+            'portfolioReferences.defaultTranslation',
+            'reservedDesign.defaultTranslation',
+            'portfolioReferences.media',
+            'reservedDesign.media',
+        ]);
+        
         $this->sendEmail(
             $contact,
             __('Contact from website'),
             'emails.contact_to_admin',
-            'solztt.book@gmail.com'
+            'frankedeveloper@gmail.com'
         );
     }
 
