@@ -4,6 +4,7 @@ import { Spinner } from "@material-tailwind/react";
 import anime from 'animejs';
 import { useSelectReferences } from '@/Contexts/SelectReferencesContext';
 import { useTranslation } from 'react-i18next';
+import { Link } from '@inertiajs/react';
 
 const LazyImageModalComponent = lazy(() => import('@/Components/Site/Components/ImageToModal'))
 
@@ -87,11 +88,20 @@ export default function AvailableDesign() {
   return (
     <section id="available" className="flex flex-col justify-between h-auto mx-auto p-5">
       <div className="max-w-[1240px] mx-auto">
-        <div className="grid lg:grid-cols-6 md:grid-cols-6 gap-4">
+        <div className="grid lg:grid-cols-1 md:grid-cols-1 gap-4">
           <div className="lg:text-left sm:text-center custom:text-center md:text-center">
             <div className="title uppercase">
               <h1 className='text-5xl tracking-tight montSerratBold text-black'>{t('available')}</h1>
             </div>
+          </div>
+
+          <div className="lg:text-left sm:text-left custom:text-left md:text-left">
+            <Link
+              href="/"
+              className="text inline-flex m-2 text-gray-600 hover:text-black transition"
+            >
+              {t('back_to_home')}
+            </Link>
           </div>
         </div>
 
@@ -101,6 +111,7 @@ export default function AvailableDesign() {
               <LazyImageModalComponent
               key={`available_${item.id}`}
                 book={true}
+                title={item.translation ? item.translation.title : item.default_translation.title}
                 description={item.translation ? item.translation.description : item.default_translation.description}
                 coverImage={route('file.index', {locale: 'lang', uuid: item.media[0].uuid})}
                 images={item.media}

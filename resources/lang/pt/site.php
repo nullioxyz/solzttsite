@@ -96,5 +96,8 @@ return [
 
     'Complete the recaptcha' => 'Complete o recaptcha',
 
-    'footer_information' => 'Solztt. Todos os direitos reservados.'
+    'footer_information' => 'SolZtt. Todos os direitos reservados.',
+
+    'back_to_home' => 'Voltar para a Página Inicial',
+    'close' => 'Fechar',
 ];

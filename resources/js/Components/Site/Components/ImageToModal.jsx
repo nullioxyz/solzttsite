@@ -11,11 +11,10 @@ import {
   DialogFooter,
 } from "@material-tailwind/react";
 import { Gallery } from "./Gallery";
-import logo from "@/Assets/Images/logo.png";
 import { useTranslation } from "react-i18next";
 import { useSelectReferences } from "@/Contexts/SelectReferencesContext";
 
-const ImageToModal = ({ reference, coverImage, alt, images, available, description, book, onBookNow, onAddReference, itemId }) => {
+const ImageToModal = ({ reference, coverImage, alt, images, available, title, description, book, onBookNow, onAddReference, itemId }) => {
 
   const sanitizedDescription = DOMPurify.sanitize(description);
   const [open, setOpen] = useState(false);
@@ -100,46 +99,37 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, descripti
       <Dialog
         open={open}
         handler={toggleModal}
-        size="md"
-        className="max-w-full overflow-y-scroll custom-scrollbar"
+        size="xl"
+        className="w-full max-w-4xl max-h-screen overflow-y-scroll custom-scrollbar"
       >
-        <DialogHeader className="flex items-center justify-between">
+        
+        <DialogHeader className="flex items-center justify-between p-4 border-b sticky top-0 bg-white z-10">
           <div className="flex items-center gap-3">
-            <Avatar
+            <Button
+              color="amber"
               size="sm"
-              variant="circular"
-              alt="Logo"
-              src={logo}
-            />
-            <div className="flex flex-col">
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="font-medium"
-              >
-                Solztt
-              </Typography>
-              <Typography
-                variant="small"
-                color="gray"
-                className="text-xs font-normal"
-              >
-                @solztt
-              </Typography>
-            </div>
+              onClick={toggleModal}
+            >
+            {t('close')}
+          </Button>
           </div>
           {renderActionButton()}
         </DialogHeader>
 
-        <DialogBody>
-          <Gallery images={images} />
-        </DialogBody>
+          <DialogBody className="flex flex-col justify-center items-center flex-grow">
+            <Gallery images={images} />
+          </DialogBody>
 
-        {description && (
-          <DialogFooter className="justify-between">
-            <div className="font-normal text-justify color-gray" dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
-          </DialogFooter>
-        )}
+          {description && (
+            <DialogFooter className="justify-normal items-start flex flex-col">
+              {title ? (
+                <p className="font-bold">{title}</p>
+              ): null}
+              
+              <div className="font-normal text-justify color-gray" dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
+            </DialogFooter>
+          )}
+
       </Dialog>
     </>
   );

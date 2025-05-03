@@ -104,6 +104,7 @@ export default function WorksHome({ currentLanguage }) {
               <LazyImageModalComponent
                 key={`portfolio_${item.id}`}
                 book={false}
+                title={item.translation ? item.translation.title : item.default_translation.title}
                 description={item.translation ? item.translation.description : item.default_translation.description}
                 coverImage={route('file.index', {locale: 'lang', uuid: item.media[0].uuid})}
                 images={item.media}

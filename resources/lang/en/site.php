@@ -106,6 +106,8 @@ return [
     'Availability' => 'Availability',
 
     'Complete the recaptcha' => 'Complete the recaptcha',
-    'footer_information' => 'Solztt. All rights reserved.'
+    'footer_information' => 'SolZtt. All rights reserved.',
+
+    'back_to_home' => 'Back to Home',
 
 ];

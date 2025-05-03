@@ -170,7 +170,7 @@ export default function Form({ currentLanguage, criativeProcessTranslation, cons
   const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY ?? "6LczDUEqAAAAAKoD4bTeyfKynwGmZZLpw3XU2ekL";
 
   return (
-    <div className="form lg:mt-20 md:mt-10">
+    <div className="form lg:mt-20 md:mt-10 max-w-[1240px]">
       <form id="contactForm">
         <div>
           {stepIndex === 0 ? (

@@ -1,4 +1,6 @@
+import { Link } from '@inertiajs/react';
 import DOMPurify from 'dompurify';
+import { useTranslation } from 'react-i18next';
 
 export default function About({ institucional }) {
   
@@ -8,16 +10,27 @@ export default function About({ institucional }) {
   const hasMedia = institucional.media.length > 0;
   const imageUrl = hasMedia ? route('file.index', {locale: institucionalTranslation.language.slug, uuid: institucional.media[0].uuid}) : '';
 
+  const { t } = useTranslation();
+
   return (
     <section id="about" className="flex flex-col justify-between h-auto mx-auto p-5 mt-20 overflow-hidden">
       <div className="max-w-[1240px] mx-auto">
-        <div className="lg:text-left sm:text-center custom:text-center md:text-center mb-10">
-          <h1 className="text-6xl tracking-tight montSerratBold text-black">
+        <div className="lg:text-left sm:text-left custom:text-left md:text-left mb-5">
+          <h1 className="sm:text-4xl xs:text-4xl md:text-5xl xl:text-6xl lg:text-6xl tracking-tight montSerratBold text-black">
             {institucionalTranslation.title}
           </h1>
         </div>
 
-        <div className="flex flex-col xl:flex-row gap-10 items-center xl:items-start">
+        <div className="lg:text-left sm:text-left custom:text-left md:text-left">
+          <Link
+            href="/"
+            className="text inline-flex m-2 text-gray-600 hover:text-black transition"
+          >
+            {t('back_to_home')}
+          </Link>
+        </div>
+
+        <div className="flex flex-col xl:flex-row gap-10 items-center xl:items-start mt-10">
           {/* Texto */}
           <div className="text text-justify text-[20px] w-full xl:w-1/2">
             <div dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />

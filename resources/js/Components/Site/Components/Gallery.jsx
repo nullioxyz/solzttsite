@@ -26,17 +26,18 @@ export function Gallery({ images}) {
           <ChevronRightIcon className="h-6 w-6 text-white" />
         </IconButton>
       )}
-      loop={true} autoplay={false}
-      className="rounded-lg relative w-full">
+      loop={true}
+      autoplay={false}
+      className="relative flex items-center rounded-lg">
       {images.map((image, index) => (
         <div
-          key={index}
+          key={'gallery_' + index}
           className="relative w-full flex items-center justify-center"
           >
           <img
             src={route('file.index', {locale: 'lang', uuid: image.uuid})}
-            alt="image 1"
-            className="max-h-[80vh] max-w-full object-contain"
+            alt={image.uuid}
+            className="max-h-[48rem] max-w-full object-center"
             loading="lazy"
           />
         </div>

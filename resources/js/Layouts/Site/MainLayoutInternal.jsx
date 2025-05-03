@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { SelectReferencesProvider } from '@/Contexts/SelectReferencesContext';
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import FixedMenu from '@/Components/Site/Nav/FixedMenu';
 import Footer from '@/Components/Site/Footer/Index';
 
