@@ -13,8 +13,8 @@ export default function Book({ requestSectionText, criativeProcess, consideratio
 
   return (
     <section id="book" className="flex flex-col justify-between h-auto mx-auto p-5">
-      <div className="w-[1240px] mx-auto">
-        <div className="lg:text-left sm:text-center">
+      <div className="max-w-[1240px] mx-auto">
+        <div className="lg:text-left">
           <div className="title uppercase">
             <h1 className='text-6xl tracking-tight montSerratBold text-black'>{t('requestatatto')}</h1>
           </div>

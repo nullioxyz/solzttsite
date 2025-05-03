@@ -31,12 +31,11 @@ class ContactService  {
 
     protected function sendEmails($contact)
     {
-        //send admin e-mail
         $this->sendEmail(
             $contact,
             __('Contact from website'),
             'emails.contact_to_admin',
-            'frankedeveloper@gmail.com'
+            'solztt.book@gmail.com'
         );
     }
 

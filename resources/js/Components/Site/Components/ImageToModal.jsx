@@ -14,7 +14,7 @@ import { Gallery } from "./Gallery";
 import { useTranslation } from "react-i18next";
 import { useSelectReferences } from "@/Contexts/SelectReferencesContext";
 
-const ImageToModal = ({ reference, coverImage, alt, images, available, title, description, book, onBookNow, onAddReference, itemId }) => {
+const ImageToModal = ({ reference, coverImage, alt, images, available, title, description, book, onBookNow, onAddReference, availableDesign, itemId }) => {
 
   const sanitizedDescription = DOMPurify.sanitize(description);
   const [open, setOpen] = useState(false);
@@ -24,7 +24,7 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, title, de
   const { selectedReferences, setSelectedReferences } = useSelectReferences();
 
   const handleClick = () => {
-    if (!book) {
+    if (!book && !availableDesign ) {
       onAddReference();
     } else {
       onBookNow();
@@ -41,7 +41,7 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, title, de
       );
     }
 
-    if (selectedReferences && selectedReferences.some(ref => ref.id === itemId)) {
+    if (!availableDesign && selectedReferences && selectedReferences.some(ref => ref.id === itemId)) {
       return (
         <Button
           color="red"
@@ -63,7 +63,7 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, title, de
         aria-label={!book ? t('use_as_reference') : t('book_now')}
         title={!book ? t('use_as_reference') : t('book_now')}
         >
-        {!book ? t('use_as_reference') : t('book_now')}
+        {!book && !availableDesign ? t('use_as_reference') : t('book_now')}
       </Button>
     );
   };

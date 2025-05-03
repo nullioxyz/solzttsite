@@ -80,7 +80,9 @@ export default function AvailableDesignHome({ currentLanguage }) {
   const handleBookNow = (item) => {
     handleAddAsReference(item);
     
-    router.visit(route('site.contact', currentLanguage.slug));
+    setTimeout(() => {
+      router.visit(route('site.contact', 'lang'));
+    }, 3000)
   }
 
   return (
@@ -109,6 +111,7 @@ export default function AvailableDesignHome({ currentLanguage }) {
                 itemId={item.id}
                 available={item.available}
                 alt={`Image ${index + 1}`}
+                availableDesign={true}
                 reference={el => boxRefs.current[index] = el}
               />
             ))}

@@ -5,6 +5,8 @@ import anime from 'animejs';
 import { useSelectReferences } from '@/Contexts/SelectReferencesContext';
 import { useTranslation } from 'react-i18next';
 import { Link } from '@inertiajs/react';
+import { router } from '@inertiajs/react'
+
 
 const LazyImageModalComponent = lazy(() => import('@/Components/Site/Components/ImageToModal'))
 
@@ -76,13 +78,12 @@ export default function AvailableDesign() {
     handleDesigns();
   }, []);
 
-  const handleBookNow = (item) => {
+  const handleBookNow = async (item) => {
     handleAddAsReference(item);
     
-    const nextSection = document.getElementById('book');
-    if (nextSection) {
-      nextSection.scrollIntoView({ behavior: 'smooth' });
-    }
+    setTimeout(() => {
+      router.visit(route('site.contact', 'lang'));
+    }, 1000)
   }
 
   return (
@@ -120,6 +121,7 @@ export default function AvailableDesign() {
                 itemId={item.id}
                 available={item.available}
                 alt={`Image ${index + 1}`}
+                availableDesign={true}
                 reference={el => boxRefs.current[index] = el}
               />
             ))}

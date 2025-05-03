@@ -170,9 +170,9 @@ export default function Form({ currentLanguage, criativeProcessTranslation, cons
   const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY ?? "6LczDUEqAAAAAKoD4bTeyfKynwGmZZLpw3XU2ekL";
 
   return (
-    <div className="form lg:mt-20 md:mt-10 max-w-[1240px]">
+    <div className="form lg:mt-20 md:mt-10">
       <form id="contactForm">
-        <div>
+        <div className='xl:w-[1240px] lg:w-[1240px] mx-auto'>
           {stepIndex === 0 ? (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -265,7 +265,7 @@ export default function Form({ currentLanguage, criativeProcessTranslation, cons
                 {steps[stepIndex].id == 'bodyPart' ? (
                   <TextInput
                     usedefaultclass={false}
-                    className="appearance-none text-gray-900 block w-full border py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                    className="appearance-none text-gray-900 block w-full border py-3 px-4 mb-3 focus:outline-none focus:bg-white"
                     type="text"
                     value={data.body_location}
                     placeholder={t("Arm, Forearm")}
