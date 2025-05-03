@@ -110,4 +110,6 @@ return [
 
     'back_to_home' => 'Back to Home',
 
+    'attachments' => 'Attachments',
+
 ];

@@ -100,4 +100,6 @@ return [
 
     'back_to_home' => 'Voltar para a Página Inicial',
     'close' => 'Fechar',
+
+    'attachments' => 'Anexos',
 ];

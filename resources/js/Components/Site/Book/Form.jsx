@@ -230,10 +230,6 @@ export default function Form({ currentLanguage, criativeProcessTranslation, cons
                       className={`block w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-6 ${errors.references ? 'border-red-500' : ''}`}
                       onChange={(e) => setData(prevData => ({ ...prevData, references: e.target.value }))}
                       />
-      
-                      {selectedReferences.length ? (
-                        <Attachments />
-                      ) : null}
                   </div>
                 ) : null}
 
@@ -422,6 +418,10 @@ export default function Form({ currentLanguage, criativeProcessTranslation, cons
               
             </motion.div>
           )}
+
+          {selectedReferences.length ? (
+            <Attachments />
+          ) : null}
 
           {steps[stepIndex].id == 'recaptcha' && data.firstname !== null ? (
             <div id="dataCheck"> 

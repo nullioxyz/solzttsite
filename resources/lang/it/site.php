@@ -101,4 +101,6 @@ return [
 
     'close' => 'Chiudi',
 
+    'attachments' => 'allegati',
+
 ];
