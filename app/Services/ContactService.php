@@ -49,10 +49,8 @@ class ContactService  {
     public function verifyRecaptcha($recaptchaResponse, $ip)
     {
         if (env('APP_ENV') !== 'local') {
-            $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-                'secret' => config('services.recaptcha.secret_key'),
-                'response' => $recaptchaResponse,
-                'remoteip' => $ip,
+            $response = Http::asForm()->post('https://recaptchaenterprise.googleapis.com/v1/projects/solztt-recapcha-1724075224348/assessments?key=' . config('services.recaptcha.secret_key'), [
+                $recaptchaResponse
             ]);
 
             $body = json_decode((string) $response->getBody());

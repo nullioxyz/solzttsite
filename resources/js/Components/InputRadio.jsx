@@ -11,7 +11,7 @@ export default function InputRadio({ className = '', isFocused = false, usedefau
     }
   }, [isFocused]);
 
-  const defaultClass = 'h-4 w-4 border-gray-300 text-[#d3c1b2]';
+  const defaultClass = 'h-4 w-4 border-gray-300 text-[#4d4c4c]';
 
   return (
     <input

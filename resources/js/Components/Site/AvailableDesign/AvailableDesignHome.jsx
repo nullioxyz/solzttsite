@@ -86,12 +86,12 @@ export default function AvailableDesignHome({ currentLanguage }) {
   }
 
   return (
-    <section id="available" className="mx-auto text-black bg-white">
+    <section id="available" className="mx-auto text-black">
       <div className="max-w-[1240px] mx-auto">
         <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-4 mb-24">
           <div className="lg:text-left sm:text-center custom:text-center md:text-center">
-            <div className="title uppercase">
-              <h1 className='text-5xl tracking-tight montSerratBold text-black'>{t('available')}</h1>
+            <div className="title">
+              <h1 className="text-[2.0rem] tracking-tight text-[#595954]">{t('available')}</h1>
             </div>
           </div>
         </div>

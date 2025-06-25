@@ -34,6 +34,13 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'MontSerratLight';
+    src: url('../fonts/montserrat/Montserrat-Light.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 
 @font-face {
     font-family: 'Times New Roman';
@@ -80,6 +87,24 @@
     }
 }
 
+body p, label, input[type="text"], textarea, span {
+    font-family: 'Merriweather', serif;
+    font-size: 1rem;
+    line-height: 1.7;
+    font-weight: 300;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Lora', serif;
+}
+
+.menu-text, button {
+    font-family: 'MontSerratLight', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
 
 .solztt {
     font-family: 'Solztt';
@@ -89,11 +114,19 @@
     font-family: 'Solztt2';
 }
 
+.Merriweather {
+    font-family: 'Merriweather', serif;
+}
+
 .montserrat {
     font-family: "Montserrat";
     font-weight: bold;
     font-style: normal;
-  }
+}
+
+.MontSerratLight {
+    font-family: 'MontSerratLight';
+}
 
 .montSerratBold {
     font-family: 'MontSerratBold';
@@ -101,11 +134,6 @@
 
 .montSerratMedium, a, button, button span, h5 {
     font-family: 'MontSerratMedium';
-}
-
-p, label, input[type="text"] {
-    font-family: 'Times New Roman' !important;
-    font-weight: 500;
 }
 
 .times {

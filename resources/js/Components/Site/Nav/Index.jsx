@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { TiThMenu } from "react-icons/ti";
-import { IoCloseSharp } from "react-icons/io5";
-import { FaInstagram, FaFacebookF } from "react-icons/fa";
+import { FiMenu } from "react-icons/fi";
+import { FiX } from "react-icons/fi";
+import { FiInstagram } from "react-icons/fi";
+
 import LanguageSelection from '../Components/LanguageSelection/Index';
 import { useTranslation } from 'react-i18next';
 import logo from '@/Assets/Images/logo.png';
@@ -42,15 +43,20 @@ export default function Index({ languages, defaultLang, currentLanguage, social 
     <div>
       {showFixedMenu && (
         <div className="fixed top-0 left-0 w-full bg-white shadow-md z-50 transition-transform duration-300 ease-in-out transform translate-x-0">
-          <div className="flex justify-between items-center h-16 px-4 p-10 max-w-[1240px] mx-auto text-black">
-            <div className="text-lg font-bold mt-10 p-10">
-              <Logo />
+          <div className="relative flex items-center h-16 px-4 p-10 max-w-[1240px] mx-auto text-black">
+            <div className="absolute left-1/2 transform -translate-x-1/2 mt-10">
+              <a href={route('home.index', currentLanguage.slug)}>
+                <Logo />
+              </a>
             </div>
 
-            <LanguageSelection languages={languages} defaultLang={defaultLang} currentLanguage={currentLanguage} textColor="text-black" />
 
-            <div className="iconMenu flex cursor-pointer text-black" onClick={onclickMenu}>
-              {!open ? <TiThMenu size={30} /> : <IoCloseSharp size={30} />}
+            <div className="ml-auto iconMenu flex cursor-pointer" onClick={onclickMenu}>
+              {!open ? (
+                <FiMenu size={30} color="#747474" style={{ strokeWidth: 1 }} />
+              ) : (
+                <FiX size={30} color="#747474" style={{ strokeWidth: 1 }} />
+              )}
             </div>
           </div>
         </div>
@@ -58,53 +64,54 @@ export default function Index({ languages, defaultLang, currentLanguage, social 
       
 
       <div className={`relative flex justify-between items-center h-32 max-w-[1240px] mx-auto text-black`}>
-        <div className="text-lg font-bold mt-10">
-          <Logo />
+        <div className="relative left-1/2 transform -translate-x-1/2 mt-10 text-lg font-bold">
+          <a href={route('home.index', currentLanguage.slug)}>
+              <Logo />
+            </a>
         </div>
-        <LanguageSelection languages={languages} defaultLang={defaultLang} currentLanguage={currentLanguage} />
 
-        <div className="iconMenu flex mr-2 cursor-pointer " onClick={onclickMenu}>
-          {!open ? <TiThMenu size={30} /> : <IoCloseSharp size={30} />}
+        <div className="iconMenu flex mr-2 cursor-pointer" onClick={onclickMenu}>
+          {!open ? <FiMenu size={30} color='#747474' style={{ strokeWidth: 1 }} /> : <FiX size={30} style={{ strokeWidth: 1 }} color={'#747474'} />}
         </div>
 
         {open && <div className="fixed inset-0 bg-black opacity-50 z-40" onClick={onclickMenu}></div>}
 
         <div className={`mobile-menu fixed top-0 right-0 h-full text-black w-80 bg-white shadow-lg z-50 transition-transform duration-300 ease-in-out ${open ? 'transform translate-x-0' : 'transform translate-x-full'}`}>
-          <div className="flex justify-end p-4">
-            <IoCloseSharp size={30} className="cursor-pointer" onClick={onclickMenu} />
+          <div className="flex p-4">
+            <LanguageSelection languages={languages} defaultLang={defaultLang} currentLanguage={currentLanguage} />
+            <FiX size={30} color='#747474' style={{ strokeWidth: 1 }} className="cursor-pointer" onClick={onclickMenu} />
           </div>
 
-          <ul className="uppercase flex flex-col space-y-4 p-4 text-[20px]">
+          <ul className="flex flex-col space-y-4 p-4 text-[20px]">
             <li className="border-b border-gray-300 py-2">
-              <a href={route('site.about', currentLanguage.slug)} className="text-black MontSerratMedium">{t('about')}</a>
+              <a href={route('home.index', currentLanguage.slug)} className="text-[#747474] menu-text">{t('home')}</a>
+            </li>
+
+            <li className="border-b border-gray-300 py-2">
+              <a href={route('site.about', currentLanguage.slug)} className="text-[#747474] menu-text">{t('about')}</a>
             </li>
             <li className="border-b border-gray-300 py-2">
-              <a href={route('site.portfolio', currentLanguage.slug)} className="text-black MontSerratMedium">{t('portfolio')}</a>
+              <a href={route('site.portfolio', currentLanguage.slug)} className="text-[#747474] menu-text">{t('portfolio')}</a>
             </li>
             <li className="border-b border-gray-300 py-2">
-              <a href={route('site.available_designs', currentLanguage.slug)} className="text-black MontSerratMedium">{t('available')}</a>
+              <a href={route('site.available_designs', currentLanguage.slug)} className="text-[#747474] menu-text">{t('available')}</a>
             </li>
+            
             <li className="border-b border-gray-300 py-2">
-              <a href="#how" className="text-black MontSerratMedium">{t('appointment')}</a>
-            </li>
-            <li className="border-b border-gray-300 py-2">
-              <a href={route('site.contact', currentLanguage.slug)} className="text-black MontSerratMedium">{t('contact')}</a>
+              <a href={route('site.contact', currentLanguage.slug)} className="text-[#747474] menu-text">{t('contact')}</a>
             </li>
           </ul>
 
           <div className="flex justify-start space-x-3 mt-4 px-4">
+            
             {social.instagram && (
               <a href={social.instagram.url} target="_blank" rel="noopener noreferrer">
-                <FaInstagram size={20} className="text-black" />
+                <FiInstagram size={24} style={{ strokeWidth: 1 }}  color="#747474" />
               </a>
             )}
-
-            {social.facebook && (
-              <a href={social.facebook.url} target="_blank" rel="noopener noreferrer">
-                <FaFacebookF size={20} className="text-black" />
-              </a>
-            )}
+          
           </div>
+
         </div>
       </div>
     </div>

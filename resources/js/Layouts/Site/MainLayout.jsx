@@ -3,7 +3,6 @@ import React from 'react';
 import Nav from '@/Components/Site/Nav/Index';
 import { SelectReferencesProvider } from '@/Contexts/SelectReferencesContext';
 import { Head } from '@inertiajs/react';
-import { FaFacebookF, FaInstagram } from 'react-icons/fa';
 import Footer from '@/Components/Site/Footer/Index';
 
 const logoUrl = `${window.location.origin}/images/logo.jpg`;

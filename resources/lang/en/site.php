@@ -112,4 +112,9 @@ return [
 
     'attachments' => 'Attachments',
 
+    'First name' => 'First name',
+    'Last name' => 'Last name',
+    'Phone Number' => 'Phone Number',
+
+    'Place of the tattoo' => 'Placement (Body area)'
 ];

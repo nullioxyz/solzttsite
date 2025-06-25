@@ -36,7 +36,7 @@ export default function Index({
 }) {
   return (
 
-    <MainLayoutInternal languages={languages} defaultLang={defaultLang} social={social} metatags={metatags} currentLanguage={currentLanguage}>
+    <MainLayout languages={languages} defaultLang={defaultLang} social={social} metatags={metatags} currentLanguage={currentLanguage}>
         <Book
             requestSectionText={requestSectionText}
             criativeProcess={criativeProcess}
@@ -44,6 +44,6 @@ export default function Index({
             paymentMethod={paymentMethods}
             currentLanguage={currentLanguage}
         />
-    </MainLayoutInternal>
+    </MainLayout>
   )
 }

@@ -28,7 +28,7 @@ export function Gallery({ images}) {
       )}
       loop={true}
       autoplay={false}
-      className="relative flex items-center rounded-lg">
+      className="relative flex items-center">
       {images.map((image, index) => (
         <div
           key={'gallery_' + index}

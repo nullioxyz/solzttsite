@@ -15,24 +15,15 @@ export default function About({ institucional }) {
   return (
     <section id="about" className="flex flex-col justify-between h-auto mx-auto p-5 mt-20 overflow-hidden">
       <div className="max-w-[1240px] mx-auto">
-        <div className="lg:text-left sm:text-left custom:text-left md:text-left mb-5">
-          <h1 className="sm:text-4xl xs:text-4xl md:text-5xl xl:text-6xl lg:text-6xl tracking-tight montSerratBold text-black">
+        <div className="lg:text-left sm:text-center custom:text-center md:text-center mb-5">
+          <h1 className="sm:text-[2.0rem] xs:text-[2.0rem] md:text-[2.0rem] xl:text-[2.0rem] lg:text-[2.0rem] text-[2.0rem] tracking-tight text-[#595954]">
             {institucionalTranslation.title}
           </h1>
         </div>
 
-        <div className="lg:text-left sm:text-left custom:text-left md:text-left">
-          <Link
-            href="/"
-            className="text inline-flex m-2 text-gray-600 hover:text-black transition"
-          >
-            {t('back_to_home')}
-          </Link>
-        </div>
-
-        <div className="flex flex-col xl:flex-row gap-10 items-center xl:items-start mt-10">
+        <div className="flex flex-col-reverse xl:flex-row gap-10 items-center xl:items-start mt-10">
           {/* Texto */}
-          <div className="text text-justify text-[20px] w-full xl:w-1/2">
+          <div className="text text-justify text-[20px] w-full xl:w-1/2 roboto text-[#4d4c4c]">
             <div dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
           </div>
 

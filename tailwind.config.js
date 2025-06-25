@@ -21,6 +21,7 @@ export default {
                 solztt2: ['Solztt2'],
                 MontSerratMedium: ['MontSerratMedium'],
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                MontserratLight: ['MontSerratLight', 'sans-serif'],
             },
             screens: {
                 'xs': '480px',

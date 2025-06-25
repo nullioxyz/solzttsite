@@ -36,7 +36,7 @@ export default function Index({
 }) {
   return (
 
-    <MainLayoutInternal languages={languages} defaultLang={defaultLang} social={social} metatags={metatags} currentLanguage={currentLanguage}>
+    <MainLayout languages={languages} defaultLang={defaultLang} social={social} metatags={metatags} currentLanguage={currentLanguage}>
         <Suspense fallback={<Spinner />}>
           <Works
             portfolio={portfolio}
@@ -50,6 +50,6 @@ export default function Index({
             currentLanguage={currentLanguage}
           />
         </Suspense>
-    </MainLayoutInternal>
+    </MainLayout>
   )
 }

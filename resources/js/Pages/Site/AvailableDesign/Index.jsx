@@ -21,10 +21,10 @@ export default function Index({
   portfolio
 }) {
   return (
-    <MainLayoutInternal languages={languages} defaultLang={defaultLang} social={social} metatags={metatags} currentLanguage={currentLanguage}>
+    <MainLayout languages={languages} defaultLang={defaultLang} social={social} metatags={metatags} currentLanguage={currentLanguage}>
         <Suspense fallback={<Spinner />}>
             <AvailableDesign />
         </Suspense>
-    </MainLayoutInternal>
+    </MainLayout>
   )
 }

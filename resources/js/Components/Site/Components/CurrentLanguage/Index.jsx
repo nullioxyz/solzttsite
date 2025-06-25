@@ -8,25 +8,22 @@ export default function CurrentLanguage({ currentLanguage, defaultLang }) {
   const languageName = currentLanguage ? currentLanguage.name : defaultLang.name;
 
   return (
-    <div className='flex space-x-4 items-center'>
+    <div className='flex p-0'>
       {languageToShow === 'pt' && (
         <>
-          <BR title={languageName} className='w-8' />
-          <span className='normal-case'>{languageName}</span>
+          <BR title={languageName} className='w-6 mt-[-3px]' />
         </>
       )}
 
       {languageToShow === 'it' && (
         <>
-          <IT title={languageName} className='w-8' />
-          <span className='normal-case'>{languageName}</span>
+          <IT title={languageName} className='w-6 mt-[-3px]' />
         </>
       )}
 
       {languageToShow === 'en' && (
         <>
-          <GB title={languageName} className='w-8' />
-          <span className='normal-case'>{languageName}</span>
+          <GB title={languageName} className='w-6 mt-[-3px]' />
         </>
       )}
     </div>

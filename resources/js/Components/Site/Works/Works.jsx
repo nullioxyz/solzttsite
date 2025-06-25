@@ -89,27 +89,15 @@ export default function Works({ currentLanguage }) {
   }, [newItems, portfolio.length]);
 
   return (
-    <section id="works" className="mx-auto text-black bg-white">
-      <div className="max-w-[1240px] mx-auto">
-        <div className="grid lg:grid-cols-1 md:grid-cols-1 gap-4 mb-24">
-          <div className="lg:text-left m-2 sm:text-left custom:text-left md:text-left">
-            <div className="title uppercase">
-              <h1 className='text-5xl tracking-tight montSerratBold'>{t('portfolio')}</h1>
-            </div>
-          </div>
-
-          <div className="lg:text-left sm:text-left custom:text-left md:text-left">
-            <Link
-              href="/"
-              className="text inline-flex m-3 text-gray-600 hover:text-black transition"
-            >
-              {t('back_to_home')}
-            </Link>
-          </div>
-
+    <section id="works" className="mx-auto">
+      <div className="max-w-[1240px] mx-auto w-full">
+        <div className="mb-10">
+          <h1 className="text-[2.0rem] tracking-tight text-[#595954] text-center sm:text-left">
+            {t('portfolio')}
+          </h1>
         </div>
 
-        <div className="grid grid-cols-3 gap-2 w-full mb-24 m-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xs:grid-cols-2 md:grid-cols-2 gap-x-3 gap-y-4 mb-24">
           <Suspense fallback={<Spinner />}>
             {portfolio.length > 0 && portfolio.map((item, index) => (
               <LazyImageModalComponent
@@ -132,7 +120,7 @@ export default function Works({ currentLanguage }) {
         {pagination.current_page < pagination.last_page && (
           <div className="flex justify-center mb-10">
             <button
-              className="px-6 py-3 bg-[#272533] text-white text-lg rounded-full hover:bg-[#9a7cae] transition duration-300 uppercase"
+              className="px-6 py-3 bg-[#272533] text-white text-lg hover:bg-[#9a7cae] transition duration-300 uppercase"
               onClick={handleLoadMore}
               disabled={loadingMore}
               aria-label={t('load_more')}

@@ -13,6 +13,7 @@ import {
 import { Gallery } from "./Gallery";
 import { useTranslation } from "react-i18next";
 import { useSelectReferences } from "@/Contexts/SelectReferencesContext";
+import { FiX } from "react-icons/fi";
 
 const ImageToModal = ({ reference, coverImage, alt, images, available, title, description, book, onBookNow, onAddReference, availableDesign, itemId }) => {
 
@@ -35,7 +36,7 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, title, de
   const renderActionButton = () => {
     if (!available) {
       return (
-        <Button color="orange" size="sm" disabled>
+        <Button color="orange" size="sm" className="rounded-none border-0" disabled>
           {t('not available')}
         </Button>
       );
@@ -44,8 +45,9 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, title, de
     if (!availableDesign && selectedReferences && selectedReferences.some(ref => ref.id === itemId)) {
       return (
         <Button
-          color="red"
           size="sm"
+          className="rounded-none border-0 bg-[#e63946] text-white hover:bg-[#d62839] shadow-none hover:shadow-none"
+          autoFocus="false"
           onClick={() => setSelectedReferences(prevRefs => prevRefs.filter(ref => ref.id !== itemId))}
           aria-label={!book ? t('remove_reference') : t('choose_another')}
           title={!book ? t('remove_reference') : t('choose_another')}
@@ -59,6 +61,7 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, title, de
       <Button
         color="gray"
         size="sm"
+        className="rounded-none border-0"
         onClick={handleClick}
         aria-label={!book ? t('use_as_reference') : t('book_now')}
         title={!book ? t('use_as_reference') : t('book_now')}
@@ -71,7 +74,7 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, title, de
   return (
     <>
       <Card
-        className="relative w-full lg:h-[400px] xl:h-[400px] md:h-[400px] sm:w-full sm:h-auto aspect-square cursor-pointer overflow-hidden"
+        className="relative w-full rounded-none aspect-[5/4] lg:h-[800px] xl:h-[800px] md:h-[800px] sm:w-full sm:h-[800px] cursor-pointer overflow-hidden"
         ref={reference}
       >
         <div className="relative w-full h-full">
@@ -79,7 +82,7 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, title, de
             src={coverImage}
             alt={alt}
             onClick={toggleModal}
-            className={`object-cover lg:h-[400px] xl:h-[400px] md:h-[400px] sm:w-full sm:h-auto ${!available ? 'grayscale' : ''}`}
+            className={`object-cover w-full h-full ${!available ? 'grayscale' : ''}`}
             loading="lazy"
           />
         </div>
@@ -87,7 +90,7 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, title, de
           <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-full flex justify-center">
             <button
               onClick={onBookNow}
-              className="xl:text-lg lg:text-lg md:text-md md:px-5 md:py-1 sm:px-2 sm:py-2 xs:px-1 xs:py-1 sm:text-sm xs:text-[10px] bg-[#272533] break-words whitespace-normal text-white rounded-full hover:bg-[#9a7cae] transition duration-300 uppercase"
+              className="rounded-none xl:text-lg lg:text-lg md:text-md md:px-5 md:py-1 sm:px-2 sm:py-2 xs:px-1 xs:py-1 sm:text-sm xs:text-[10px] bg-[#272533] break-words whitespace-normal text-white hover:bg-[#9a7cae] transition duration-300 uppercase"
               aria-label={t('book_now')}
             >
               {t('book_now')}
@@ -100,20 +103,20 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, title, de
         open={open}
         handler={toggleModal}
         size="xl"
-        className="w-full max-w-4xl max-h-screen overflow-y-scroll custom-scrollbar"
+        className="w-full max-w-4xl max-h-screen overflow-y-scroll custom-scrollbar rounded-none"
       >
         
-        <DialogHeader className="flex items-center justify-between p-4 border-b sticky top-0 bg-white z-10">
-          <div className="flex items-center gap-3">
-            <Button
-              color="amber"
-              size="sm"
-              onClick={toggleModal}
-            >
-            {t('close')}
-          </Button>
-          </div>
+        <DialogHeader className="flex items-center justify-between p-4 border-b sticky top-0 bg-white z-10 rounded-none">
           {renderActionButton()}
+          <div className="flex items-center gap-3">
+            <FiX
+              size={30}
+              color="#747474"
+              className="cursor-pointer"
+              onClick={toggleModal}
+              style={{ strokeWidth: 1 }}
+            />
+          </div>
         </DialogHeader>
 
           <DialogBody className="flex flex-col justify-center items-center flex-grow">

@@ -2,22 +2,6 @@ import { useEffect, useRef } from "react"
 
 export default function Logo() {
 
-  const svgRef = useRef(null);
-
-  useEffect(() => {
-    const svg = svgRef.current;
-    if (svg) {
-      const path = svg.querySelector('path');
-      if (path) {
-        const length = path.getTotalLength();
-        path.style.strokeDasharray = length;
-        path.style.strokeDashoffset = length;
-
-        path.style.transition = "stroke-dashoffset 2s ease-in-out";
-        path.style.strokeDashoffset = '0';
-      }
-    }
-  }, []);
 
   return (
     <>

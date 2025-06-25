@@ -25,19 +25,6 @@ export default function Index({
       <main>
         <AboutHome institucional={institucional}/>
 
-
-        <Suspense fallback={<Spinner />}>
-          <Works currentLanguage={currentLanguage}/>
-        </Suspense>
-
-        <Suspense fallback={<Spinner />}>
-          <AvailableDesign currentLanguage={currentLanguage} />
-        </Suspense>
-
-        <How
-          currentLanguage={currentLanguage}
-        />
-
       </main>
     </MainLayout>
   )

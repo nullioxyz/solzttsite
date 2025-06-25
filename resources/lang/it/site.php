@@ -103,4 +103,12 @@ return [
 
     'attachments' => 'allegati',
 
+    'availabilityPlaceholder' => 'Disponibilità di dati e orari',
+
+    'Phone Number' => 'Numero di telefono',
+
+    'Place of the tattoo' => 'Parte del corpo da tatuare',
+
+    'First name' => 'Nome',
+    'Last name' => 'Cognome'
 ];

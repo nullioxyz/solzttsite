@@ -87,31 +87,23 @@ export default function AvailableDesign() {
   }
 
   return (
-    <section id="available" className="flex flex-col justify-between h-auto mx-auto p-5">
-      <div className="max-w-[1240px] mx-auto">
-        <div className="grid lg:grid-cols-1 md:grid-cols-1 gap-4">
-          <div className="lg:text-left sm:text-center custom:text-center md:text-center">
-            <div className="title uppercase">
-              <h1 className='text-5xl tracking-tight montSerratBold text-black'>{t('available')}</h1>
-            </div>
-          </div>
-
-          <div className="lg:text-left sm:text-left custom:text-left md:text-left">
-            <Link
-              href="/"
-              className="text inline-flex m-2 text-gray-600 hover:text-black transition"
-            >
-              {t('back_to_home')}
-            </Link>
-          </div>
+    <section id="available" className="flex flex-col justify-between h-auto px-5 py-10">
+      <div className="max-w-[1240px] mx-auto w-full">
+        
+        {/* Título alinhado à esquerda em desktop, centralizado em mobile */}
+        <div className="mb-10">
+          <h1 className="text-[2.0rem] tracking-tight text-[#595954] text-center sm:text-left">
+            {t('available')}
+          </h1>
         </div>
-
-        <div className="grid grid-cols-3 gap-2 mt-10 mb-24">
+  
+        {/* Grid de imagens com 2 colunas fixas a partir do sm */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 xs:grid-cols-2 md:grid-cols-2 gap-x-3 gap-y-4 mb-24">
           <Suspense fallback={<Spinner />}>
             {designs.length > 0 && designs.map((item, index) => (
               <LazyImageModalComponent
-              key={`available_${item.id}`}
-                book={true}
+                key={`available_${item.id}`}
+                book={false}
                 title={item.translation ? item.translation.title : item.default_translation.title}
                 description={item.translation ? item.translation.description : item.default_translation.description}
                 coverImage={route('file.index', {locale: 'lang', uuid: item.media[0].uuid})}
@@ -127,7 +119,8 @@ export default function AvailableDesign() {
             ))}
           </Suspense>
         </div>
-
+  
+        {/* Botão "load more" */}
         {pagination.current_page < pagination.last_page && (
           <div className="flex justify-center mb-10">
             <button
@@ -144,4 +137,5 @@ export default function AvailableDesign() {
       </div>
     </section>
   )
+  
 }

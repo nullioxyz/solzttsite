@@ -102,4 +102,12 @@ return [
     'close' => 'Fechar',
 
     'attachments' => 'Anexos',
+    'availabilityPlaceholder' => 'Disponibilidade de datas e horários',
+
+    'First name' => 'Nome',
+    'Last name' => 'Sobrenome',
+
+    'Phone Number' => 'WhatsApp/Telegram',
+
+    'Place of the tattoo' => 'Parte do corpo que será tatuada'
 ];

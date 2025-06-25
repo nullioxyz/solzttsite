@@ -19,7 +19,7 @@ import CurrentLanguage from '../CurrentLanguage/Index';
 export default function LanguageSelection({ languages, defaultLang, currentLanguage, textColor }) {
   const [langSelectOpen, setlangSelectOpen] = React.useState(false);
   const handleLangSelectOpen = () => setlangSelectOpen((cur) => !cur);
-  const textColorDefault = textColor ?? 'text-black';
+  const textColorDefault = textColor ?? 'text-[#747474]';
 
   const { t } = useTranslation();
 
@@ -41,14 +41,14 @@ export default function LanguageSelection({ languages, defaultLang, currentLangu
 
 
   return (
-    <div className="flex ml-auto mr-2 cursor-pointer">
+    <div className="flex ml-auto cursor-pointer">
       <Button
         onClick={handleLangSelectOpen}
         className='bg-transparent border-none shadow-none hover:border-none hover:shadow-none'
         aria-label={t(`Current language ${languageName}`)}
         title={languageName}
         >
-        <div className={`flex space-x-4 items-center ${textColorDefault}`}>
+        <div className={`flex space-x-4 p-0 items-center ${textColorDefault}`}>
           <CurrentLanguage defaultLang={defaultLang} currentLanguage={currentLanguage} />
         </div>
       </Button>
