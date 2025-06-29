@@ -174,7 +174,7 @@ export default function Form({ currentLanguage, criativeProcessTranslation, cons
       <form id="contactForm" onSubmit={(e) => formSubmit(e)}>
         <div className="xl:w-[1240px] lg:w-[1240px] mx-auto space-y-6">
           
-          <div className="text-xl text-gray-600" dangerouslySetInnerHTML={{ __html: considerationTranslation.description }} />
+          <div className="text-xl text-[#4d4c4c]" dangerouslySetInnerHTML={{ __html: considerationTranslation.description }} />
   
           <TextInput
             className="block w-full rounded-none py-3 px-4 text-[#4d4c4c] focus:border-none"

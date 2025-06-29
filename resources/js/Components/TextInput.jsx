@@ -12,7 +12,7 @@ export default forwardRef(function TextInput(
     }
   }, [isFocused]);
 
-  const defaultClass = 'border-gray-300 rounded-md MontSerratLight shadow-sm text-[#e5e7eb]';
+  const defaultClass = 'border-gray-300 rounded-md MontSerratLight shadow-sm text-[#4d4c4c]';
 
   return (
     <input
