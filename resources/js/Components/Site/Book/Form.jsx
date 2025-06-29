@@ -167,7 +167,7 @@ export default function Form({ currentLanguage, considerationTranslation }) {
   }
 
   //TODO: FIX THIS.
-  const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY ?? "6LczDUEqAAAAAKoD4bTeyfKynwGmZZLpw3XU2ekL";
+  const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY ?? "6LcNenErAAAAAJBKpTssnlu_Z66_uvf46nDU_WOF";
 
   return (
     <div className="form">
