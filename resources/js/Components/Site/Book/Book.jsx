@@ -3,13 +3,9 @@ import Form from './Form';
 import { useTranslation } from 'react-i18next';
 import { Link } from '@inertiajs/react';
 
-export default function Book({ requestSectionText, criativeProcess, consideration, paymentMethod, currentLanguage }) {
+export default function Book({ consideration, currentLanguage }) {
   const { t } = useTranslation();
-
-  const requestSectionTextTranslation = requestSectionText.translation ?? requestSectionText.default_translation;
-  const criativeProcessTranslation = criativeProcess.translation ?? criativeProcess.default_translation;
   const considerationTranslation = consideration.translation ?? consideration.default_translation;
-  const paymentMethodTranslation = paymentMethod.translation ?? paymentMethod.default_translation;
 
   return (
     <section id="book" className="flex flex-col justify-between h-auto mx-auto p-5">
@@ -25,9 +21,7 @@ export default function Book({ requestSectionText, criativeProcess, consideratio
           <div className="grid lg:grid-cols-1 md:grid-cols-1 sm:grid-cols-1">
             <Form
               currentLanguage={currentLanguage}
-              criativeProcessTranslation={criativeProcessTranslation}
               considerationTranslation={considerationTranslation}
-              paymentMethodTranslation={paymentMethodTranslation}
               />
           </div>
         </div>

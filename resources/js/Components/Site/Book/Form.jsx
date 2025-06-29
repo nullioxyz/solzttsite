@@ -27,7 +27,7 @@ const Toast = Swal.mixin({
   }
 });
 
-export default function Form({ currentLanguage, criativeProcessTranslation, considerationTranslation, paymentMethodTranslation }) {
+export default function Form({ currentLanguage, considerationTranslation }) {
   const [stepIndex, setStepIndex] = useState(0);
 
   const { data, setData, post, processing, errors, reset } = useForm({
