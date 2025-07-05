@@ -116,5 +116,7 @@ return [
     'Last name' => 'Last name',
     'Phone Number' => 'Phone Number',
 
-    'Place of the tattoo' => 'Placement (Body area)'
+    'Place of the tattoo' => 'Placement (Body area)',
+
+    'captcha_question' => 'What is 2 + 2?'
 ];

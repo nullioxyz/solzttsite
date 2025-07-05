@@ -40,7 +40,7 @@ Route::middleware(['lang'])->prefix('/{locale}')->group(function() {
     
     Route::get('/available-designs', [SiteAvailableController::class, 'index'])->name('site.available_designs');
     Route::get('/load-available-designs', [SiteAvailableController::class, 'load'])->name('site.available_designs.load');
-    Route::post('/save-contact', [ContactController::class, 'store'])->name('contact.store');
+    Route::post('/save-contact', [ContactController::class, 'store'])->middleware('throttle:3,1')->name('contact.store');
 
     Route::get('translations', [TranslationController::class, 'getTranslations'])->name('site.translations');
     Route::post('set-language', [TranslationController::class, 'setLanguage'])->name('site.setLanguage');

@@ -48,19 +48,20 @@ class ContactService  {
 
     public function verifyRecaptcha($recaptchaResponse, $ip)
     {
-        if (env('APP_ENV') !== 'local') {
-
+        try {
             $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
                 'secret' => config('services.recaptcha.secret_key'),
                 'response' => $recaptchaResponse,
             ]);
         
             $body = $response->json();
-        
-            return ($body['success'] ?? false) && ($body['score'] ?? 0) >= 0.5;
+            
+            return ($body['success'] ?? false);
+        } catch (\Exception $e) {
+            
         }
-        
-        return true;
+
+        return false;
     }
 
     public function storeContact($validatedData)

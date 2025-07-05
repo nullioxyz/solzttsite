@@ -11,8 +11,7 @@ import { useRef, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelectReferences } from "@/Contexts/SelectReferencesContext";
 import Attachments from "../Components/Attachments/Index";
-import axios from '@/Services/requests';
-import { motion } from "framer-motion";
+import axios from '@/Services/requests'
 
 
 const Toast = Swal.mixin({
@@ -28,7 +27,6 @@ const Toast = Swal.mixin({
 });
 
 export default function Form({ currentLanguage, considerationTranslation }) {
-  const [stepIndex, setStepIndex] = useState(0);
 
   const { data, setData, post, processing, errors, reset } = useForm({
     firstname: null,
@@ -44,16 +42,14 @@ export default function Form({ currentLanguage, considerationTranslation }) {
     gender: null,
     city: null,
     availability: null,
-    recaptcha: null,
+    captcha_question: null,
     attachments: null
   });
 
-  const [phone, setPhone] = useState('');
   const [countryPhone, setCountryPhone] = useState('us');
 
   const { t } = useTranslation();
 
-  const recaptchaRef = useRef();
   const { selectedReferences, setSelectedReferences } = useSelectReferences();
 
   useEffect(() => {
@@ -69,7 +65,6 @@ export default function Form({ currentLanguage, considerationTranslation }) {
   };
 
   useEffect(() => {
-
     const fetchLanguage = async () => {
       try {
         const response = await axios.get(route('site.currentLanguage', { locale: currentLanguage.slug }));
@@ -81,18 +76,11 @@ export default function Form({ currentLanguage, considerationTranslation }) {
       } catch (error) {
 
       }
-
     };
 
     fetchLanguage();
 
   }, [setCountryPhone]);
-
-  const onChangeRecaptcha = (e) => {
-    const recaptchaValue = recaptchaRef.current.getValue();
-
-    setData(prevData => ({ ...prevData, recaptcha: recaptchaValue }))
-  }
 
   const sizeOptions = t('sizes', { returnObjects: true });
   const pronounsOpt = t('pronouns_opt', { returnObjects: true });
@@ -104,43 +92,8 @@ export default function Form({ currentLanguage, considerationTranslation }) {
   ];
 
 
-  const steps = [
-    { id: "instructions", question: t('instructions'), placeholder: t('instructionsPlaceholder') },
-    { id: "tattooIdea", question: t('tattoo_idea'), placeholder: t('tattooIdeaPlaceholder') },
-    { id: "bodyPart", question: t('body_location'), placeholder: t('bodyLocationPlaceholder') },
-    { id: "size", question: t('size'), placeholder: t('sizePlaceholder') },
-    { id: "references", question: t('references'), placeholder: t('referencesPlaceholder') },
-    { id: "availability", question: t('availability'), placeholder: t('availability')},
-    { id: "firstname", question: t('firstname'), placeholder: t('firstnamePlaceholder') },
-    { id: "lastname", question: t('lastname'), placeholder: t('lastnamePlaceholder') },
-    { id: "pronouns", question: t('pronouns'), placeholder: t('pronounsPlaceholder') },
-    { id: "email", question: t('email'), placeholder: t('emailPlaceholder') },
-    { id: "phone", question: t('phone'), placeholder: t('phonePlaceholder') },
-    { id: "city", question: t('city'), placeholder: t('cityPlaceholder') },
-    { id: "contact_preference", question: t('contact_preference'), placeholder: t('contact_preference')},
-    { id: "recaptcha", question: t('data_check_and_recaptcha'), placeholder: t('recaptcha')}
-  ];
-
-    const handleNext = () => {
-    if (stepIndex < steps.length - 1) {
-      setStepIndex(stepIndex + 1);
-    }
-  };
-
-  const handleBack = () => {
-    if (stepIndex > 0) {
-      setStepIndex(stepIndex - 1);
-    }
-  };
-
-
   const formSubmit = async (e) => {
     e.preventDefault();
-
-    if (!data.recaptcha) {
-      alert(t('Complete the recaptcha'));
-      return;
-    }
 
     post(route('contact.store', { locale: currentLanguage.slug }), {
       data: data,
@@ -211,6 +164,7 @@ export default function Form({ currentLanguage, considerationTranslation }) {
                 placeholder: t("+39 389 748 2409"),
               }}
             />
+            {errors.size && <p className="text-[#7d3636] text-md italic">{errors.size}</p>}
           </div>
 
           <TextArea
@@ -318,13 +272,25 @@ export default function Form({ currentLanguage, considerationTranslation }) {
               </div>
             ))}
           </div>
-  
-          <ReCAPTCHA
-            ref={recaptchaRef}
-            sitekey={siteKey}
-            onChange={onChangeRecaptcha}
+
+          <input
+            type="text"
+            name="company"
+            className="hidden"
+            autoComplete="off"
           />
-  
+
+          <div className="space-y-3">
+            <label className="block text-md text-[#4d4c4c]">{t("captcha_question")}</label>
+            <TextInput
+              className="block w-full rounded-none py-3 px-4 text-[#4d4c4c] focus:border-none"
+              type="text"
+              placeholder={t("captcha_question")}
+              value={data.captcha_question}
+              onChange={(e) => setData({ ...data, captcha_question: e.target.value })}
+            />
+          </div>
+
           {selectedReferences.length > 0 && <Attachments />}
   
           <button

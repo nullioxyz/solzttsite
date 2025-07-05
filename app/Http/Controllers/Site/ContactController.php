@@ -79,8 +79,8 @@ class ContactController extends Controller
     {
         $validatedData = $request->validated();
 
-        if (!$this->contactService->verifyRecaptcha($request->input('recaptcha'), $request->ip())) {
-            return back()->withErrors(['captcha' => __('ReCAPTCHA validation failed, please try again')]);
+        if (trim($request->input('captcha_question')) !== '4') {
+            return back()->withErrors(['captcha' => __('This is not good')]);
         }
 
         try {

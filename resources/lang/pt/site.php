@@ -109,5 +109,7 @@ return [
 
     'Phone Number' => 'WhatsApp/Telegram',
 
-    'Place of the tattoo' => 'Parte do corpo que será tatuada'
+    'Place of the tattoo' => 'Parte do corpo que será tatuada',
+
+    'captcha_question' => 'Quanto é 2 + 2?'
 ];

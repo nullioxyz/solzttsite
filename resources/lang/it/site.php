@@ -110,5 +110,7 @@ return [
     'Place of the tattoo' => 'Parte del corpo da tatuare',
 
     'First name' => 'Nome',
-    'Last name' => 'Cognome'
+    'Last name' => 'Cognome',
+
+    'captcha_question' => 'Quanto fa 2 + 2?'
 ];

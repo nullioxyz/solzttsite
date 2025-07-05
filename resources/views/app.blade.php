@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Merriweather:wght@300;400&display=swap" rel="stylesheet">
     <script src="https://www.google.com/recaptcha/enterprise.js" async defer></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-L1M0C8JWXT"></script>
+
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag() {
@@ -71,6 +72,7 @@
             });
         });
     </script>
+
 </body>
 
 </html>
