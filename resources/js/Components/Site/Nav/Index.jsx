@@ -88,9 +88,6 @@ export default function Index({ languages, defaultLang, currentLanguage, social 
             </li>
 
             <li className="border-b border-gray-300 py-2">
-              <a href={route('site.about', currentLanguage.slug)} className="text-[#747474] menu-text">{t('about')}</a>
-            </li>
-            <li className="border-b border-gray-300 py-2">
               <a href={route('site.portfolio', currentLanguage.slug)} className="text-[#747474] menu-text">{t('portfolio')}</a>
             </li>
             <li className="border-b border-gray-300 py-2">
