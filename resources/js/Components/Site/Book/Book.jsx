@@ -9,7 +9,7 @@ export default function Book({ consideration, currentLanguage }) {
   const considerationTranslation = consideration.translation ?? consideration.default_translation;
 
   return (
-    <section id="book" className="flex flex-col justify-between h-auto mx-auto p-5">
+    <section id="book" className="flex flex-col justify-between xl:mt-20 lg:mt-20 md:mt-20 sm:mt-5 xs:mt-5 h-auto mx-auto p-5">
       <div className="max-w-[1240px] mx-auto w-full">
 
         <div className="mb-10">

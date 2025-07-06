@@ -87,7 +87,7 @@ export default function AvailableDesign() {
   }
 
   return (
-    <section id="available" className="flex flex-col justify-between h-auto px-5 py-10">
+    <section id="available" className="flex flex-col justify-between xl:mt-20 lg:mt-20 md:mt-20 sm:mt-5 xs:mt-5 h-auto px-5 py-10">
       <div className="max-w-[1240px] mx-auto w-full">
         
         {/* Título alinhado à esquerda em desktop, centralizado em mobile */}

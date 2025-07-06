@@ -9,7 +9,7 @@ export default function AboutHome({ institucional }) {
   const imageUrl = hasMedia ? route('file.index', {locale: institucionalTranslation.language.slug, uuid: institucional.media[0].uuid}) : '';
 
   return (
-    <section id="about" className="flex flex-col justify-between h-auto mx-auto p-5 mt-20 overflow-hidden">
+    <section id="about" className="flex flex-col justify-between h-auto mx-auto p-5 xl:mt-20 lg:mt-20 md:mt-20 sm:mt-5 xs:mt-5 overflow-hidden">
       <div className="max-w-[1240px] mx-auto w-full">
 
         <div className="mb-10">

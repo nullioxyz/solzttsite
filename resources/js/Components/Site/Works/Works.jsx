@@ -89,7 +89,7 @@ export default function Works({ currentLanguage }) {
   }, [newItems, portfolio.length]);
 
   return (
-    <section id="works" className="mx-auto">
+    <section id="works" className="mx-auto xl:mt-20 lg:mt-20 md:mt-20 sm:mt-5 xs:mt-5">
       <div className="max-w-[1240px] mx-auto w-full">
         <div className="mb-10">
           <h1 className="text-[2.0rem] tracking-tight text-[#595954] text-center sm:text-left">
