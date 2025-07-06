@@ -18,6 +18,24 @@
         gtag('config', 'G-L1M0C8JWXT');
     </script>
 
+    @if(app()->environment('production'))
+        <script>
+            !function(f,b,e,v,n,t,s)
+            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+            n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s)}(window, document,'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+            fbq('init', '1042966984401150');
+            fbq('track', 'PageView');
+        </script>
+        <noscript>
+            <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1042966984401150&ev=PageView&noscript=1" />
+        </noscript>
+    @endif
+
     <title inertia>{{ config('app.name', 'Solztt') }}</title>
 
     <!-- Scripts -->
@@ -63,7 +81,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const loader = document.getElementById('initial-loader');
-            // Remove loader quando o Inertia terminar de carregar a página
             window.addEventListener('load', () => {
                 loader.style.opacity = '0';
                 setTimeout(() => {

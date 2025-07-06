@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import { useSelectReferences } from "@/Contexts/SelectReferencesContext";
 import Attachments from "../Components/Attachments/Index";
 import axios from '@/Services/requests'
+import { FiX } from 'react-icons/fi';
 
 
 const Toast = Swal.mixin({
@@ -43,14 +44,22 @@ export default function Form({ currentLanguage, considerationTranslation }) {
     city: null,
     availability: null,
     captcha_question: null,
-    attachments: null
+    attachments: null,
+    files: null,
   });
+
+  const [files, setFiles] = useState([]);
 
   const [countryPhone, setCountryPhone] = useState('us');
 
   const { t } = useTranslation();
 
   const { selectedReferences, setSelectedReferences } = useSelectReferences();
+
+  useEffect(() => {
+    setData({ ...data, files });
+  }, [files]);
+
 
   useEffect(() => {
     if (JSON.stringify(selectedReferences) !== JSON.stringify(data.attachments)) {
@@ -106,6 +115,7 @@ export default function Form({ currentLanguage, considerationTranslation }) {
         });
 
         setData([]);
+        setFiles([]);
         document.getElementById("contactForm").reset();
         setSelectedReferences([]);
       },
@@ -121,7 +131,7 @@ export default function Form({ currentLanguage, considerationTranslation }) {
 
   //TODO: FIX THIS.
   const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY ?? "6LcNenErAAAAAJBKpTssnlu_Z66_uvf46nDU_WOF";
-
+  
   return (
     <div className="form">
       <form id="contactForm" onSubmit={(e) => formSubmit(e)}>
@@ -129,29 +139,40 @@ export default function Form({ currentLanguage, considerationTranslation }) {
           
           <div className="text-xl text-[#4d4c4c]" dangerouslySetInnerHTML={{ __html: considerationTranslation.description }} />
   
-          <TextInput
-            className="block w-full rounded-none py-3 px-4 text-[#4d4c4c] focus:border-none"
-            type="text"
-            placeholder={t("First name")}
-            value={data.firstname}
-            onChange={(e) => setData({ ...data, firstname: e.target.value })}
-          />
-  
-          <TextInput
-            className="block w-full rounded-none py-3 px-4 text-[#4d4c4c] focus:border-none"
-            type="text"
-            placeholder={t("Last name")}
-            value={data.lastname}
-            onChange={(e) => setData({ ...data, lastname: e.target.value })}
-          />
+          <div className="space-y-3">
+            <label className="block text-md text-[#4d4c4c]">{t("First name")}</label>
+            <TextInput
+              className="block w-full rounded-none py-3 px-4 text-[#4d4c4c] focus:border-none"
+              type="text"
+              value={data.firstname}
+              onChange={(e) => setData({ ...data, firstname: e.target.value })}
+            />
+            {errors.firstname && <p className="text-[#7d3636] text-md italic">{errors.firstname}</p>}
+          </div>
 
-          <TextInput
-            className="block w-full rounded-none py-3 px-4 text-[#4d4c4c] focus:border-none"
-            type="text"
-            placeholder={t("my@email.com")}
-            value={data.email}
-            onChange={(e) => setData({ ...data, email: e.target.value })}
-          />
+          <div className="space-y-3">
+            <label className="block text-md text-[#4d4c4c]">{t("Last name")}</label>
+            <TextInput
+              className="block w-full rounded-none py-3 px-4 text-[#4d4c4c] focus:border-none"
+              type="text"
+              value={data.lastname}
+              onChange={(e) => setData({ ...data, lastname: e.target.value })}
+            />
+            {errors.lastname && <p className="text-[#7d3636] text-md italic">{errors.lastname}</p>}
+          </div>
+  
+
+          <div className="space-y-3">
+            <label className="block text-md text-[#4d4c4c]">{t("Email")}</label>
+            <TextInput
+              className="block w-full rounded-none py-3 px-4 text-[#4d4c4c] focus:border-none"
+              type="text"
+              placeholder={t("my@email.com")}
+              value={data.email}
+              onChange={(e) => setData({ ...data, email: e.target.value })}
+            />
+            {errors.email && <p className="text-[#7d3636] text-md italic">{errors.email}</p>}
+          </div>
   
           <div className="space-y-3">
             <label className="block text-md text-[#4d4c4c]">{t("Phone Number")}</label>
@@ -164,31 +185,80 @@ export default function Form({ currentLanguage, considerationTranslation }) {
                 placeholder: t("+39 389 748 2409"),
               }}
             />
+            {errors.phone && <p className="text-[#7d3636] text-md italic">{errors.phone}</p>}
+          </div>
+
+          <div className="">
+            <label className="block text-md text-[#4d4c4c]">{t("Your tattoo idea")}</label>
+            <TextArea
+              id="tattoo-idea"
+              name="idea"
+              rows="10"
+              value={data.tattoo_idea}
+              className={`block w-full rounded-none py-3 px-4 text-[#4d4c4c] border border-gray-300 focus:outline-none focus:ring-0 ${errors.references ? '#7d3636' : ''}`}
+              onChange={(e) => setData({ ...data, tattoo_idea: e.target.value })}
+            />
+
             {errors.size && <p className="text-[#7d3636] text-md italic">{errors.size}</p>}
           </div>
 
-          <TextArea
-            id="tattoo-idea"
-            name="idea"
-            rows="10"
-            value={data.tattoo_idea}
-            usedefaultclass
-            className="block w-full rounded-none py-3 px-4 text-[#4d4c4c] border border-gray-300 focus:outline-none focus:ring-0"
+          <div className="space-y-3">
+            <label className="block text-md text-[#4d4c4c]">{t("Visual references or tattoos (optional) - (max 5)")}</label>
+            <input
+              type="file"
+              name="file_upload"
+              multiple
+              accept=".jpg,.jpeg,.png,.pdf"
+              onChange={(e) => {
+                const newFiles = Array.from(e.target.files);
+                const total = files.length + newFiles.length;
+          
+                if (total > 5) {
+                  Swal.fire({
+                    icon: "warning",
+                    title: t("You can only upload up to 5 files"),
+                  });
+                }
+          
+                const allowedFiles = newFiles.slice(0, 5 - files.length);
+                setFiles(prev => [...prev, ...allowedFiles]);
+          
+                // optional: reset input to allow same file re-selection
+                e.target.value = null;
+              }}
+              className="block w-full text-[#4d4c4c] file:mr-4 file:py-2 file:px-4 file:rounded-none file:border-0 file:text-sm file:font-semibold file:bg-black file:text-white hover:file:bg-gray-800"
+            />
+            {errors.files && (
+              <p className="text-[#7d3636] text-md italic">{errors.files}</p>
+            )}
+          </div>
 
-            onChange={(e) => setData({ ...data, tattoo_idea: e.target.value })}
-            placeholder={t("tattoTattoIdeaPlaceholder")}
-          />
-  
-          <TextArea
-            id="references"
-            name="references"
-            rows="3"
-            value={data.references}
-            className="block w-full rounded-none py-3 px-4 text-[#4d4c4c] border border-gray-300 focus:outline-none focus:ring-0"
+          <div className="space-y-3">
+            {files.length > 0 && (
+              <ul className="mt-3 space-y-2">
+                {files.map((file, index) => (
+                  <li
+                    key={index}
+                    className="flex items-center justify-between bg-gray-100 px-4 py-2 rounded-none shadow-sm"
+                  >
+                    <span className="text-sm text-[#4d4c4c] truncate max-w-[70%]">{file.name}</span>
+                    <button
+                      type="button"
+                      className="text-[#7d3636] hover:underline text-sm"
+                      onClick={() => {
+                        const updated = [...files];
+                        updated.splice(index, 1);
+                        setFiles(updated);
+                      }}
+                    >
+                      <FiX size={30} color='#747474' style={{ strokeWidth: 1 }} className="cursor-pointer" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+          )}
+          </div>
 
-            onChange={(e) => setData({ ...data, references: e.target.value })}
-            placeholder={t("referencesPlaceholder")}
-          />
   
           <div className="space-y-3">
             <label className="block text-md text-[#4d4c4c]">{t("sizePlaceholder")}</label>
@@ -199,7 +269,7 @@ export default function Form({ currentLanguage, considerationTranslation }) {
                   name="size"
                   value={key}
                   checked={data.size === key}
-                  usedefaultclass
+                  usedefaultclass={false}
                   onChange={(e) => setData({ ...data, size: e.target.value })}
                 />
                 <label htmlFor={key} className="text-md text-[#4d4c4c]">{value}</label>
@@ -212,12 +282,14 @@ export default function Form({ currentLanguage, considerationTranslation }) {
             <label className="block text-md text-[#4d4c4c]">{t("Place of the tattoo")}</label>
             <TextInput
               className="block w-full rounded-none py-3 px-4 text-[#4d4c4c]"
-              usedefaultclass
+              usedefaultclass={false}
               type="text"
               placeholder={t("Arm, Forearm")}
               value={data.body_location}
               onChange={(e) => setData({ ...data, body_location: e.target.value })}
             />
+
+            {errors.body_location && <p className="text-[#7d3636] text-md italic">{errors.body_location}</p>}
           </div>
   
           <div className="space-y-3">
@@ -237,24 +309,33 @@ export default function Form({ currentLanguage, considerationTranslation }) {
             ))}
           </div>
   
-          <TextInput
-            className="block w-full rounded-none py-3 px-4 text-[#4d4c4c] focus:border-none"
-            type="text"
-            placeholder={t("cityPlaceholder")}
-            value={data.city}
-            onChange={(e) => setData({ ...data, city: e.target.value })}
-          />
-  
-          <TextArea
-            id="availability"
-            name="availability"
-            rows="3"
-            value={data.availability}
-            className="block w-full rounded-none py-3 px-4 text-[#4d4c4c] border border-gray-300 focus:outline-none focus:ring-0"
+          <div className="space-y-3">
+            <label className="block text-md text-[#4d4c4c]">{t("cityPlaceholder")}</label>
 
-            onChange={(e) => setData({ ...data, availability: e.target.value })}
-            placeholder={t("availabilityPlaceholder")}
-          />
+            <TextInput
+              className="block w-full rounded-none py-3 px-4 text-[#4d4c4c] focus:border-none"
+              type="text"
+              value={data.city}
+              onChange={(e) => setData({ ...data, city: e.target.value })}
+            />
+
+            {errors.city && <p className="text-[#7d3636] text-md italic">{errors.city}</p>}
+          </div>
+  
+          <div className="space-y-3">
+            <label className="block text-md text-[#4d4c4c]">{t("availabilityPlaceholder")}</label>
+            <TextArea
+              id="availability"
+              name="availability"
+              rows="3"
+              value={data.availability}
+              className="block w-full rounded-none py-3 px-4 text-[#4d4c4c] border border-gray-300 focus:outline-none focus:ring-0"
+
+              onChange={(e) => setData({ ...data, availability: e.target.value })}
+            />
+
+            {errors.availability && <p className="text-[#7d3636] text-md italic">{errors.availability}</p>}
+          </div>
   
           <div className="space-y-3">
             <label className="block text-md text-[#4d4c4c]">{t("contact_preference")}</label>

@@ -1,5 +1,4 @@
-import { PencilSquareIcon, EyeIcon } from '@heroicons/react/24/solid'
-import DeleteButton from '../Buttons/DeleteButton/Index';
+import { EyeIcon } from '@heroicons/react/24/solid'
 import { Chip } from '@material-tailwind/react';
 
 export default function TableRow({ item }) {
@@ -27,7 +26,7 @@ export default function TableRow({ item }) {
           <Chip color="green" value="Readed" />
 
         ): (
-          <Chip color="red" value="Not rad" />
+          <Chip color="red" value="Not read" />
         )}
       </td>
 

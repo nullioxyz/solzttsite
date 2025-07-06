@@ -160,15 +160,22 @@ return [
     
     "tattoo_idea.required" => "Your tattoo idea is crucial so I can give you an accurate quote!",
     "tattoo_idea.min" => "Try to describe your idea in at least 30 characters.",
-    "references.required" => "Tell me about your references! Links, images, anything goes...",
+    "references.required" => "Tell me about your references Links, images, anything goes...",
     "size.required" => "Knowing the tattoo size is important as it affects the price.",
     "body_location.required" => "Let me know where you want your tattoo on your body.",
     "email.required" => "Please provide a valid email address.",
     "phone.required" => "I need a phone number to get in touch.",
     "firstname.required" => "Tell me your name, please!",
-    "lastname.required" => "I need your last name, don't be shy!",
-    "city.required" => "Where are you from? Tell me your city!",
+    "lastname.required" => "I need your last name",
+    "city.required" => "Where are you from? Please, tell me your current city",
     "availability.required" => "Let me know your availability so I can fit into your schedule.",
+
+    'file' => [
+        'required' => 'Please upload a file.',
+        'file'     => 'The upload must be a valid file.',
+        'mimes'    => 'Only JPG, PNG or PDF files are allowed.',
+        'max'      => 'The file must not be larger than 2MB.',
+    ],
 
     /*
     |--------------------------------------------------------------------------

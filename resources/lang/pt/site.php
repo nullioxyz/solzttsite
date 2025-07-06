@@ -93,6 +93,7 @@ return [
     'Body part' => 'Local do Corpo',
     'City' => 'Cidade',
     'Availability' => 'Disponibilidade',
+    'Your tattoo idea' => 'Sua ideia',
 
     'Complete the recaptcha' => 'Complete o recaptcha',
 
@@ -111,5 +112,7 @@ return [
 
     'Place of the tattoo' => 'Parte do corpo que será tatuada',
 
-    'captcha_question' => 'Quanto é 2 + 2?'
+    'captcha_question' => 'Quanto é 2 + 2?',
+    'Visual references or tattoos (optional) - (max 5)' => 'Referências visuais ou tatuagens (opcional) - max 5',
+    "You can only upload up to 5 files" => 'Você pode enviar no máximo 5 arquivos',
 ];

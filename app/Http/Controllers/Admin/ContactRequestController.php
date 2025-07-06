@@ -43,7 +43,7 @@ class ContactRequestController extends Controller
 
     public function view(Contact $contact)
     {
-        $contact->load('reservedDesign.media', 'portfolioReferences.media');
+        $contact->load('reservedDesign.media', 'portfolioReferences.media', 'media');
 
         return Inertia::render('Contact/View', [
             'contact' => $contact,

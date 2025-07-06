@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-
-class Contact extends Model
+class Contact extends Model implements HasMedia
 {
-    Use SoftDeletes;
+    use SoftDeletes, InteractsWithMedia;
+    
     protected $table = 'contact';
 
     protected $fillable = [

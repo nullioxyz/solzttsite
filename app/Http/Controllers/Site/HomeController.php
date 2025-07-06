@@ -7,7 +7,6 @@ use App\Models\Institucional;
 use App\Models\Language;
 use App\Models\SiteSetting;
 use App\Models\Social;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cookie;
 use Inertia\Inertia;
 

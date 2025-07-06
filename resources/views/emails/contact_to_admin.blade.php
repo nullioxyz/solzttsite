@@ -21,6 +21,9 @@
             overflow: hidden;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+        ul {
+            list-style: none;
+        }
         .header {
             background-color: #f4f4f4;
             color: #000000;
@@ -82,7 +85,19 @@
             <p><strong>{{ __('Phone:') }}</strong> {{ $contact['phone'] }}</p>
             <p><strong>{{ __('Preferred Contact Method:') }}</strong> {{ $contact['contact_me_by'] }}</p>
             <p><strong>{{ __('Tattoo Idea:') }}</strong> {{ $contact['tattoo_idea'] }}</p>
-            <p><strong>{{ __('References:') }}</strong> {{ $contact['references'] }}</p>
+            @if(count($contact->media) > 0)
+                <p><strong>{{ __('References:') }}</strong></p>
+
+                <ul>
+                    @foreach($contact->media as $media)
+                        <li>
+                            <a href="{{ route('file.index', ['locale' => 'locale', 'uuid' => $media->uuid]) }}">
+                                <img src="{{ route('file.index', ['locale' => 'locale', 'uuid' => $media->uuid]) }}" width="100" height="100">
+                            </a>
+                        </li>  
+                    @endforeach
+                </ul>
+            @endif
             @if(count($contact['portfolioReferences']) > 0)
                 <p><strong>{{ __('Portfolio References:') }}</strong></p>
 

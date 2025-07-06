@@ -35,6 +35,7 @@ class ContactService  {
             'reservedDesign.defaultTranslation',
             'portfolioReferences.media',
             'reservedDesign.media',
+            'media'
         ]);
         
         $this->sendEmail(
@@ -55,7 +56,9 @@ class ContactService  {
                 'content_type_id' => ContentType::TATTOO
             ]);
 
-            $this->attachReferencesAndDesigns($contact, $validatedData['attachments']);
+            if(isset($validatedData['attachments'])) {
+                $this->attachReferencesAndDesigns($contact, $validatedData['attachments']);
+            }
 
             DB::commit();
 

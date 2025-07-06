@@ -20,7 +20,8 @@ export default function Form(props) {
     city: props.data.city,
     availability: props.data.availability,
     portfolioReferences: props.data.portfolio_references,
-    reservedDesign: props.data.reserved_design
+    reservedDesign: props.data.reserved_design,
+    media: props.data.media,
   };
 
   const getReservedDesign = () => {
@@ -88,10 +89,28 @@ export default function Form(props) {
               <p className="text-gray-700">{data.size}</p>
             </div>
 
-            <div className="item">
-              <h3 className="font-semibold text-lg">References:</h3>
-              <p className="text-gray-700">{data.references}</p>
-            </div>
+            {data.media && data.media.length ? (
+              <div className="item">
+                <h3 className="font-semibold text-lg">
+                  References
+                </h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {data.media?.map((file, index) => (
+                    <React.Fragment key={index}>
+                      <div key={index} className="p-2">
+                        <a target='_blank' href={route('file.index', {'locale': 'lang', 'uuid': file.uuid})}>
+                          <img
+                            src={file.original_url}
+                            alt={`Reserved Design Image ${index + 1}`}
+                            className="w-full h-[200px] object-cover rounded"
+                          />
+                        </a>
+                      </div>
+                    </React.Fragment>
+                  ))}
+                </div>
+              </div>
+            ) : null}
 
             <div className="item">
               <h3 className="font-semibold text-lg">Body location:</h3>

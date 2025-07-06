@@ -8,6 +8,7 @@ use App\Models\Portfolio;
 use App\Models\SiteSetting;
 use App\Models\Social;
 use App\Services\ContactService;
+use App\Strategies\Files\MediaUploadStrategy;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
@@ -15,10 +16,12 @@ use Inertia\Inertia;
 class ContactController extends Controller
 {
     protected $contactService;
+    protected $mediaUploadStrategy;
 
-    public function __construct(ContactService $contactService)
+    public function __construct(ContactService $contactService, MediaUploadStrategy $mediaUploadStrategy)
     {
         $this->contactService = $contactService;
+        $this->mediaUploadStrategy = $mediaUploadStrategy;
     }
 
     public function index()
@@ -71,7 +74,7 @@ class ContactController extends Controller
             'social' => $social,
             'metatags' => $metatags,
             'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? $defaultLang,
-            'portfolio' => $portfolio
+            'portfolio' => $portfolio,
         ]);
     }
 
@@ -85,10 +88,15 @@ class ContactController extends Controller
 
         try {
             
-            $this->contactService->storeContact($validatedData);
+            $contact = $this->contactService->storeContact($validatedData);
+
+            if(count($validatedData['files'])) {
+                $this->mediaUploadStrategy->upload($request->file('files'), $contact, 'contact');
+            }
 
             return redirect()->route('site.contact', $request->cookie('locale'));
         } catch (\Exception $e) {
+            dd($e);
             Log::error($e->getMessage());
             return redirect()->route('site.contact', $request->cookie('locale'))->withErrors(['error' => 'Something went wrong. Please try again.']);
         }

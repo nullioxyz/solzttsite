@@ -104,6 +104,7 @@ return [
     'Body part' => 'Body Location',
     'City' => 'City',
     'Availability' => 'Availability',
+    'Your tattoo idea' => 'Your tattoo idea',
 
     'Complete the recaptcha' => 'Complete the recaptcha',
     'footer_information' => 'SolZtt. All rights reserved.',
@@ -118,5 +119,9 @@ return [
 
     'Place of the tattoo' => 'Placement (Body area)',
 
-    'captcha_question' => 'What is 2 + 2?'
+    'captcha_question' => 'What is 2 + 2?',
+
+    'Visual references or tattoos (optional) - (max 5)' => 'Visual references or tattoos (optional) - max 5',
+
+    "You can only upload up to 5 files" => 'You can only upload up to 5 files',
 ];
