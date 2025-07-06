@@ -100,7 +100,7 @@ export default function Form(props) {
                       <div key={index} className="p-2">
                         <a target='_blank' href={route('file.index', {'locale': 'lang', 'uuid': file.uuid})}>
                           <img
-                            src={file.original_url}
+                            src={route('file.index', {'locale': 'lang', 'uuid': file.uuid})}
                             alt={`Reserved Design Image ${index + 1}`}
                             className="w-full h-[200px] object-cover rounded"
                           />
