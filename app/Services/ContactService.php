@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\ContactCreated;
 use App\Mail\ContactMailable;
 use App\Models\AvailableDesign;
 use App\Models\Contact;
@@ -9,13 +10,11 @@ use App\Models\ContentType;
 use App\Models\Portfolio;
 use App\Repositories\Contact\ContactRepository;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 
 class ContactService  {
     
     protected $contactRepo;
-
     
     public function __construct(ContactRepository $contactRepo)
     {
@@ -29,7 +28,7 @@ class ContactService  {
         );
     }
 
-    protected function sendEmails($contact)
+    public function sendEmails($contact)
     {
         $contact->load([
             'portfolioReferences.defaultTranslation',
@@ -46,24 +45,6 @@ class ContactService  {
         );
     }
 
-    public function verifyRecaptcha($recaptchaResponse, $ip)
-    {
-        try {
-            $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-                'secret' => config('services.recaptcha.secret_key'),
-                'response' => $recaptchaResponse,
-            ]);
-        
-            $body = $response->json();
-            
-            return ($body['success'] ?? false);
-        } catch (\Exception $e) {
-            
-        }
-
-        return false;
-    }
-
     public function storeContact($validatedData)
     {
         DB::beginTransaction();
@@ -78,12 +59,12 @@ class ContactService  {
 
             DB::commit();
 
-            $this->sendEmails($contact);
+            event(new ContactCreated($contact));
 
             return $contact;
         } catch (\Exception $e) {
             DB::rollBack();
-            throw $e; // Rethrow to be caught in the controller
+            throw $e;
         }
     }
 
