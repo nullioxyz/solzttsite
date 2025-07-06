@@ -122,7 +122,7 @@ export default function AvailableDesignHome({ currentLanguage }) {
           <div className="flex justify-center mb-10">
             <a
               href={route('site.available_designs', currentLanguage.slug)}
-              className="px-6 py-3 bg-[#272533] text-white text-lg rounded-full hover:bg-[#9a7cae] transition duration-300 uppercase"
+              className="px-6 py-3 bg-[#595954] text-white text-lg hover:bg-[#fff] hover:text-[#595954] transition duration-300 uppercase border-[#595954] border"
             >
               {!loadingMore ? t('load_more') : <Spinner />}
             </a>

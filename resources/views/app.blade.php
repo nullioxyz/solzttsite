@@ -72,23 +72,9 @@
 
 <body class="antialiased">
 
-    <div id="initial-loader">
-        <div class="loader-animation"></div>
-    </div>
-
     @inertia
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const loader = document.getElementById('initial-loader');
-            window.addEventListener('load', () => {
-                loader.style.opacity = '0';
-                setTimeout(() => {
-                    loader.remove();
-                }, 500); // Remover após 0.5s para transição suave
-            });
-        });
-    </script>
+   
 
 </body>
 

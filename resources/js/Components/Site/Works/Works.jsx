@@ -120,7 +120,7 @@ export default function Works({ currentLanguage }) {
         {pagination.current_page < pagination.last_page && (
           <div className="flex justify-center mb-10">
             <button
-              className="px-6 py-3 bg-[#272533] text-white text-lg hover:bg-[#9a7cae] transition duration-300 uppercase"
+              className="px-6 py-3 bg-[#595954] text-white text-lg hover:bg-[#fff] hover:text-[#595954] transition duration-300 uppercase border-[#595954] border"
               onClick={handleLoadMore}
               disabled={loadingMore}
               aria-label={t('load_more')}
