@@ -23,7 +23,7 @@ class StoreContactRequest extends FormRequest
             'availability' => 'required',
             'attachments' => 'array|nullable',
             'files' => 'nullable|array|max:5',
-            'files.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'files.*' => 'image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 
@@ -41,10 +41,9 @@ class StoreContactRequest extends FormRequest
             'lastname.required' => trans("validation.lastname.required"),
             'city.required' => trans("validation.city.required"),
             'availability.required' => trans('validation.availability.required'),
-            'file.required' => trans('validation_messages.file.required'),
-            'file.file'     => trans('validation_messages.file.file'),
-            'file.mimes'    => trans('validation_messages.file.mimes'),
-            'file.max'      => trans('validation_messages.file.max'),
+            'files.file'     => trans('validation.file.file'),
+            'files.mimes'    => trans('validation.file.mimes'),
+            'files.*.max'      => trans('validation.file.max'),
         ];
     }
 }

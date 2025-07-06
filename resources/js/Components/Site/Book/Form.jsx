@@ -120,7 +120,6 @@ export default function Form({ currentLanguage, considerationTranslation }) {
         setSelectedReferences([]);
       },
       onError: (error) => {
-        console.log(error);
         Toast.fire({
           icon: "warning",
           title: t("Check your information and submit the form again")
@@ -134,7 +133,7 @@ export default function Form({ currentLanguage, considerationTranslation }) {
   
   return (
     <div className="form">
-      <form id="contactForm" onSubmit={(e) => formSubmit(e)}>
+      <form id="contactForm" onSubmit={(e) => formSubmit(e)} encType="multipart/form-data"      >
         <div className="xl:w-[1240px] lg:w-[1240px] mx-auto space-y-6">
           
           <div className="text-xl text-[#4d4c4c]" dangerouslySetInnerHTML={{ __html: considerationTranslation.description }} />
@@ -228,9 +227,16 @@ export default function Form({ currentLanguage, considerationTranslation }) {
               }}
               className="block w-full text-[#4d4c4c] file:mr-4 file:py-2 file:px-4 file:rounded-none file:border-0 file:text-sm file:font-semibold file:bg-black file:text-white hover:file:bg-gray-800"
             />
-            {errors.files && (
-              <p className="text-[#7d3636] text-md italic">{errors.files}</p>
-            )}
+            {data.files?.map((file, index) => (
+              <div key={index}>
+                <span>{file.name}</span>
+                {errors[`files.${index}`] && (
+                  <p className="text-[#7d3636] text-md italic">
+                    {errors[`files.${index}`]}
+                  </p>
+                )}
+              </div>
+            ))}
           </div>
 
           <div className="space-y-3">
@@ -256,7 +262,7 @@ export default function Form({ currentLanguage, considerationTranslation }) {
                   </li>
                 ))}
               </ul>
-          )}
+            )}
           </div>
 
   

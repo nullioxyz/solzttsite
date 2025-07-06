@@ -42,7 +42,7 @@ class ContactService  {
             $contact,
             __('Contact from website'),
             'emails.contact_to_admin',
-            'frankedeveloper@gmail.com'
+            'solztt.book@gmail.com'
         );
     }
 
