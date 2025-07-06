@@ -10,9 +10,10 @@ export default function AboutHome({ institucional }) {
 
   return (
     <section id="about" className="flex flex-col justify-between h-auto mx-auto p-5 mt-20 overflow-hidden">
-      <div className="max-w-[1240px] mx-auto">
-        <div className="lg:text-left sm:text-center xs:text-center custom:text-center md:text-center mb-10">
-          <h1 className="text-[2.0rem] tracking-tight text-[#595954]">
+      <div className="max-w-[1240px] mx-auto w-full">
+
+        <div className="mb-10">
+          <h1 className="text-[2.0rem] tracking-tight text-[#595954] text-center sm:text-left">
             {institucionalTranslation.title}
           </h1>
         </div>
