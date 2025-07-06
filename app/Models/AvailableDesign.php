@@ -43,7 +43,7 @@ class AvailableDesign extends Model implements HasMedia
 
     public function translation()
     {
-        $locale = Session::get('locale') || Cookie::get('locale');
+        $locale = Cookie::get('locale');;
 
         return $this->hasOne(AvailableDesignLang::class, 'available_design_id')
             ->whereHas('language', function ($query) use ($locale) {
