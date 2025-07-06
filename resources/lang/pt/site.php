@@ -4,14 +4,14 @@ return [
 
     //menu
     'about' => 'Quem sou eu?', 
-    'contact' => 'Contato', 
+    'contact' => 'Quero Tatuar', 
     'portfolio' => 'Portfólio', 
     'available' => 'Desenhos Disponíveis',
     'appointment' => 'Agendamento',
     
     //sections
     'how_to_book' => 'Como agendar um horário', 
-    'requestatatto' => 'Solicitar orçamento', 
+    'requestatatto' => 'Quero Tatuar', 
     'book_now' => 'Agende agora', 
 
     //contact form

@@ -4,14 +4,14 @@ return [
 
     //menu
     'about' => 'Who Am I?',
-    'contact' => 'Contact',
+    'contact' => 'Book a Tattoo',
     'portfolio' => 'Portfolio',
     'available' => 'Available Designs',
     'appointment' => 'Appointment',
     
     //sections
     'how_to_book' => 'How to book an appointment',
-    'requestatatto' => 'Request a quote',
+    'requestatatto' => 'Book a Tattoo',
     'book_now' => 'Book now',
 
     //contact form

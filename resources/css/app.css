@@ -49,42 +49,9 @@
     font-style: normal;
 }
 
-
-@keyframes typing {
-    from { width: 0; }
-    to { width: 100%; }
-}
-
-@keyframes blink-caret {
-    from, to { border-color: transparent; }
-    50% { border-color: #fff; }
-}
-
-
-.svg-container svg path {
-    stroke-dasharray: 1000;
-    stroke-dashoffset: 1000;
-    animation: draw 4s forwards, fill 1s 4s forwards;
-}
-
 .svg-container svg g {
     display: flex;
     align-items: center;
-}
-
-@keyframes draw {
-    to {
-        stroke-dashoffset: 0;
-    }
-}
-
-@keyframes fill {
-    from {
-        fill: #7c8f77;
-    }
-    to {
-        fill: #000;
-    }
 }
 
 body p, label, input[type="text"], textarea, span {

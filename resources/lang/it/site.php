@@ -4,7 +4,7 @@ return [
 
     //menu
     'about' => 'Chi sono io?',
-    'contact' => 'Contatti',
+    'contact' => 'Richiedi un Preventivo',
     'portfolio' => 'Portfolio',
     'available' => 'Disegni Disponibili',
     'appointment' => 'Appuntamento',
