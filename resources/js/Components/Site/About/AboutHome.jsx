@@ -13,7 +13,7 @@ export default function AboutHome({ institucional }) {
       <div className="max-w-[1240px] mx-auto w-full">
 
         <div className="mb-10">
-          <h1 className="text-[2.0rem] tracking-tight text-[#595954] text-center sm:text-left">
+          <h1 className="text-[2.0rem] tracking-tight text-[#595954] xl:text-left md:text-center sm:text-center">
             {institucionalTranslation.title}
           </h1>
         </div>
@@ -26,11 +26,11 @@ export default function AboutHome({ institucional }) {
 
           {/* Imagem */}
           {hasMedia && (
-            <div className="w-full xl:w-1/2 flex justify-center xl:justify-end">
+            <div className="w-full xl:w-1/2 flex justify-center xl:mt-[-4rem]">
               <img 
                 src={imageUrl}
                 alt="Image 1"  
-                className="w-[620px] h-[400px] md:w-[500px] md:h-[500px] sm:w-full sm:h-auto object-cover"
+                className="w-[620px] sm:w-full sm:h-auto object-cover"
                 loading='lazy'
               />
             </div>
