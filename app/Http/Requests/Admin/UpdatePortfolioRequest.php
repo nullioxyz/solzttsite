@@ -24,10 +24,6 @@ class UpdatePortfolioRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'slug' => [
-                'required',
-                Rule::unique('portfolio')->ignore($this->route('portfolio')),
-            ],
             'active' => 'nullable',
             'languages' => 'required|array',
             'languages.*.title' => 'required|string',
@@ -39,15 +35,22 @@ class UpdatePortfolioRequest extends FormRequest
                     $lang = explode('.', $attribute);
                     $languages = $this->get('languages');
                     
-                    $exists = PortfolioLang::where('slug', $value)
-                        ->where('language_id', '!=', $languages[$lang[1]]['language_id'] ?? $lang[1])
-                        ->where('portfolio_id', $this->route('portfolio')->id)
-                        ->exists();
+                    $languageId = $languages[$lang[1]]['language_id'] ?? $lang[1];
+                    $portfolio = $this->route('portfolio');
                     
-                    if ($exists) {
+                    $query = PortfolioLang::where('slug', $value)
+                        ->where('language_id', $languageId)
+                        ->where('portfolio_id', $portfolio->id);
+                    
+                    $existingId = $languages[$lang[1]]['id'] ?? null;
+                    if ($existingId) {
+                        $query->where('id', '!=', $existingId);
+                    }
+                
+                    if ($query->exists()) {
                         $fail(__('The slug has already been taken.'));
                     }
-                },
+                }
             ],
             'files' => 'nullable|array',
             'files.*' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',

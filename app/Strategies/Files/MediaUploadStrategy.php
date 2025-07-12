@@ -2,9 +2,12 @@
 
 namespace App\Strategies\Files;
 
+use App\Jobs\DeleteMediaJob;
+use App\Jobs\UploadMediaJob;
 use App\Models\Media;
 use App\Strategies\Interfaces\FileUploadStrategyInterface;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class MediaUploadStrategy implements FileUploadStrategyInterface
 {
@@ -48,15 +51,33 @@ class MediaUploadStrategy implements FileUploadStrategyInterface
     }
 
     public function delete($media)
-    {
-        if (app()->environment() !== 'local') {
-            if(! Storage::disk($media->disk)->exists($media->id . '/' . $media->file_name)) {
-                return;
-            }
-    
-            Storage::disk($media->disk)->delete($media->id . '/' . $media->file_name);
-        }
+    {   
+        DeleteMediaJob::dispatch(
+            [
+                'disk' => $media->disk,
+                'id' => $media->id,
+                'file_name' => $media->file_name,
+            ]
+        );
 
         $media->delete();
+    }
+
+    public function uploadAsync(array $files, $model, string $collection)
+    {
+        if (! $model instanceof \Spatie\MediaLibrary\HasMedia) {
+            throw new \InvalidArgumentException('Model must implement Spatie\MediaLibrary\HasMedia');
+        }
+
+        foreach ($files as $file) {
+            $folder = Str::uuid()->toString();
+            $filename = $file->getClientOriginalName();
+
+            $tempPath = $file->storeAs("temp_uploads/{$folder}", $filename, 'public');
+
+            UploadMediaJob::dispatch($model, $tempPath, $file->getClientMimeType(), $collection);
+        }
+
+        return $model;
     }
 }

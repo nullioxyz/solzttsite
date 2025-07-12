@@ -76,7 +76,7 @@ class PortfolioController extends Controller
             $this->portfolioLangStrategy->create($request->get('languages'), $portfolio);
 
             if(count($validator['files'])) {
-                $this->mediaUploadStrategy->upload($validator['files'], $portfolio, 'portfolio');
+                $this->mediaUploadStrategy->uploadAsync($validator['files'], $portfolio, 'portfolio');
             }
             
             DB::commit();
@@ -129,7 +129,7 @@ class PortfolioController extends Controller
             $this->portfolioLangStrategy->decideCreateOrUpdate($request->get('languages'), $portfolio);
 
             if(count($validator['files'])) {
-                $this->mediaUploadStrategy->upload($validator['files'], $portfolio, 'portfolio');
+                $this->mediaUploadStrategy->uploadAsync($validator['files'], $portfolio, 'portfolio');
             }
 
             DB::commit();
