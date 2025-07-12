@@ -90,8 +90,13 @@ export default function Index({ languages, defaultLang, currentLanguage, social 
             <li className="border-b border-gray-300 py-2">
               <a href={route('site.portfolio', currentLanguage.slug)} className="text-[#747474] menu-text">{t('portfolio')}</a>
             </li>
+
             <li className="border-b border-gray-300 py-2">
               <a href={route('site.available_designs', currentLanguage.slug)} className="text-[#747474] menu-text">{t('available')}</a>
+            </li>
+
+            <li className="border-b border-gray-300 py-2">
+              <a href={route('site.after_care', currentLanguage.slug)} className="text-[#747474] menu-text">{t('Tattoo Aftercare')}</a>
             </li>
             
             <li className="border-b border-gray-300 py-2">

@@ -124,4 +124,6 @@ return [
     'Visual references or tattoos (optional) - (max 5)' => 'Visual references or tattoos (optional) - max 5',
 
     "You can only upload up to 5 files" => 'You can only upload up to 5 files',
+    
+    "Tattoo Aftercare" => "Tattoo Aftercare",
 ];

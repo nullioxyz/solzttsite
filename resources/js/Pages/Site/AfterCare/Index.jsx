@@ -1,7 +1,7 @@
-import React, { lazy } from 'react';
+import React, { Suspense } from 'react';
 
+import AfterCare from '@/Components/Site/AfterCare/AfterCare';
 import MainLayout from '@/Layouts/Site/MainLayout';
-import AboutHome from '@/Components/Site/About/AboutHome';
 
 export default function Index({
   institucional,
@@ -9,14 +9,15 @@ export default function Index({
   defaultLang,
   currentLanguage,
   social,
-  metatags
+  metatags,
 }) {
   return (
-
     <MainLayout languages={languages} defaultLang={defaultLang} social={social} metatags={metatags} currentLanguage={currentLanguage}>
-      <main>
-        <AboutHome institucional={institucional}/>
-      </main>
+        <Suspense>
+          <AfterCare
+            institucional={institucional}
+          />
+        </Suspense>
     </MainLayout>
   )
 }

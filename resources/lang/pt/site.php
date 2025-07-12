@@ -115,4 +115,6 @@ return [
     'captcha_question' => 'Quanto é 2 + 2?',
     'Visual references or tattoos (optional) - (max 5)' => 'Referências visuais ou tatuagens (opcional) - max 5',
     "You can only upload up to 5 files" => 'Você pode enviar no máximo 5 arquivos',
+
+    "Tattoo Aftercare" => "Pós-Tatuagem",
 ];
