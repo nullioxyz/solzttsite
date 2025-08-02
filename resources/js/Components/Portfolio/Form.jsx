@@ -108,26 +108,9 @@ export default function Form (props) {
   return (
     <form onSubmit={submit}>
       <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-        <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-            <InputLabel htmlFor="slug" value="Slug" className={`mt-1 block w-full ${errors.slug ? 'text-[red]' : ''}`} />
-
-            <TextInput
-                id="slug"
-                type="text"
-                name="slug"
-                value={data.slug}
-                className={`mt-1 block w-full ${errors.slug ? 'border-red-500' : ''}`}
-                autoComplete="slug"
-                onChange={(e) => setData('slug', e.target.value)}
-            />
-
-            {errors.slug && 
-              <InputError message={errors.slug} className='mt-5'/>
-            }
-        </div>
 
         <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-            <InputLabel htmlFor="category_id" value="Category" className={`mt-1 block w-full ${errors.category_id ? 'text-[red]' : ''}`} />
+            <InputLabel htmlFor="category_id" value="Category" className={`mt-1 block w-full text-black ${errors.category_id ? 'text-[red]' : ''}`} />
 
             <SelectDefault
                 name="category_id"
@@ -143,7 +126,7 @@ export default function Form (props) {
         </div>
 
         <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-          <InputLabel htmlFor="files" value="Dropfiles here" className="mt-1 block w-full " />
+          <InputLabel htmlFor="files" value="Dropfiles here" className="mt-1 block w-full text-black" />
 
           <Dropfile
             uploadedFiles={uploadedFiles}
@@ -156,7 +139,7 @@ export default function Form (props) {
 
         {data.existingFiles && Array.isArray(data.existingFiles) && data.existingFiles.length > 0 ? (
           <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-            <InputLabel htmlFor="files" value="Uploaded files" className="mt-1 block w-full " />
+            <InputLabel htmlFor="files" value="Uploaded files" className="mt-1 block w-full text-black" />
             <Gallery files={data.existingFiles} onDelete={removeExistingFile} onReorder={handleReorder} />
           </div>
         ) : null}

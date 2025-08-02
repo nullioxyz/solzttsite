@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\SlugModelSettings;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
+use Spatie\Sluggable\HasSlug;
 
 class SiteSettingLang extends Model
 {
-    use HasFactory;
+    use HasFactory, HasSlug, SlugModelSettings;
     
     protected $table = 'site_setting_lang';
 
@@ -20,6 +22,10 @@ class SiteSettingLang extends Model
         'description',
         'keywords',
         'slug'
+    ];
+
+    protected $slugFields = [
+        'title'
     ];
 
     public $timestamps = false;

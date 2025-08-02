@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\SlugModelSettings;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Spatie\Sluggable\HasSlug;
 
 class PortfolioLang extends Model
 {
-    
+    use HasSlug, SlugModelSettings;
+
     protected $table = 'portfolio_lang';
 
     protected $fillable = [
@@ -16,6 +19,10 @@ class PortfolioLang extends Model
         'title',
         'description',
         'slug'
+    ];
+
+    protected $slugFields = [
+        'title'
     ];
 
     public $timestamps = false;

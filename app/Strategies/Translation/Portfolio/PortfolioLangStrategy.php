@@ -17,14 +17,18 @@ class PortfolioLangStrategy implements TranslationStrategyInterface {
 
     public function create(array $languages, $institucional)
     {
-        $languagesData = array_map(function($lang, $id) use ($institucional) {
-            return array_merge($lang, [
-                'language_id' => $id,
+        $created = [];
+    
+        foreach ($languages as $languageId => $langData) {
+            $data = array_merge($langData, [
+                'language_id' => $languageId,
                 'portfolio_id' => $institucional->id,
             ]);
-        }, $languages, array_keys($languages));
-        
-        return $this->portfolioLangRepo->createMany($languagesData);
+    
+            $created[] = $this->portfolioLangRepo->create($data);
+        }
+    
+        return $created;
     }
 
     public function update(array $languages, $institucionalLangId)

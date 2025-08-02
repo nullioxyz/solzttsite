@@ -23,13 +23,11 @@ class StorePortfolioRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'slug' => 'required|string|unique:portfolio,slug',
             'active' => 'nullable',
             'category_id' => 'required',
             'languages' => 'required|array',
             'languages.*.title' => 'required|string',
             'languages.*.description' => 'string',
-            'languages.*.slug' => 'required|string|unique:portfolio_lang,slug',
             'files' => 'nullable|array',
             'files.*' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
         ];
@@ -38,13 +36,9 @@ class StorePortfolioRequest extends FormRequest
     public function messages()
     {
         return [
-            'slug.required' => __('Slug is required'),
-            'slug.unique' => __('Slug is already in use'),
             'category_id.required' => __('Select a category'),
             'languages.required' => __('At least one language is mandatory(*)'),
             'languages.*.title.required' => __('Field title is required'),
-            'languages.*.slug.required' => __('Field language slug is required'),
-            'languages.*.slug.unique' => __('Slug is already in use'),
             'files.array' => __('Images must be an array'),
             'files.*.image' => __('Each file must be an image'),
             'files.*.mimes' => __('Only JPEG, PNG and JPG files are allowed'),

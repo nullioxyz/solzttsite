@@ -16,14 +16,18 @@ class CategoryLangStrategy implements TranslationStrategyInterface {
 
     public function create(array $languages, $category)
     {
-        $languagesData = array_map(function($lang, $id) use ($category) {
-            return array_merge($lang, [
-                'language_id' => $id,
+        $created = [];
+
+        foreach ($languages as $languageId => $langData) {
+            $data = array_merge($langData, [
+                'language_id' => $languageId,
                 'category_id' => $category->id,
             ]);
-        }, $languages, array_keys($languages));
-        
-        return $this->categoryLangRepo->createMany($languagesData);
+
+            $created[] = $this->categoryLangRepo->create($data);
+        }
+
+        return $created;
     }
 
     public function update(array $languages, $categoryLangId)
@@ -48,7 +52,6 @@ class CategoryLangStrategy implements TranslationStrategyInterface {
                 $this->update(
                     [
                         'title' => $lang['title'],
-                        'slug' => $lang['slug'],
                     ],
                     $lang['id']
                 );

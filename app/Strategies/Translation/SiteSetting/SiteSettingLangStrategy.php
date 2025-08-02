@@ -17,14 +17,18 @@ class SiteSettingLangStrategy implements TranslationStrategyInterface {
 
     public function create(array $languages, $siteSetting)
     {
-        $languagesData = array_map(function($lang, $id) use ($siteSetting) {
-            return array_merge($lang, [
-                'language_id' => $id,
+        $created = [];
+
+        foreach ($languages as $languageId => $langData) {
+            $data = array_merge($langData, [
+                'language_id' => $languageId,
                 'site_setting_id' => $siteSetting->id,
             ]);
-        }, $languages, array_keys($languages));
-        
-        return $this->siteSettingRepo->createMany($languagesData);
+
+            $created[] = $this->siteSettingRepo->create($data);
+        }
+
+        return $created;
     }
 
     public function update(array $languages, $siteSettingLangId)

@@ -28,30 +28,6 @@ class UpdatePortfolioRequest extends FormRequest
             'languages' => 'required|array',
             'languages.*.title' => 'required|string',
             'languages.*.description' => 'string',
-            'languages.*.slug' => [
-                'required',
-                'string',
-                function ($attribute, $value, $fail) {
-                    $lang = explode('.', $attribute);
-                    $languages = $this->get('languages');
-                    
-                    $languageId = $languages[$lang[1]]['language_id'] ?? $lang[1];
-                    $portfolio = $this->route('portfolio');
-                    
-                    $query = PortfolioLang::where('slug', $value)
-                        ->where('language_id', $languageId)
-                        ->where('portfolio_id', $portfolio->id);
-                    
-                    $existingId = $languages[$lang[1]]['id'] ?? null;
-                    if ($existingId) {
-                        $query->where('id', '!=', $existingId);
-                    }
-                
-                    if ($query->exists()) {
-                        $fail(__('The slug has already been taken.'));
-                    }
-                }
-            ],
             'files' => 'nullable|array',
             'files.*' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
         ];
@@ -60,13 +36,9 @@ class UpdatePortfolioRequest extends FormRequest
     public function messages()
     {
         return [
-            'slug.required' => __('Slug is required'),
-            'slug.unique' => __('Slug is already in use'),
             'languages.required' => __('At least one language is mandatory(*)'),
             'languages.*.title.required' => __('Field title is required'),
             'languages.*.description.required' => __('Field description is required'),
-            'languages.*.slug.required' => __('Field language slug is required'),
-            'languages.*.slug.unique' => __('Slug is already in use'),
             'files.array' => __('Images must be an array'),
             'files.*.image' => __('Each file must be an image'),
             'files.*.mimes' => __('Only JPEG, PNG and JPG files are allowed'),

@@ -16,6 +16,7 @@ use App\Strategies\Translation\AvailableDesign\AvailableDesignLangStrategy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 
 class AvailableController extends Controller
 {
@@ -66,9 +67,13 @@ class AvailableController extends Controller
                             ->withInput();
             }
 
+            $languages = $request->get('languages');
+            $slug = Str::slug($languages[2]['title']);
+
             $availableDesigns = $this->availableDesignRepo->create(
                 [
                     ...$request->validated(),
+                    'slug' => $slug,
                     'content_type_id' => ContentType::TATTOO
                 ]
             );
@@ -121,8 +126,11 @@ class AvailableController extends Controller
                         ->withInput();
             }
             
+            $languages = $request->get('languages');
+            $slug = Str::slug($languages[2]['title']);
+
             $this->availableDesignRepo->update($availableDesign->id, [
-                'slug' => $request->get('slug'),
+                'slug' => $slug,
                 'active' => $request->get('active'),
                 'available' => $request->get('available')
             ]);

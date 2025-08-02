@@ -13,6 +13,7 @@ use App\Repositories\Category\CategoryRepository;
 use App\Strategies\Translation\Category\CategoryLangStrategy;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -58,9 +59,12 @@ class CategoryController extends Controller
                             ->withInput();
             }
 
+            $languages = $request->get('languages');
+            $categorySlug = Str::slug($languages[2]['title']);
+
             $category = $this->categoryRepo->create(
                 [
-                    ...$request->validated(),
+                    'slug' => $categorySlug,
                     'content_type_id' => ContentType::TATTOO
                 ]
             );
@@ -100,14 +104,18 @@ class CategoryController extends Controller
                         ->withInput();
             }
             
+            $languages = $request->get('languages');
+            $categorySlug = Str::slug($languages[2]['title']);
+
             $this->categoryRepo->update($category->id, [
-                'slug' => $request->get('slug')
+                'slug' => $categorySlug
             ]);
             
             $this->categoryLangStrategy->decideCreateOrUpdate($request->get('languages'), $category);
 
             DB::commit();
         } catch (\Exception $e) {
+
             DB::rollBack();
 
             return redirect()->route('category.edit', $category)->with('warning', __('Something wrong. Please try again'));

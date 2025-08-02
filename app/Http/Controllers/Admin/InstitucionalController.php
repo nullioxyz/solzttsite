@@ -13,7 +13,9 @@ use App\Repositories\Institucional\InstitucionalRepository;
 use App\Strategies\Files\MediaUploadStrategy;
 use App\Strategies\Translation\Institucional\InstitucionalLangStrategy;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 
 class InstitucionalController extends Controller
 {
@@ -50,7 +52,6 @@ class InstitucionalController extends Controller
     public function store(StoreInstitucionalRequest $request)
     {
         try {
-            
             DB::beginTransaction();
 
             $validator = $request->validated();
@@ -61,9 +62,12 @@ class InstitucionalController extends Controller
                             ->withInput();
             }
 
+            $languages = $request->get('languages');
+            $institucionalSlug = Str::slug($languages[2]['title']);
+
             $institucional = $this->institucionalRepo->create(
                 [
-                    ...$request->validated(),
+                    'slug' => $institucionalSlug,
                     'content_type_id' => ContentType::TATTOO
                 ]
             );
@@ -108,9 +112,13 @@ class InstitucionalController extends Controller
                         ->withErrors($validator)
                         ->withInput();
             }
-            
+
+            $languages = $request->get('languages');
+            $institucionalSlug = Str::slug($languages[2]['title']);;
+
             $this->institucionalRepo->update($institucional->id, [
-                'slug' => $request->get('slug')
+                'slug' => $institucionalSlug,
+                'content_type_id' => ContentType::TATTOO
             ]);
             
             $this->institucionalLangStrategy->decideCreateOrUpdate($request->get('languages'), $institucional);
@@ -121,7 +129,9 @@ class InstitucionalController extends Controller
 
             DB::commit();
         } catch (\Exception $e) {
-            dd($e);
+
+            Log::error($e->getMessage(), $request->all());
+
             DB::rollBack();
 
             return redirect()->route('institucional.edit', $institucional)->with('warning', __('Something wrong. Please try again'));
@@ -137,6 +147,8 @@ class InstitucionalController extends Controller
             $this->institucionalRepo->destroy($institucional->id);
             DB::commit();
         } catch (\Exception $e) {
+            Log::error($e->getMessage());
+
             DB::rollBack();
             return redirect()->route('institucional.edit', $institucional)->with('warning', __('Something wrong. Please try again'));
         }
@@ -156,6 +168,7 @@ class InstitucionalController extends Controller
 
             DB::commit();
         } catch (\Exception $e) {
+            Log::error($e->getMessage());
             DB::rollBack();
         }
     }

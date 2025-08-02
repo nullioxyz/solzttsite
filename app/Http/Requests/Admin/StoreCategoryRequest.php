@@ -23,22 +23,16 @@ class StoreCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'slug' => 'required|string|unique:category,slug',
             'languages' => 'required|array',
             'languages.*.title' => 'required|string',
-            'languages.*.slug' => 'required|string|unique:category_lang,slug',
         ];
     }
 
     public function messages()
     {
         return [
-            'slug.required' => __('Slug is required'),
-            'slug.unique' => __('Slug is already in use'),
             'languages.required' => __('At least one language is mandatory(*)'),
             'languages.*.title.required' => __('Field title is required'),
-            'languages.*.slug.required' => __('Field language slug is required'),
-            'languages.*.slug.unique' => __('Slug is already in use'),
         ];
     }
 }

@@ -111,26 +111,9 @@ export default function Form (props) {
   return (
     <form onSubmit={submit}>
       <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-        <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-            <InputLabel htmlFor="slug" value="Slug" className={`mt-1 block w-full ${errors.slug ? 'text-[red]' : ''}`} />
-
-            <TextInput
-                id="slug"
-                type="text"
-                name="slug"
-                value={data.slug}
-                className={`mt-1 block w-full ${errors.slug ? 'border-red-500' : ''}`}
-                autoComplete="slug"
-                onChange={(e) => setData('slug', e.target.value)}
-            />
-
-            {errors.slug && 
-              <InputError message={errors.slug} className='mt-5'/>
-            }
-        </div>
 
         <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-            <InputLabel htmlFor="category_id" value="Category" className={`mt-1 block w-full ${errors.category_id ? 'text-[red]' : ''}`} />
+            <InputLabel htmlFor="category_id" value="Category" className={`mt-1 block w-full text-black ${errors.category_id ? 'text-[red]' : ''}`} />
 
             <SelectDefault
                 name="category_id"
@@ -146,7 +129,7 @@ export default function Form (props) {
         </div>
 
         <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-            <InputLabel htmlFor="active" value="Active" className='mt-1' />
+            <InputLabel htmlFor="active" value="Active" className='mt-1 text-black' />
             <Checkbox
               defaultChecked={data.active}
               ripple={false}
@@ -158,7 +141,7 @@ export default function Form (props) {
 
         <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
 
-          <InputLabel htmlFor="available" value="available" className='mt-1' />
+          <InputLabel htmlFor="available" value="available" className='mt-1 text-black' />
 
           <Checkbox
             onClick={(e) => setData('available', !data.available)}
@@ -169,7 +152,7 @@ export default function Form (props) {
         </div>
 
         <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-          <InputLabel htmlFor="files" value="Dropfiles here" className="mt-1 block w-full " />
+          <InputLabel htmlFor="files" value="Dropfiles here" className="mt-1 block w-full text-black" />
 
           <Dropfile
             uploadedFiles={uploadedFiles}

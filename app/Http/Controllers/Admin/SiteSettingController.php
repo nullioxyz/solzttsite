@@ -5,16 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreSiteSettingRequest;
 use App\Http\Requests\Admin\UpdateSiteSettingRequest;
-use App\Models\CategoryLang;
 use App\Models\Language;
 use App\Models\SiteSetting;
 use App\Models\SiteSettingLang;
-use App\Models\Theme;
 use App\Repositories\SiteSetting\SiteSettingRepository;
 use App\Repositories\Theme\ThemeRepository;
 use App\Strategies\Translation\SiteSetting\SiteSettingLangStrategy;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 
 class SiteSettingController extends Controller
 {
@@ -63,8 +62,12 @@ class SiteSettingController extends Controller
                             ->withInput();
             }
 
+            $languages = $request->get('languages');
+            $slug = Str::slug($languages[2]['title']);
+
             $siteSetting = $this->siteSettingRepo->create(
                 [
+                    'slug' => $slug,
                     ...$request->validated()
                 ]
             );
@@ -104,9 +107,12 @@ class SiteSettingController extends Controller
                         ->withErrors($validator)
                         ->withInput();
             }
+
+            $languages = $request->get('languages');
+            $slug = Str::slug($languages[2]['title']);
             
             $this->siteSettingRepo->update($siteSetting->id, [
-                'slug' => $request->get('slug')
+                'slug' => $slug
             ]);
             
             $this->siteSettingLangStrategy->decideCreateOrUpdate($request->get('languages'), $siteSetting);

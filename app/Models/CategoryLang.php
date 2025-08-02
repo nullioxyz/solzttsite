@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
-
+use App\Traits\SlugModelSettings;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Spatie\Sluggable\HasSlug;
 
 class CategoryLang extends Model
 {
+
+    use HasSlug, SlugModelSettings;
 
     protected $table = 'category_lang';
 
@@ -16,6 +19,10 @@ class CategoryLang extends Model
         'language_id',
         'title',
         'slug'
+    ];
+
+    protected $slugFields = [
+        'title'
     ];
 
     public $timestamps = false;

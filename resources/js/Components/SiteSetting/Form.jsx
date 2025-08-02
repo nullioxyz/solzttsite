@@ -46,25 +46,7 @@ export default function Form (props) {
     <form onSubmit={submit}>
       <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
         <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-            <InputLabel htmlFor="slug" value="Slug" className={`mt-1 block w-full ${errors.slug ? 'text-[red]' : ''}`} />
-
-            <TextInput
-                id="slug"
-                type="text"
-                name="slug"
-                value={data.slug}
-                className={`mt-1 block w-full ${errors.slug ? 'border-red-500' : ''}`}
-                autoComplete="slug"
-                onChange={(e) => setData('slug', e.target.value)}
-            />
-
-            {errors.slug && 
-              <InputError message={errors.slug} className='mt-5'/>
-            }
-        </div>
-
-        <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-            <InputLabel htmlFor="theme_id" value="Theme" className={`mt-1 block w-full ${errors.theme_id ? 'text-[red]' : ''}`} />
+            <InputLabel htmlFor="theme_id" value="Theme" className={`mt-1 block w-full text-black ${errors.theme_id ? 'text-[red]' : ''}`} />
 
             <SelectDefault
                 name="theme_id"

@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Traits\SlugModelSettings;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cookie;
+use Spatie\Sluggable\HasSlug;
 
 class Category extends Model
 {
@@ -19,7 +20,7 @@ class Category extends Model
         'active',
         'slug'
     ];
-
+    
     public $timestamps = true;
 
 

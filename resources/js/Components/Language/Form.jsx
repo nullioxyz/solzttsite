@@ -100,7 +100,7 @@ export default function Form({ onLangChange, existingData, errors }) {
                     <InputLabel
                       htmlFor={field.field}
                       value={field.label}
-                      className={`mt-1 block w-full ${getErrorMessage(lang.id, 'title') ? 'text-[red]' : ''}`}
+                      className={`mt-1 block w-full text-black ${getErrorMessage(lang.id, 'title') ? 'text-[red]' : ''}`}
                     />
 
                     <TextInput
@@ -124,7 +124,7 @@ export default function Form({ onLangChange, existingData, errors }) {
                     <InputLabel
                       htmlFor={field.field}
                       value={field.label}
-                      className={`mt-1 block w-full ${getErrorMessage(lang.id, 'description') ? 'text-[red]' : ''}`}
+                      className={`mt-1 block w-full text-black ${getErrorMessage(lang.id, 'description') ? 'text-[red]' : ''}`}
                     />
                     <CKEditor
                       editor={ClassicEditor}
@@ -148,7 +148,7 @@ export default function Form({ onLangChange, existingData, errors }) {
                     <InputLabel
                       htmlFor={field.field}
                       value={field.label}
-                      className={`mt-1 block w-full ${getErrorMessage(lang.id, 'keywords') ? 'text-[red]' : ''}`}
+                      className={`mt-1 block w-full text-black ${getErrorMessage(lang.id, 'keywords') ? 'text-[red]' : ''}`}
                     />
 
                     <TextInput
@@ -167,29 +167,7 @@ export default function Form({ onLangChange, existingData, errors }) {
                   </div>
                 ) : null}
 
-                {field.field == 'slug' ? (
-                  <div key={`lang[${lang.id}][${lang.name}][${lang.id}]`} className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                    <InputLabel
-                      htmlFor={field.field}
-                      value={field.label}
-                      className={`mt-1 block w-full ${getErrorMessage(lang.id, 'slug') ? 'text-[red]' : ''}`}
-                    />
-
-                    <TextInput
-                      value={languagesData[lang.id] !== undefined && languagesData[lang.id].slug ? languagesData[lang.id].slug : ''}
-                      id={`lang[${lang.id}][${lang.name}]`}
-                      name={`lang[${lang.id}][${field.field}]`}
-                      className={`mt-1 block w-full ${getErrorMessage(lang.id, 'slug') ? 'border-red-500' : ''}`}
-                      autoComplete="title"
-                      required={lang.default ? true : false}
-                      onChange={(e) => handleInputChange(lang.id, field.field, e.target.value)}
-                    />
-
-                    {getErrorMessage(lang.id, 'slug') &&
-                      <InputError message={getErrorMessage(lang.id, 'slug')} className='mt-5' />
-                    }
-                  </div>
-                ) : null}
+                
               </div>
             ))}
           </TabPanel>

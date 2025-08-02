@@ -17,14 +17,18 @@ class AvailableDesignLangStrategy implements TranslationStrategyInterface {
 
     public function create(array $languages, $availableDesign)
     {
-        $languagesData = array_map(function($lang, $id) use ($availableDesign) {
-            return array_merge($lang, [
-                'language_id' => $id,
+        $created = [];
+
+        foreach ($languages as $languageId => $langData) {
+            $data = array_merge($langData, [
+                'language_id' => $languageId,
                 'available_design_id' => $availableDesign->id,
             ]);
-        }, $languages, array_keys($languages));
-        
-        return $this->availableDesignLangRepo->createMany($languagesData);
+
+            $created[] = $this->availableDesignLangRepo->create($data);
+        }
+
+        return $created;
     }
 
     public function update(array $languages, $availableDesignLangId)

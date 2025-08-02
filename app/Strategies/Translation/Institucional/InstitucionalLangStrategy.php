@@ -2,7 +2,6 @@
 
 namespace App\Strategies\Translation\Institucional;
 
-use App\Models\Institucional;
 use App\Repositories\InstitucionalLang\InstitucionalLangRepository;
 use App\Strategies\Interfaces\TranslationStrategyInterface;
 
@@ -18,14 +17,18 @@ class InstitucionalLangStrategy implements TranslationStrategyInterface {
 
     public function create(array $languages, $institucional)
     {
-        $languagesData = array_map(function($lang, $id) use ($institucional) {
-            return array_merge($lang, [
-                'language_id' => $id,
+        $created = [];
+
+        foreach ($languages as $languageId => $langData) {
+            $data = array_merge($langData, [
+                'language_id' => $languageId,
                 'institucional_id' => $institucional->id,
             ]);
-        }, $languages, array_keys($languages));
-        
-        return $this->institucionalLangRepo->createMany($languagesData);
+
+            $created[] = $this->institucionalLangRepo->create($data);
+        }
+
+        return $created;
     }
 
     public function update(array $languages, $institucionalLangId)
@@ -50,7 +53,6 @@ class InstitucionalLangStrategy implements TranslationStrategyInterface {
                 $this->update(
                     [
                         'title' => $lang['title'],
-                        'slug' => $lang['slug'],
                         'description' => $lang['description']
                     ],
                     $lang['id']

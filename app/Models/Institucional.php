@@ -6,16 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\ContentType;
-use Illuminate\Support\Facades\App;
+use App\Traits\SlugModelSettings;
 use Illuminate\Support\Facades\Cookie;
-use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-
+use Spatie\Sluggable\HasSlug;
 
 class Institucional extends Model implements HasMedia
 {
-    use HasFactory, SoftDeletes, InteractsWithMedia;
+    use HasFactory, SoftDeletes, InteractsWithMedia, HasSlug, SlugModelSettings;
     
     protected $table = 'institucional';
 
@@ -28,6 +27,11 @@ class Institucional extends Model implements HasMedia
         'slug',
         'created_at',
         'updated_at'
+    ];
+
+    protected $slugFields = [
+        'title',
+        'subtitle'
     ];
 
     protected $casts = [

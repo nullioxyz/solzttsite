@@ -4,9 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 
 class InstitucionalLang extends Model
 {
+    use HasSlug;
+    
     protected $table = 'institucional_lang';
 
     protected $fillable = [
@@ -19,6 +23,12 @@ class InstitucionalLang extends Model
 
     public $timestamps = false;
 
+    public function getSlugOptions() : SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('title')
+            ->saveSlugsTo('slug');
+    }   
 
     public function language()
     {
@@ -36,10 +46,6 @@ class InstitucionalLang extends Model
                 'field'  => 'description',
                 'label' => __('Description'),
             ],
-            [
-                'field' => 'slug',
-                'label' => __('Slug'),
-            ]
         ]);
     }
 
@@ -56,4 +62,8 @@ class InstitucionalLang extends Model
         return $fields;
     }
 
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }

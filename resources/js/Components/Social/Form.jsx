@@ -33,7 +33,7 @@ export default function Form (props) {
     <form onSubmit={submit}>
       <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
         <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-            <InputLabel htmlFor="ñame" value="name" className={`mt-1 block w-full ${errors.name ? 'text-[red]' : ''}`} />
+            <InputLabel htmlFor="ñame" value="name" className={`mt-1 block w-full text-black ${errors.name ? 'text-[red]' : ''}`} />
 
             <TextInput
                 id="name"
@@ -51,7 +51,7 @@ export default function Form (props) {
         </div>
 
         <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-            <InputLabel htmlFor="url" value="url" className={`mt-1 block w-full ${errors.url ? 'text-[red]' : ''}`} />
+            <InputLabel htmlFor="url" value="url" className={`mt-1 block w-full text-black ${errors.url ? 'text-[red]' : ''}`} />
 
             <TextInput
                 id="url"

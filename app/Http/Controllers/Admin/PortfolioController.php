@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StorePortfolioRequest;
 use App\Http\Requests\Admin\UpdatePortfolioRequest;
-use App\Models\Category;
 use App\Models\ContentType;
 use App\Models\Language;
 use App\Models\Portfolio;
@@ -16,6 +15,7 @@ use App\Strategies\Files\MediaUploadStrategy;
 use App\Strategies\Translation\Portfolio\PortfolioLangStrategy;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 
 class PortfolioController extends Controller
 {
@@ -55,7 +55,6 @@ class PortfolioController extends Controller
     public function store(StorePortfolioRequest $request)
     {
         try {
-            
             DB::beginTransaction();
 
             $validator = $request->validated();
@@ -66,9 +65,13 @@ class PortfolioController extends Controller
                             ->withInput();
             }
 
+            $languages = $request->get('languages');
+            $portfolioSlug = Str::slug($languages[2]['title']);
+
             $portfolio = $this->portfolioRepo->create(
                 [
                     ...$request->validated(),
+                    'slug' => $portfolioSlug,
                     'content_type_id' => ContentType::TATTOO
                 ]
             );
@@ -121,9 +124,12 @@ class PortfolioController extends Controller
                         ->withErrors($validator)
                         ->withInput();
             }
+
+            $languages = $request->get('languages');
+            $categorySlug = Str::slug($languages[2]['title']);
             
             $this->portfolioRepo->update($portfolio->id, [
-                'slug' => $request->get('slug')
+                'slug' => $categorySlug
             ]);
             
             $this->portfolioLangStrategy->decideCreateOrUpdate($request->get('languages'), $portfolio);
