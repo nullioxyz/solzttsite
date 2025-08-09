@@ -49,12 +49,152 @@
     font-style: normal;
 }
 
+/* Container do conteúdo do CKEditor */
+.editor-content {
+    font-family: 'Merriweather', serif; /* ou a fonte padrão do seu site */
+    font-size: 16px;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+/* Headings */
+.editor-content h1 {
+    font-family: 'Lora', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.editor-content h2 {
+    font-family: 'Lora', serif;
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 0.9rem;
+}
+
+.editor-content h3 {
+    font-family: 'Lora', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+}
+
+/* Paragraph */
+.editor-content p {
+    margin-bottom: 1rem;
+}
+
+/* Listas */
+.editor-content ul,
+.editor-content ol {
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Citações */
+.editor-content blockquote {
+    border-left: 4px solid #ccc;
+    padding-left: 1rem;
+    color: #666;
+    font-style: italic;
+    margin-bottom: 1rem;
+}
+
+/* Código */
+.editor-content pre {
+    background-color: #f4f4f4;
+    padding: 1rem;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.9rem;
+}
+
+.ck-content h1, h2, h3, h4, h5, h6 {
+    font-family: 'Lora', serif;
+}
+
+.ck-content h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0.67em 0;
+}
+
+.ck-content h2 {
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin: 0.75em 0;
+}
+
+.ck-content h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0.83em 0;
+}
+
+.ck-content h4 {
+    font-size: 1em;
+    font-weight: bold;
+    margin: 1.12em 0;
+}
+
+.ck-content h5 {
+    font-size: 0.83em;
+    font-weight: bold;
+    margin: 1.5em 0;
+}
+
+.ck-content h6 {
+    font-size: 0.75em;
+    font-weight: bold;
+    margin: 1.67em 0;
+}
+
+.ck-content p {
+    margin: 1em 0;
+}
+
+.ck-content blockquote {
+    border-left: 4px solid #ddd;
+    margin: 1em 0;
+    padding-left: 1em;
+    color: #666;
+    font-style: italic;
+}
+
+.ck-content ul,
+.ck-content ol {
+    margin: 1em 0;
+    padding-left: 40px;
+}
+
+.ck-content code {
+    font-family: monospace, monospace;
+    background: #f9f2f4;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+.ck-content pre {
+    background: #f4f4f4;
+    padding: 10px;
+    overflow-x: auto;
+    border-radius: 6px;
+    margin: 1em 0;
+}
+
+.ck-editor__editable {
+    min-height: 400px;
+    max-height: 800px;
+    overflow-y: auto;
+}  
+
 .svg-container svg g {
     display: flex;
     align-items: center;
 }
 
-body p, label, input[type="text"], textarea, span {
+body p, label, input[type="text"], textarea, span, blockquote, html {
     font-family: 'Merriweather', serif;
     font-size: 1rem;
     line-height: 1.7;
@@ -153,24 +293,24 @@ h1, h2, h3, h4, h5, h6 {
     background: none !important;
 }
   
-  /* Cor de fundo e fonte do menu de seleção de países */
-  .react-tel-input .country-list {
-    background-color: white; /* Fundo da lista de países */
-    color: black; /* Cor da fonte da lista */
-  }
-  
-  /* Ajuste da cor de texto para países específicos */
-  .react-tel-input .country-list .country {
-    color: black; /* Cor do texto para todos os países */
-  }
-  
-  /* Ajuste para o fundo dos itens ao passar o mouse */
-  .react-tel-input .country-list .country:hover {
-    background-color: #f0f0f0; /* Cor de fundo ao passar o mouse */
-  }
-  
-  /* Ajuste para a bandeira selecionada no dropdown */
-  .react-tel-input .selected-flag {
-    background-color: white; /* Cor de fundo da bandeira selecionada */
-    border-radius: 0px !important;
-  }
+/* Cor de fundo e fonte do menu de seleção de países */
+.react-tel-input .country-list {
+background-color: white; /* Fundo da lista de países */
+color: black; /* Cor da fonte da lista */
+}
+
+/* Ajuste da cor de texto para países específicos */
+.react-tel-input .country-list .country {
+color: black; /* Cor do texto para todos os países */
+}
+
+/* Ajuste para o fundo dos itens ao passar o mouse */
+.react-tel-input .country-list .country:hover {
+background-color: #f0f0f0; /* Cor de fundo ao passar o mouse */
+}
+
+/* Ajuste para a bandeira selecionada no dropdown */
+.react-tel-input .selected-flag {
+background-color: white; /* Cor de fundo da bandeira selecionada */
+border-radius: 0px !important;
+}

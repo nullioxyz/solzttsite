@@ -5,10 +5,8 @@ namespace App\Http\Controllers\Site;
 use App\Http\Controllers\Controller;
 use App\Models\Institucional;
 use App\Models\Language;
-use App\Models\Portfolio;
 use App\Models\SiteSetting;
 use App\Models\Social;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Inertia\Inertia;
 
@@ -16,7 +14,7 @@ class AfterCareController extends Controller
 {
     public function index()
     {
-        $institucional = Institucional::where('slug', 'after-care')
+        $institucional = Institucional::where('slug', 'tattoo-aftercare ')
             ->with('defaultTranslation.language', 'translation.language', 'media')
             ->first();
 

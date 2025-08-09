@@ -126,16 +126,17 @@ export default function Form({ onLangChange, existingData, errors }) {
                       value={field.label}
                       className={`mt-1 block w-full text-black ${getErrorMessage(lang.id, 'description') ? 'text-[red]' : ''}`}
                     />
-                    <CKEditor
-                      editor={ClassicEditor}
-                      data={languagesData && languagesData[lang.id] !== undefined && languagesData[lang.id].description ? languagesData[lang.id].description : ''}
-                      required={lang.default ? true : false}
-                      name={`lang[${lang.id}][${field.field}]`}
-                      onReady={editor => {
 
-                      }}
-                      onChange={(e, editor) => handleInputChange(lang.id, field.field, editor.getData())}
-                    />
+                      <CKEditor
+                        editor={ClassicEditor}
+                        data={languagesData && languagesData[lang.id] !== undefined && languagesData[lang.id].description ? languagesData[lang.id].description : ''}
+                        required={lang.default ? true : false}
+                        name={`lang[${lang.id}][${field.field}]`}
+                        onReady={editor => {
+
+                        }}
+                        onChange={(e, editor) => handleInputChange(lang.id, field.field, editor.getData())}
+                      />
 
                     {getErrorMessage(lang.id, 'description') &&
                       <InputError message={getErrorMessage(lang.id, 'description')} className='mt-5' />

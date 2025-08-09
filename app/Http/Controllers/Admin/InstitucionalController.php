@@ -63,7 +63,7 @@ class InstitucionalController extends Controller
             }
 
             $languages = $request->get('languages');
-            $institucionalSlug = Str::slug($languages[2]['title']);
+            $institucionalSlug = Str::slug($languages[3]['title']);
 
             $institucional = $this->institucionalRepo->create(
                 [
@@ -114,7 +114,7 @@ class InstitucionalController extends Controller
             }
 
             $languages = $request->get('languages');
-            $institucionalSlug = Str::slug($languages[2]['title']);;
+            $institucionalSlug = Str::slug($languages[3]['title']);;
 
             $this->institucionalRepo->update($institucional->id, [
                 'slug' => $institucionalSlug,
