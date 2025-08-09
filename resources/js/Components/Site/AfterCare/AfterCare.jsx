@@ -4,7 +4,22 @@ export default function AfterCare({ institucional }) {
   
   const institucionalTranslation = institucional.translation ?? institucional.default_translation;
   
-  const sanitizedDescription = DOMPurify.sanitize(institucionalTranslation.description);
+  const sanitizedDescription = DOMPurify.sanitize(institucionalTranslation.description, {
+    ALLOWED_TAGS: [
+      'b', 'i', 'em', 'strong', 'a',
+      'ul', 'ol', 'li', 'p', 'h1', 'h2', 'h3', 'blockquote', 'pre', 'code', 'br',
+      'table', 'thead', 'tbody', 'tr', 'td', 'th',
+      'iframe', 'img', 'figure',
+    ],
+    ALLOWED_ATTR: [
+      'href', 'target', 'rel', 'colspan', 'rowspan', 'style',
+      'src', 'width', 'height', 'frameborder', 'allow', 'allowfullscreen', 'alt', 'title',
+      'type', 'start'
+    ],
+    ADD_TAGS: ['iframe'],
+    ADD_ATTR: ['allowfullscreen', 'allow', 'frameborder'],
+  });
+  
   const hasMedia = institucional.media.length > 0;
   const imageUrl = hasMedia ? route('file.index', {locale: institucionalTranslation.language.slug, uuid: institucional.media[0].uuid}) : '';
 
@@ -20,7 +35,7 @@ export default function AfterCare({ institucional }) {
         <div className="flex flex-col-reverse xl:flex-row gap-10 items-center xl:items-start">
           {/* Texto */}
           <div className="text text-justify text-[20px] w-full xl:w-1/2 roboto text-[#4d4c4c]">
-            <div dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
+            <div class="ck-content" dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
           </div>
 
           {/* Imagem */}

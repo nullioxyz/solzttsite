@@ -1,6 +1,7 @@
 import { useLanguages } from "@/Contexts/LanguageContext";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
 import {
   Tabs,
   TabsHeader,
@@ -23,9 +24,7 @@ export default function Form({ onLangChange, existingData, errors }) {
     if (!normalizedData && Object.keys(languagesData).length && existingData) {
       normalizeDataToState(languagesData);
     }
-
   }, [languagesData, existingData, onLangChange]);
-
 
   const getErrorMessage = (id, field) => {
     const errorKey = `languages.${id}.${field}`;
@@ -126,9 +125,17 @@ export default function Form({ onLangChange, existingData, errors }) {
                       value={field.label}
                       className={`mt-1 block w-full text-black ${getErrorMessage(lang.id, 'description') ? 'text-[red]' : ''}`}
                     />
-
                       <CKEditor
                         editor={ClassicEditor}
+                        config={{
+                          removePlugins: ['ImageUpload', 'EasyImage', 'MediaEmbed', 'MediaEmbedToolbar'],
+                          image: {
+                            toolbar: [ 'imageTextAlternative' ]
+                          },
+                          mediaEmbed: {
+                            previewsInData: true
+                          },
+                        }}
                         data={languagesData && languagesData[lang.id] !== undefined && languagesData[lang.id].description ? languagesData[lang.id].description : ''}
                         required={lang.default ? true : false}
                         name={`lang[${lang.id}][${field.field}]`}
@@ -137,7 +144,6 @@ export default function Form({ onLangChange, existingData, errors }) {
                         }}
                         onChange={(e, editor) => handleInputChange(lang.id, field.field, editor.getData())}
                       />
-
                     {getErrorMessage(lang.id, 'description') &&
                       <InputError message={getErrorMessage(lang.id, 'description')} className='mt-5' />
                     }

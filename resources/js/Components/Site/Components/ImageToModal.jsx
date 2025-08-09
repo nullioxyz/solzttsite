@@ -17,7 +17,22 @@ import { FiX } from "react-icons/fi";
 
 const ImageToModal = ({ reference, coverImage, alt, images, available, title, description, book, onBookNow, onAddReference, availableDesign, itemId }) => {
 
-  const sanitizedDescription = DOMPurify.sanitize(description);
+  const sanitizedDescription = DOMPurify.sanitize(description, {
+    ALLOWED_TAGS: [
+      'b', 'i', 'em', 'strong', 'a',
+      'ul', 'ol', 'li', 'p', 'h1', 'h2', 'h3', 'blockquote', 'pre', 'code', 'br',
+      'table', 'thead', 'tbody', 'tr', 'td', 'th',
+      'iframe', 'img', 'figure',
+    ],
+    ALLOWED_ATTR: [
+      'href', 'target', 'rel', 'colspan', 'rowspan', 'style',
+      'src', 'width', 'height', 'frameborder', 'allow', 'allowfullscreen', 'alt', 'title',
+      'type', 'start'
+    ],
+    ADD_TAGS: ['iframe'],
+    ADD_ATTR: ['allowfullscreen', 'allow', 'frameborder'],
+  });
+  
   const [open, setOpen] = useState(false);
 
   const toggleModal = () => setOpen(prev => !prev);

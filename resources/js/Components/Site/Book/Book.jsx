@@ -1,11 +1,10 @@
 import React from 'react';
 import Form from './Form';
 import { useTranslation } from 'react-i18next';
-import { Link } from '@inertiajs/react';
-import { useEffect } from 'react';
 
 export default function Book({ consideration, currentLanguage }) {
   const { t } = useTranslation();
+  
   const considerationTranslation = consideration.translation ?? consideration.default_translation;
 
   return (

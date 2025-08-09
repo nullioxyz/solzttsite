@@ -76,7 +76,6 @@
     font-family: 'Lora', serif;
     font-size: 1.5rem;
     font-weight: 600;
-    margin-bottom: 0.8rem;
 }
 
 /* Paragraph */
@@ -166,6 +165,7 @@
 .ck-content ol {
     margin: 1em 0;
     padding-left: 40px;
+    all: revert;
 }
 
 .ck-content code {
@@ -187,14 +187,39 @@
     min-height: 400px;
     max-height: 800px;
     overflow-y: auto;
-}  
+}
 
+.ck-content ul {
+    list-style-type: disc;
+    padding-left: 1.5em;
+    margin: 0 0 1em 0;
+  }
+  
 .svg-container svg g {
     display: flex;
     align-items: center;
 }
 
-body p, label, input[type="text"], textarea, span, blockquote, html {
+.ck-content table, 
+.ck-content th,
+.ck-content td {
+  border: 1px solid #ccc;
+  padding: 0.5rem 1rem;
+  text-align: left;
+}
+
+.ck-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+.ck-content th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+}
+
+body p, label, input[type="text"], textarea, span, blockquote, html, ul, li, ol, span, table {
     font-family: 'Merriweather', serif;
     font-size: 1rem;
     line-height: 1.7;
