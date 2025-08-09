@@ -1,5 +1,4 @@
 import { PencilSquareIcon } from '@heroicons/react/24/solid'
-import DeleteButton from '../Buttons/DeleteButton/Index';
 
 export default function TableRow({ item }) {
 
@@ -16,10 +15,6 @@ export default function TableRow({ item }) {
                     <PencilSquareIcon className="size-6 text-blue-500" />
                 </a>
             </td>
-            <td className="px-6 py-4">
-                <DeleteButton deleteUrl={route('institucional.delete', item.slug)} />
-            </td>
-            
         </tr>
     )
 }

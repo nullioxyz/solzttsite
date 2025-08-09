@@ -17,36 +17,10 @@ class HomeController extends Controller
      */
     public function index($locale)
     {
-        $institucional = Institucional::where('slug', 'solztt-universe')
+        $institucional = Institucional::where('id', 1)
             ->with('defaultTranslation.language', 'translation.language', 'media')
             ->first();
-        
-        $appointmentTexts = Institucional::with(
-            'defaultTranslation.language', 'translation.language'
-        )->whereIn('slug', [
-            'appointment-1',
-            'appointment-2',
-            'appointment-3',
-        ])->get();
-        
-
-        $institucionalTexts = Institucional::with('defaultTranslation.language', 'translation.language')
-            ->whereIn('slug', [
-                'tattoo-book-text',
-                'criative-process',
-                'consideration',
-                'payment-methods',
-                'warning'
-            ])->get()
-            ->keyBy('slug');
-            
-        $requestSectionText = $institucionalTexts->get('tattoo-book-text');
-        $appointmentWarning = $institucionalTexts->get('warning');
-
-        $criativeProcess = $institucionalTexts->get('criative-process');
-        $consideration = $institucionalTexts->get('consideration');
-        $paymentMethods = $institucionalTexts->get('payment-methods');
-
+    
         $availableLangs = Language::select('slug', 'name', 'default')->get();
         $defaultLang = $availableLangs->firstWhere('default', 1);
 
@@ -58,12 +32,6 @@ class HomeController extends Controller
         
         return Inertia::render('Site/Index', [
             'institucional' => $institucional,
-            'appointmentTexts' => $appointmentTexts,
-            'appointmentWarning' => $appointmentWarning,
-            'requestSectionText' => $requestSectionText,
-            'criativeProcess' => $criativeProcess,
-            'consideration' => $consideration,
-            'paymentMethods' => $paymentMethods,
             'languages' => $availableLangs,
             'defaultLang' => $defaultLang,
             'social' => $social,

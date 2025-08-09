@@ -26,22 +26,8 @@ class ContactController extends Controller
 
     public function index()
     {
-        $institucional = Institucional::where('slug', 'solztt-universe')
-            ->with('defaultTranslation.language', 'translation.language', 'media')
-            ->first();
-
-        $institucionalTexts = Institucional::with('defaultTranslation.language', 'translation.language')
-            ->whereIn('slug', [
-                'tattoo-book-text',
-                'criative-process',
-                'consideration',
-                'payment-methods',
-                'warning'
-            ])->get()
-            ->keyBy('slug');
-            
-
-        $consideration = $institucionalTexts->get('consideration');
+        $consideration = Institucional::with('defaultTranslation.language', 'translation.language')
+            ->where('id', 7)->first();
 
         $availableLangs = Language::select('slug', 'name', 'default')->get();
         $defaultLang = $availableLangs->firstWhere('default', 1);
@@ -67,7 +53,6 @@ class ContactController extends Controller
         )->paginate(4);
 
         return Inertia::render('Site/Contact/Index', [
-            'institucional' => $institucional,
             'consideration' => $consideration,
             'languages' => $availableLangs,
             'defaultLang' => $defaultLang,

@@ -14,7 +14,7 @@ class AfterCareController extends Controller
 {
     public function index()
     {
-        $institucional = Institucional::where('slug', 'tattoo-aftercare ')
+        $institucional = Institucional::where('id', 10)
             ->with('defaultTranslation.language', 'translation.language', 'media')
             ->first();
 
