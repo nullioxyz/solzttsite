@@ -1,7 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import List from '@/Components/Institucional/List';
 import { Head } from '@inertiajs/react';
-import AddButton from '@/Components/Buttons/AddButton/Index';
 
 export default function Index({ auth, institucionals  }) {
     
