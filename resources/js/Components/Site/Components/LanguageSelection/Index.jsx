@@ -30,15 +30,22 @@ export default function LanguageSelection({ languages, defaultLang, currentLangu
       }
 
       await axios.post(route('site.setLanguage', { locale: currentLanguage.slug }), { lang: lang });
-      window.location.replace(`/${lang}`);
+      
+      let currentPath = window.location.pathname;
+
+      let newPath = currentPath.replace(
+        new RegExp(`^/${currentLanguage.slug}(/|$)`),
+        `/${lang}$1`
+      );
+
+      window.location.replace(newPath);
       
     } catch (error) {
       
     }
-};
+  };
 
   const languageName = currentLanguage ? currentLanguage.name : defaultLang.name;
-
 
   return (
     <div className="flex ml-auto cursor-pointer">
