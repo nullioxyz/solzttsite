@@ -89,8 +89,15 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, title, de
   return (
     <>
       <Card
-        className="relative w-full rounded-none aspect-[5/4] lg:h-[800px] xl:h-[800px] md:h-[800px] sm:w-full sm:h-[800px] cursor-pointer overflow-hidden"
-        ref={reference}
+      className="
+        relative w-full rounded-none 
+        aspect-[3/4]           /* padrão mobile: 3x4 */
+        sm:aspect-[5/4]        /* a partir de sm: 5x4 */
+        lg:h-[800px] xl:h-[800px] md:h-[800px] 
+        sm:w-full sm:h-[800px] 
+        cursor-pointer overflow-hidden
+      "
+      ref={reference}
       >
         <div className="relative w-full h-full">
           <img
