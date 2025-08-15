@@ -126,4 +126,5 @@ return [
     "You can only upload up to 5 files" => 'You can only upload up to 5 files',
     
     "Tattoo Aftercare" => "Tattoo Aftercare",
+    'back' => 'Back'
 ];

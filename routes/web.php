@@ -32,13 +32,16 @@ Route::prefix('/')->group(function() {
 
 Route::middleware(['lang'])->prefix('/{locale}')->group(function() {
     Route::get('/portfolio', [PortfolioSiteController::class, 'index'])->name('site.portfolio');
+    Route::get('/portfolio/detail/{slug}', [PortfolioSiteController::class, 'show'])->name('site.portfolio.show');
     Route::get('/portfolio/load', [PortfolioSiteController::class, 'load'])->name('site.portfolio.load');
+    
 
     Route::get('/after-care', [AfterCareController::class, 'index'])->name('site.after_care');
 
     Route::get('/contact', [ContactController::class, 'index'])->name('site.contact');
     
     Route::get('/available-designs', [SiteAvailableController::class, 'index'])->name('site.available_designs');
+    Route::get('/available-designs/detail/{slug}', [SiteAvailableController::class, 'show'])->name('site.available_designs.show');
     Route::get('/load-available-designs', [SiteAvailableController::class, 'load'])->name('site.available_designs.load');
     Route::post('/save-contact', [ContactController::class, 'store'])->middleware('throttle:3,1')->name('contact.store');
 

@@ -5,8 +5,6 @@ import {
   Dialog,
   DialogHeader,
   DialogBody,
-  Avatar,
-  Typography,
   Card,
   DialogFooter,
 } from "@material-tailwind/react";
@@ -14,8 +12,10 @@ import { Gallery } from "./Gallery";
 import { useTranslation } from "react-i18next";
 import { useSelectReferences } from "@/Contexts/SelectReferencesContext";
 import { FiX } from "react-icons/fi";
+import { useCallback } from "react";
+import { useRef } from "react";
 
-const ImageToModal = ({ reference, coverImage, alt, images, available, title, description, book, onBookNow, onAddReference, availableDesign, itemId }) => {
+const ImageToModal = ({ reference, coverImage, alt, images, available, title, description, book, onBookNow, onAddReference, availableDesign, itemId, detailUrl, indexUrl }) => {
 
   const sanitizedDescription = DOMPurify.sanitize(description, {
     ALLOWED_TAGS: [
@@ -34,8 +34,29 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, title, de
   });
   
   const [open, setOpen] = useState(false);
+  const didPushRef = useRef(false);
 
-  const toggleModal = () => setOpen(prev => !prev);
+
+  const toggleModal = useCallback(() => {
+    setOpen(prev => {
+      const next = !prev;
+
+      if (next) {
+        // abriu → muda a URL para a página da galeria
+        if (!didPushRef.current) {
+          window.history.pushState({ modal: true }, "", detailUrl);
+          didPushRef.current = true;
+        }
+      } else {
+        // fechou → volta para a listagem sem criar novo histórico
+        window.history.replaceState({}, "", indexUrl);
+        didPushRef.current = false;
+      }
+
+      return next;
+    });
+  }, [detailUrl, indexUrl]);
+
   const { t } = useTranslation();
   const { selectedReferences, setSelectedReferences } = useSelectReferences();
 

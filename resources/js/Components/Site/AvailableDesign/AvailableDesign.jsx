@@ -4,7 +4,6 @@ import { Spinner } from "@material-tailwind/react";
 import anime from 'animejs';
 import { useSelectReferences } from '@/Contexts/SelectReferencesContext';
 import { useTranslation } from 'react-i18next';
-import { Link } from '@inertiajs/react';
 import { router } from '@inertiajs/react'
 
 
@@ -13,6 +12,7 @@ const LazyImageModalComponent = lazy(() => import('@/Components/Site/Components/
 export default function AvailableDesign() {
   const boxRefs = useRef([]);
   const [designs, setDesigns] = useState([]);
+  const [currentLanguage, setCurrentLanguage] = useState([]);
   const [pagination, setPagination] = useState({});
   const [loadingMore, setLoadingMore] = useState(false);
   const [newItems, setNewItems] = useState([]);
@@ -28,9 +28,11 @@ export default function AvailableDesign() {
       
       if (response.data) {
         const { data, first_page, current_page, last_page, next_page_url } = response.data.designs;
-        
+        const { currentLang } = response.data;
+
         setNewItems(data);
         setDesigns(prevDesigns => [...prevDesigns, ...data]);
+        setCurrentLanguage(currentLang);
         
         setPagination({
           current_page,
@@ -115,12 +117,13 @@ export default function AvailableDesign() {
                 alt={`Image ${index + 1}`}
                 availableDesign={true}
                 reference={el => boxRefs.current[index] = el}
+                detailUrl={route('site.available_designs.show', { locale: currentLanguage.slug, slug: item.slug })}
+                indexUrl={route('site.available_designs', { locale: currentLanguage.slug })}
               />
             ))}
           </Suspense>
         </div>
   
-        {/* Botão "load more" */}
         {pagination.current_page < pagination.last_page && (
           <div className="flex justify-center mb-10">
             <button

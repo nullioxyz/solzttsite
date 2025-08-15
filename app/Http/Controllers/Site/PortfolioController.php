@@ -57,6 +57,29 @@ class PortfolioController extends Controller
         ]);
     }
 
+    public function show(string $lang, string $slugPortfolio)
+    {
+        $availableLangs = Language::select('slug', 'name', 'default')->get();
+        $defaultLang = $availableLangs->firstWhere('default', 1);
+        
+        $portfolio = Portfolio::with(['media', 'translation', 'defaultTranslation'])->where('slug', $slugPortfolio)->first();
+
+        $socials = Social::get()->keyBy('name');
+        $social['instagram'] = $socials->get('instagram');
+        $social['facebook'] = $socials->get('facebook');
+
+        $metatags = SiteSetting::with(['defaultTranslation.language', 'translation.language'])->where('slug', 'default-conf')->first();
+        
+        return Inertia::render('Site/Portfolio/PortfolioShow', [
+            'languages' => $availableLangs,
+            'defaultLang' => $defaultLang,
+            'social' => $social,
+            'metatags' => $metatags,
+            'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? $defaultLang,
+            'portfolio' => $portfolio
+        ]);
+    }
+
     public function load(Request $request)
     {
         $portfolio = Portfolio::with(
