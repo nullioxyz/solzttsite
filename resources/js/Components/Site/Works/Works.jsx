@@ -4,7 +4,6 @@ import { Spinner } from "@material-tailwind/react";
 import anime from 'animejs';
 import { useTranslation } from 'react-i18next';
 import { useSelectReferences } from '@/Contexts/SelectReferencesContext';
-import { Link } from "@inertiajs/react";
 
 const LazyImageModalComponent = lazy(() => import('@/Components/Site/Components/ImageToModal'));
 
@@ -89,7 +88,7 @@ export default function Works({ currentLanguage }) {
   }, [newItems, portfolio.length]);
 
   return (
-    <section id="works" className="mx-auto xl:mt-20 lg:mt-20 md:mt-20 sm:mt-5 xs:mt-5">
+    <section id="works" className="mx-auto xl:mt-20 lg:mt-20 md:mt-20 sm:mt-5 xs:mt-5 p-5">
       <div className="max-w-[1240px] mx-auto w-full">
         <div className="mb-10">
           <h1 className="text-[2.0rem] tracking-tight text-[#595954] text-center sm:text-left">
@@ -112,6 +111,8 @@ export default function Works({ currentLanguage }) {
                 available={true}
                 alt={`Image ${index + 1}`}
                 reference={el => boxRefs.current[index] = el}
+                detailUrl={route('site.portfolio.show', { locale: currentLanguage.slug, slug: item.slug })}
+                indexUrl={route('site.portfolio', { locale: currentLanguage.slug })}
               />
             ))}
           </Suspense>

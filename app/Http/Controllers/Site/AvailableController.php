@@ -32,34 +32,43 @@ class AvailableController extends Controller
 
         $metatags = SiteSetting::with(['defaultTranslation.language', 'translation.language'])->where('slug', 'default-conf')->first();
         
-        $portfolio = Portfolio::with(
-            [
-                'media' =>  function($query) {
-                    $query->orderBy('order_column', 'asc');
-                },
-                'defaultTranslation',
-                'translation'
-            ]
-            )->whereHas(
-                'media', function($query) {
-                $query->orderBy('order_column', 'asc');
-            }
-        )->paginate(
-            $this->perPage($request)
-        );
-
         return Inertia::render('Site/AvailableDesign/Index', [
             'languages' => $availableLangs,
             'defaultLang' => $defaultLang,
             'social' => $social,
             'metatags' => $metatags,
             'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? $defaultLang,
-            'portfolio' => $portfolio
         ]);
     }  
 
+    public function show(string $lang, string $slugDesign)
+    {
+        $availableLangs = Language::select('slug', 'name', 'default')->get();
+        $defaultLang = $availableLangs->firstWhere('default', 1);
+        
+        $availableDesign = AvailableDesign::with(['media', 'translation', 'defaultTranslation'])->where('slug', $slugDesign)->firstOrFail();
+
+        $socials = Social::get()->keyBy('name');
+        $social['instagram'] = $socials->get('instagram');
+        $social['facebook'] = $socials->get('facebook');
+
+        $metatags = SiteSetting::with(['defaultTranslation.language', 'translation.language'])->where('slug', 'default-conf')->first();
+        
+        return Inertia::render('Site/AvailableDesign/AvailableDesignShow', [
+            'languages' => $availableLangs,
+            'defaultLang' => $defaultLang,
+            'social' => $social,
+            'metatags' => $metatags,
+            'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? $defaultLang,
+            'availableDesign' => $availableDesign
+        ]);
+    }
+
     public function load(Request $request)
     {
+        $availableLangs = Language::select('slug', 'name', 'default')->get();
+        $defaultLang = $availableLangs->firstWhere('default', 1);
+
         $designs = AvailableDesign::with(
             [
                 'media' =>  function($query) {
@@ -78,7 +87,10 @@ class AvailableController extends Controller
             $this->perPage($request)
         );
 
-        return response()->json(['designs' => $designs]);
+        return response()->json([
+            'designs' => $designs,
+            'currentLang' => Language::where('slug', Cookie::get('locale'))->first() ?? $defaultLang,
+        ]);
     }
 
 }

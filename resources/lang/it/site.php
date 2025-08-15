@@ -119,4 +119,7 @@ return [
     "You can only upload up to 5 files" => 'Puoi caricare al massimo 5 file',
 
     "Tattoo Aftercare" => "Post-Tatuaggio",
+
+    'back' => 'Indietro'
+
 ];

@@ -117,4 +117,6 @@ return [
     "You can only upload up to 5 files" => 'Você pode enviar no máximo 5 arquivos',
 
     "Tattoo Aftercare" => "Pós-Tatuagem",
+
+    'back' => 'Voltar',
 ];
