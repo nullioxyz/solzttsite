@@ -62,7 +62,19 @@ class PortfolioController extends Controller
         $availableLangs = Language::select('slug', 'name', 'default')->get();
         $defaultLang = $availableLangs->firstWhere('default', 1);
         
-        $portfolio = Portfolio::with(['media', 'translation', 'defaultTranslation'])->where('slug', $slugPortfolio)->first();
+        $portfolio = Portfolio::with(
+            [
+                'media' =>  function($query) {
+                    $query->orderBy('order_column', 'asc');
+                },
+                'defaultTranslation',
+                'translation'
+            ]
+            )->whereHas(
+                'media', function($query) {
+                $query->orderBy('order_column', 'asc');
+            }
+        )->where('slug', $slugPortfolio)->first();
 
         $socials = Social::get()->keyBy('name');
         $social['instagram'] = $socials->get('instagram');

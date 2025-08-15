@@ -46,7 +46,17 @@ class AvailableController extends Controller
         $availableLangs = Language::select('slug', 'name', 'default')->get();
         $defaultLang = $availableLangs->firstWhere('default', 1);
         
-        $availableDesign = AvailableDesign::with(['media', 'translation', 'defaultTranslation'])->where('slug', $slugDesign)->firstOrFail();
+        $availableDesign = AvailableDesign::with([
+                'media' =>  function($query) {
+                    $query->orderBy('order_column', 'asc');
+                },
+                'defaultTranslation',
+                'translation'
+            ]
+            )->whereHas(
+                'media', function($query) {
+                $query->orderBy('order_column', 'asc');
+            })->where('slug', $slugDesign)->firstOrFail();
 
         $socials = Social::get()->keyBy('name');
         $social['instagram'] = $socials->get('instagram');
