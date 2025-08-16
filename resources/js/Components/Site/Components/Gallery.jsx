@@ -156,6 +156,10 @@ export function Gallery({ images = [] }) {
               className="shrink-0 flex items-center justify-center"
               style={{ width: `${width}px`, height: `${height}px` }}
             >
+              {!loaded && (
+                <div className="absolute inset-0 bg-gray-200 animate-pulse" />
+              )}
+              
               <picture className="w-full h-full">
                 <source
                   type="image/avif"
