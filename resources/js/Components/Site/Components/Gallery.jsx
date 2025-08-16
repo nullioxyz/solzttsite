@@ -1,34 +1,35 @@
-import { useRef, useState, useLayoutEffect, useEffect, useCallback } from "react";
+import { useRef, useState, useLayoutEffect, useCallback, useEffect } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import { fileUrl } from "@/helpers/images";
 
 export function Gallery({ images = [] }) {
   const containerRef = useRef(null);
   const trackRef = useRef(null);
-  const [loaded, setLoaded] = useState(false);
-
 
   const [index, setIndex] = useState(0);
   const [dragDx, setDragDx] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
 
-  // Medições do viewport
-  const [width, setWidth] = useState(0);
-  const [height, setHeight] = useState(480); // fallback para 1º paint (evita “menor”)
+  // loaded por slide
+  const [loaded, setLoaded] = useState(() => images.map(() => false));
+  useEffect(() => {
+    // reajusta quando a lista de imagens muda
+    setLoaded(images.map(() => false));
+  }, [images]);
 
-  // Mede ANTES do primeiro paint para evitar flicker de tamanho
+  // viewport
+  const [width, setWidth] = useState(0);
+  const [height, setHeight] = useState(480);
+
   useLayoutEffect(() => {
     const measure = () => {
       if (!containerRef.current) return;
       const w = containerRef.current.getBoundingClientRect().width;
       setWidth(w);
-
-      // Altura alvo: até 80vh, respeitando uma proporção mínima (3:4) se quiser
       const maxH = Math.round(window.innerHeight * 0.8);
       const aspectH = Math.round(w * (4 / 3)); // 3x4 “em pé”
       setHeight(Math.min(maxH, aspectH));
     };
-
     measure();
     const ro = new ResizeObserver(measure);
     if (containerRef.current) ro.observe(containerRef.current);
@@ -49,6 +50,7 @@ export function Gallery({ images = [] }) {
   const handlePrev = useCallback(() => setIndex((i) => clampIndex(i - 1)), [clampIndex]);
   const handleNext = useCallback(() => setIndex((i) => clampIndex(i + 1)), [clampIndex]);
 
+  // drag
   const dragState = useRef({ pointerId: null, startX: 0, startY: 0, dragging: false });
   const THRESHOLD = Math.min(120, Math.max(40, width * 0.15));
 
@@ -105,6 +107,32 @@ export function Gallery({ images = [] }) {
   const baseTranslate = -(index * width);
   const translateX = baseTranslate + dragDx;
 
+  // handler de load por slide (com decode)
+  const handleImgLoad = (i) => (e) => {
+    const img = e.currentTarget;
+    const done = () =>
+      setLoaded((prev) => {
+        if (prev[i]) return prev;
+        const next = prev.slice();
+        next[i] = true;
+        return next;
+      });
+
+    if (img.decode) {
+      img.decode().then(done).catch(done);
+    } else {
+      // fallback
+      requestAnimationFrame(done);
+    }
+  };
+
+  // opcional: pedir prioridade p/ o slide atual e pré-carregar o próximo
+  const getLoading = (i) => {
+    if (i === index || i === index + 1) return "eager";
+    return "lazy";
+  };
+  const getPriority = (i) => (i === index ? "high" : "auto");
+
   return (
     <div className="relative w-full">
       {images.length > 1 && (
@@ -129,7 +157,7 @@ export function Gallery({ images = [] }) {
         </button>
       )}
 
-      {/* Viewport COM altura definida desde o primeiro paint */}
+      {/* viewport com altura definida */}
       <div
         ref={containerRef}
         className="relative overflow-hidden"
@@ -143,23 +171,24 @@ export function Gallery({ images = [] }) {
             transform: `translate3d(${translateX}px, 0, 0)`,
             transition: isDragging ? "none" : "transform 350ms ease",
             willChange: "transform",
-            height: `${height}px`, // garante que os filhos herdem a mesma altura
+            height: `${height}px`,
           }}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerCancel}
         >
-          {images.map((image, idx) => (
+          {images.map((image, i) => (
             <div
-              key={`gallery_${idx}`}
-              className="shrink-0 flex items-center justify-center"
+              key={`gallery_${i}`}
+              className="relative shrink-0 flex items-center justify-center" // relative p/ skeleton absolute
               style={{ width: `${width}px`, height: `${height}px` }}
             >
-              {!loaded && (
+              {/* skeleton por slide */}
+              {!loaded[i] && (
                 <div className="absolute inset-0 bg-gray-200 animate-pulse" />
               )}
-              
+
               <picture className="w-full h-full">
                 <source
                   type="image/avif"
@@ -185,14 +214,13 @@ export function Gallery({ images = [] }) {
                   `}
                   sizes={`${Math.min(width, 1200)}px`}
                   alt={image.alt || 'image'}
-                  // primeira imagem pode ser carregada com prioridade
-                  loading={idx === 0 ? "eager" : "lazy"}
-                  fetchpriority={idx === 0 ? "high" : "auto"}
+                  loading={getLoading(i)}
+                  fetchpriority={getPriority(i)}
                   decoding="async"
                   draggable={false}
-                  onLoad={() => setLoaded(true)}
+                  onLoad={handleImgLoad(i)}
                   className={`w-full h-full object-contain transition-opacity duration-500 select-none ${
-                    loaded ? "opacity-100" : "opacity-0"
+                    loaded[i] ? "opacity-100" : "opacity-0"
                   }`}
                 />
               </picture>
