@@ -5,6 +5,7 @@ import anime from 'animejs';
 import { useTranslation } from 'react-i18next';
 import { useSelectReferences } from '@/Contexts/SelectReferencesContext';
 import { fileUrl } from "@/helpers/images";
+import { SkeletonCard } from "@/Components/Skeleton/SkeletonCard";
 
 const LazyImageModalComponent = lazy(() => import('@/Components/Site/Components/ImageToModal'));
 
@@ -98,25 +99,30 @@ export default function Works({ currentLanguage }) {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 xs:grid-cols-2 md:grid-cols-2 gap-x-3 gap-y-4 mb-24">
-          <Suspense fallback={<Spinner />}>
-            {portfolio.length > 0 && portfolio.map((item, index) => (
-              <LazyImageModalComponent
-                key={`portfolio_${item.id}`}
-                book={false}
-                title={item.translation ? item.translation.title : item.default_translation.title}
-                description={item.translation ? item.translation.description : item.default_translation.description}
-                coverImage={item.media[0].uuid}
-                images={item.media}
-                onAddReference={() => handleAddAsReference(item)}
-                itemId={item.id}
-                available={true}
-                alt={`Image ${index + 1}`}
-                reference={el => boxRefs.current[index] = el}
-                detailUrl={route('site.portfolio.show', { locale: currentLanguage.slug, slug: item.slug })}
-                indexUrl={route('site.portfolio', { locale: currentLanguage.slug })}
-              />
-            ))}
-          </Suspense>
+          {isInitialLoad && portfolio.length === 0 ? (
+            // 6 placeholders, por exemplo
+            Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={`sk_${i}`} />)
+          ) : (
+            <Suspense fallback={null}>
+              {portfolio.map((item, index) => (
+                <LazyImageModalComponent
+                  key={`portfolio_${item.id}`}
+                  book={false}
+                  title={item.translation ? item.translation.title : item.default_translation.title}
+                  description={item.translation ? item.translation.description : item.default_translation.description}
+                  coverImage={item.media[0].uuid}
+                  images={item.media}
+                  onAddReference={() => handleAddAsReference(item)}
+                  itemId={item.id}
+                  available={true}
+                  alt={`Image ${index + 1}`}
+                  reference={el => boxRefs.current[index] = el}
+                  detailUrl={route('site.portfolio.show', { locale: currentLanguage.slug, slug: item.slug })}
+                  indexUrl={route('site.portfolio', { locale: currentLanguage.slug })}
+                />
+              ))}
+            </Suspense>
+          )}
         </div>
 
         {pagination.current_page < pagination.last_page && (

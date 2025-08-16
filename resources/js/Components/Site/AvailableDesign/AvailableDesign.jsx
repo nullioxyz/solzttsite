@@ -5,6 +5,7 @@ import anime from 'animejs';
 import { useSelectReferences } from '@/Contexts/SelectReferencesContext';
 import { useTranslation } from 'react-i18next';
 import { router } from '@inertiajs/react'
+import { SkeletonCard } from '@/Components/Skeleton/SkeletonCard';
 
 
 const LazyImageModalComponent = lazy(() => import('@/Components/Site/Components/ImageToModal'))
@@ -16,6 +17,7 @@ export default function AvailableDesign() {
   const [pagination, setPagination] = useState({});
   const [loadingMore, setLoadingMore] = useState(false);
   const [newItems, setNewItems] = useState([]);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const { t } = useTranslation();
 
   const { addAsReference, setSelectedReferences } = useSelectReferences();
@@ -58,6 +60,12 @@ export default function AvailableDesign() {
       type: 'available_design',
     });
   };
+  
+  useEffect(() => {
+    if (isInitialLoad) {
+      handleDesigns().finally(() => setIsInitialLoad(false));
+    }
+  }, [isInitialLoad]);
 
   useEffect(() => {
     if (newItems.length > 0) {
@@ -76,9 +84,6 @@ export default function AvailableDesign() {
     }
   }, [newItems, designs.length]);
 
-  useEffect(() => {
-    handleDesigns();
-  }, []);
 
   const handleBookNow = async (item) => {
     handleAddAsReference(item);
@@ -99,10 +104,12 @@ export default function AvailableDesign() {
           </h1>
         </div>
   
-        {/* Grid de imagens com 2 colunas fixas a partir do sm */}
         <div className="grid grid-cols-1 sm:grid-cols-2 xs:grid-cols-2 md:grid-cols-2 gap-x-3 gap-y-4 mb-24">
-          <Suspense fallback={<Spinner />}>
-            {designs.length > 0 && designs.map((item, index) => (
+          {isInitialLoad && designs.length === 0 ? (
+            Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={`sk_${i}`} />)
+          ) : (
+            <Suspense fallback={null}>
+              {designs.length > 0 && designs.map((item, index) => (
               <LazyImageModalComponent
                 key={`available_${item.id}`}
                 book={false}
@@ -121,7 +128,8 @@ export default function AvailableDesign() {
                 indexUrl={route('site.available_designs', { locale: currentLanguage.slug })}
               />
             ))}
-          </Suspense>
+            </Suspense>
+          )}
         </div>
   
         {pagination.current_page < pagination.last_page && (

@@ -336,6 +336,24 @@ background-color: #f0f0f0; /* Cor de fundo ao passar o mouse */
 
 /* Ajuste para a bandeira selecionada no dropdown */
 .react-tel-input .selected-flag {
-background-color: white; /* Cor de fundo da bandeira selecionada */
-border-radius: 0px !important;
+    background-color: white; /* Cor de fundo da bandeira selecionada */
+    border-radius: 0px !important;
+}
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: #e9e9ec;       /* base */
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.4), transparent);
+  animation: shimmer 1.2s infinite;
+}
+
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
 }
