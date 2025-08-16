@@ -32,7 +32,7 @@ export function Thumb({ uuid, alt, onClick, className }) {
       />
       {/* Fallback JPG */}
       <img
-        src={md}
+        src={lg}
         srcSet={`${sm} 480w, ${md} 768w, ${lg} 1280w`}
         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
         alt={alt}
