@@ -5,6 +5,8 @@ import { fileUrl } from "@/helpers/images";
 export function Gallery({ images = [] }) {
   const containerRef = useRef(null);
   const trackRef = useRef(null);
+  const [loaded, setLoaded] = useState(false);
+
 
   const [index, setIndex] = useState(0);
   const [dragDx, setDragDx] = useState(0);
@@ -184,7 +186,10 @@ export function Gallery({ images = [] }) {
                   fetchpriority={idx === 0 ? "high" : "auto"}
                   decoding="async"
                   draggable={false}
-                  className="w-full h-full object-contain select-none"
+                  onLoad={() => setLoaded(true)}
+                  className={`w-full h-full object-contain transition-opacity duration-500 select-none ${
+                    loaded ? "opacity-100" : "opacity-0"
+                  }`}
                 />
               </picture>
             </div>
