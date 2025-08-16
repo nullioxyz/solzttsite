@@ -43,6 +43,9 @@ export default function AboutHome({ institucional }) {
 
           {hasMedia && (
             <div className="w-full xl:w-1/2 flex justify-center xl:mt-[-4rem]">
+              {!loaded && (
+                <div className="absolute inset-0 bg-gray-200 animate-pulse" />
+              )}
               <picture>
                 <source
                   type="image/avif"
