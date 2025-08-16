@@ -12,8 +12,8 @@ export default function Book({ consideration, currentLanguage }) {
       <div className="max-w-[1240px] mx-auto w-full">
 
         <div className="mb-10">
-          <h1 className="text-[2.0rem] tracking-tight text-[#595954] text-center sm:text-left">
-          {t('requestatatto')}
+          <h1 className="text-[2.0rem] tracking-tight text-[#595954] lg:text-center xl:text-left md:text-center sm:text-center xs:text-center text-center">
+            {t('requestatatto')}
           </h1>
         </div>
 

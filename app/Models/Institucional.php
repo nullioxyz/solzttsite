@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\ContentType;
+use App\Models\Traits\MediaConvertions;
 use App\Traits\SlugModelSettings;
 use Illuminate\Support\Facades\Cookie;
 use Spatie\MediaLibrary\HasMedia;
@@ -14,7 +15,7 @@ use Spatie\Sluggable\HasSlug;
 
 class Institucional extends Model implements HasMedia
 {
-    use HasFactory, SoftDeletes, InteractsWithMedia, HasSlug, SlugModelSettings;
+    use HasFactory, SoftDeletes, InteractsWithMedia, HasSlug, SlugModelSettings, MediaConvertions;
     
     protected $table = 'institucional';
 
@@ -40,6 +41,13 @@ class Institucional extends Model implements HasMedia
     ];
 
     public $timestamps = true;
+
+    const MEDIA_COLLECTION = 'institucional';
+
+    public function registerMediaCollections(?Media $media = null): void
+    {
+        $this->registerMediaConversionsToModel($media);
+    }
 
     public function langs(): \Illuminate\Database\Eloquent\Relations\HasMany
     {

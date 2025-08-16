@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\MediaConvertions;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,9 +14,11 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Portfolio extends Model implements HasMedia
 {
-    use SoftDeletes, HasFactory, InteractsWithMedia;
+    use SoftDeletes, HasFactory, InteractsWithMedia, MediaConvertions;
     
     protected $table = 'portfolio';
+
+    const MEDIA_COLLECTION = 'portfolio';
 
     protected $fillable = [
         'content_type_id',
@@ -25,6 +28,11 @@ class Portfolio extends Model implements HasMedia
     ];
 
     public $timestamps = true;
+
+    public function registerMediaCollections(?Media $media = null): void
+    {
+        $this->registerMediaConversionsToModel($media);
+    }
 
     public function langs(): \Illuminate\Database\Eloquent\Relations\HasMany
     {

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\MediaConvertions;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +15,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class AvailableDesign extends Model implements HasMedia
 {
-    use SoftDeletes, HasFactory, InteractsWithMedia;
+    use SoftDeletes, HasFactory, InteractsWithMedia, MediaConvertions;
     
     protected $table = 'available_design';
 
@@ -26,8 +27,16 @@ class AvailableDesign extends Model implements HasMedia
         'slug'
     ];
 
-    public $timestamps = true;
+    const MEDIA_COLLECTION = 'available_design';
 
+    
+    public $timestamps = true;
+    
+    public function registerMediaCollections(?Media $media = null): void
+    {
+        $this->registerMediaConversionsToModel($media);
+    }
+    
     public function langs(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(AvailableDesignLang::class, 'available_design_id');
