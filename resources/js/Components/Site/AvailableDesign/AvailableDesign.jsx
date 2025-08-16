@@ -94,7 +94,7 @@ export default function AvailableDesign() {
         
         {/* Título alinhado à esquerda em desktop, centralizado em mobile */}
         <div className="mb-10">
-          <h1 className="text-[2.0rem] tracking-tight text-[#595954] text-center sm:text-left">
+          <h1 className="text-[2.0rem] tracking-tight text-[#595954] lg:text-center xl:text-left md:text-center sm:text-center xs:text-center text-center">
             {t('available')}
           </h1>
         </div>
@@ -108,7 +108,7 @@ export default function AvailableDesign() {
                 book={false}
                 title={item.translation ? item.translation.title : item.default_translation.title}
                 description={item.translation ? item.translation.description : item.default_translation.description}
-                coverImage={route('file.index', {locale: 'lang', uuid: item.media[0].uuid})}
+                coverImage={item.media[0].uuid}
                 images={item.media}
                 onAddReference={() => handleAddAsReference(item)}
                 onBookNow={() => handleBookNow(item)}

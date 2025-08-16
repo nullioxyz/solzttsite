@@ -14,6 +14,7 @@ import { useSelectReferences } from "@/Contexts/SelectReferencesContext";
 import { FiX } from "react-icons/fi";
 import { useCallback } from "react";
 import { useRef } from "react";
+import { Thumb } from "./Thumb";
 
 const ImageToModal = ({ reference, coverImage, alt, images, available, title, description, book, onBookNow, onAddReference, availableDesign, itemId, detailUrl, indexUrl }) => {
 
@@ -121,8 +122,8 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, title, de
       ref={reference}
       >
         <div className="relative w-full h-full">
-          <img
-            src={coverImage}
+          <Thumb
+            uuid={coverImage}
             alt={alt}
             onClick={toggleModal}
             className={`object-cover w-full h-full ${!available ? 'grayscale' : ''}`}

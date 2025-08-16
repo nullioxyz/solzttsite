@@ -4,6 +4,7 @@ import { Spinner } from "@material-tailwind/react";
 import anime from 'animejs';
 import { useTranslation } from 'react-i18next';
 import { useSelectReferences } from '@/Contexts/SelectReferencesContext';
+import { fileUrl } from "@/helpers/images";
 
 const LazyImageModalComponent = lazy(() => import('@/Components/Site/Components/ImageToModal'));
 
@@ -91,7 +92,7 @@ export default function Works({ currentLanguage }) {
     <section id="works" className="mx-auto xl:mt-20 lg:mt-20 md:mt-20 sm:mt-5 xs:mt-5 p-5">
       <div className="max-w-[1240px] mx-auto w-full">
         <div className="mb-10">
-          <h1 className="text-[2.0rem] tracking-tight text-[#595954] text-center sm:text-left">
+          <h1 className="text-[2.0rem] tracking-tight text-[#595954] lg:text-center xl:text-left md:text-center sm:text-center xs:text-center text-center">
             {t('portfolio')}
           </h1>
         </div>
@@ -104,7 +105,7 @@ export default function Works({ currentLanguage }) {
                 book={false}
                 title={item.translation ? item.translation.title : item.default_translation.title}
                 description={item.translation ? item.translation.description : item.default_translation.description}
-                coverImage={route('file.index', {locale: 'lang', uuid: item.media[0].uuid})}
+                coverImage={item.media[0].uuid}
                 images={item.media}
                 onAddReference={() => handleAddAsReference(item)}
                 itemId={item.id}

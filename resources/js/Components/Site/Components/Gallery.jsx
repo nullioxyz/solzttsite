@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
+import { fileUrl } from "@/helpers/images";
 
 
 export function Gallery({ images = [] }) {
@@ -144,13 +145,37 @@ export function Gallery({ images = [] }) {
               className="shrink-0 flex items-center justify-center"
               style={{ width: width || "100%" }}
             >
-              <img
-                src={route("file.index", { locale: "lang", uuid: image.uuid })}
-                alt={image.uuid}
-                className="max-h-[48rem] max-w-full object-center select-none"
-                loading="lazy"
-                draggable={false}
-              />
+              <picture>
+                <source
+                  type="image/avif"
+                  srcSet={`
+                    ${fileUrl(image.uuid, { locale: 'lang', size: 'md', format: 'avif' })} 1280w,
+                    ${fileUrl(image.uuid, { locale: 'lang', size: 'lg', format: 'avif' })} 1920w
+                  `}
+                  sizes="(max-width: 1024px) 90vw, 1200px"
+                />
+                <source
+                  type="image/webp"
+                  srcSet={`
+                    ${fileUrl(image.uuid, { locale: 'lang', size: 'md', format: 'webp' })} 1280w,
+                    ${fileUrl(image.uuid, { locale: 'lang', size: 'lg', format: 'webp' })} 1920w
+                  `}
+                  sizes="(max-width: 1024px) 90vw, 1200px"
+                />
+                <img
+                  src={fileUrl(image.uuid, { locale: 'lang', size: 'lg' })}              // fallback jpg
+                  srcSet={`
+                    ${fileUrl(image.uuid, { locale: 'lang', size: 'md' })} 1280w,
+                    ${fileUrl(image.uuid, { locale: 'lang', size: 'lg' })} 1920w
+                  `}
+                  sizes="(max-width: 1024px) 90vw, 1200px"
+                  alt={image.alt || 'image'}
+                  loading="lazy"
+                  decoding="async"
+                  draggable={false}
+                  className="max-h-[80vh] max-w-full object-contain select-none"
+                />
+              </picture>
             </div>
           ))}
         </div>
