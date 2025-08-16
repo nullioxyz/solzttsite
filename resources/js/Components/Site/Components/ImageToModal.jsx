@@ -114,9 +114,8 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, title, de
       className="
         relative w-full rounded-none 
         aspect-[3/4]           /* padrão mobile: 3x4 */
-        sm:aspect-[5/4]        /* a partir de sm: 5x4 */
-        lg:h-[800px] xl:h-[800px] md:h-[800px] 
-        sm:w-full sm:h-[800px] 
+        lg:h-[800px] xl:h-[800px] 
+        sm:w-full
         cursor-pointer overflow-hidden
       "
       ref={reference}

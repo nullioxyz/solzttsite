@@ -40,7 +40,7 @@ export function Thumb({ uuid, alt, onClick, className }) {
         decoding="async"
         onClick={onClick}
         className={className}
-        style={{ aspectRatio: '3 / 4', objectFit: 'cover', width: '100%', height: 'auto' }}
+        style={{objectFit: 'cover' }}
       />
     </picture>
   );

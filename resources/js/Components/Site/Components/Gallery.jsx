@@ -1,7 +1,6 @@
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useLayoutEffect, useEffect, useCallback } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import { fileUrl } from "@/helpers/images";
-
 
 export function Gallery({ images = [] }) {
   const containerRef = useRef(null);
@@ -10,34 +9,45 @@ export function Gallery({ images = [] }) {
   const [index, setIndex] = useState(0);
   const [dragDx, setDragDx] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
-  const [width, setWidth] = useState(0);
 
-  useEffect(() => {
+  // Medições do viewport
+  const [width, setWidth] = useState(0);
+  const [height, setHeight] = useState(480); // fallback para 1º paint (evita “menor”)
+
+  // Mede ANTES do primeiro paint para evitar flicker de tamanho
+  useLayoutEffect(() => {
     const measure = () => {
-      if (containerRef.current) setWidth(containerRef.current.offsetWidth);
+      if (!containerRef.current) return;
+      const w = containerRef.current.getBoundingClientRect().width;
+      setWidth(w);
+
+      // Altura alvo: até 80vh, respeitando uma proporção mínima (3:4) se quiser
+      const maxH = Math.round(window.innerHeight * 0.8);
+      const aspectH = Math.round(w * (4 / 3)); // 3x4 “em pé”
+      setHeight(Math.min(maxH, aspectH));
     };
+
     measure();
     const ro = new ResizeObserver(measure);
     if (containerRef.current) ro.observe(containerRef.current);
-    return () => ro.disconnect();
+    window.addEventListener("orientationchange", measure);
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("orientationchange", measure);
+      window.removeEventListener("resize", measure);
+    };
   }, []);
 
-  const clampIndex = useCallback((i) => {
-    if (!images.length) return 0;
-
-    return Math.max(0, Math.min(images.length - 1, i));
-  }, [images.length]);
+  const clampIndex = useCallback(
+    (i) => (images.length ? Math.max(0, Math.min(images.length - 1, i)) : 0),
+    [images.length]
+  );
 
   const handlePrev = useCallback(() => setIndex((i) => clampIndex(i - 1)), [clampIndex]);
   const handleNext = useCallback(() => setIndex((i) => clampIndex(i + 1)), [clampIndex]);
 
-  const dragState = useRef({
-    pointerId: null,
-    startX: 0,
-    startY: 0,
-    dragging: false,
-  });
-
+  const dragState = useRef({ pointerId: null, startX: 0, startY: 0, dragging: false });
   const THRESHOLD = Math.min(120, Math.max(40, width * 0.15));
 
   const onPointerDown = useCallback((e) => {
@@ -51,41 +61,37 @@ export function Gallery({ images = [] }) {
     setDragDx(0);
   }, []);
 
-  const onPointerMove = useCallback((e) => {
-    if (!dragState.current.dragging) return;
+  const onPointerMove = useCallback(
+    (e) => {
+      if (!dragState.current.dragging) return;
+      const dx = e.clientX - dragState.current.startX;
+      const dy = e.clientY - dragState.current.startY;
+      if (Math.abs(dx) > Math.abs(dy) && e.cancelable) e.preventDefault();
 
-    const dx = e.clientX - dragState.current.startX;
-    const dy = e.clientY - dragState.current.startY;
-    if (Math.abs(dx) > Math.abs(dy) && e.cancelable) e.preventDefault();
+      const atFirst = index === 0;
+      const atLast = index === images.length - 1;
+      let dampedDx = dx;
+      if ((atFirst && dx > 0) || (atLast && dx < 0)) dampedDx = dx * 0.35;
+      setDragDx(dampedDx);
+    },
+    [index, images.length]
+  );
 
-    const atFirst = index === 0;
-    const atLast = index === images.length - 1;
+  const onPointerUp = useCallback(
+    (e) => {
+      if (!dragState.current.dragging) return;
+      const dx = e.clientX - dragState.current.startX;
+      if (dx <= -THRESHOLD) handleNext();
+      else if (dx >= THRESHOLD) handlePrev();
 
-    let dampedDx = dx;
-    if ((atFirst && dx > 0) || (atLast && dx < 0)) {
-      dampedDx = dx * 0.35;
-    }
-    setDragDx(dampedDx);
-  }, [index, images.length]);
-
-  const onPointerUp = useCallback((e) => {
-    if (!dragState.current.dragging) return;
-
-    const dx = e.clientX - dragState.current.startX;
-
-    if (dx <= -THRESHOLD) {
-      handleNext();
-    } else if (dx >= THRESHOLD) {
-      handlePrev();
-    }
-    // reseta
-    dragState.current.dragging = false;
-    dragState.current.pointerId = null;
-    setIsDragging(false);
-    setDragDx(0);
-
-    e.currentTarget.releasePointerCapture?.(e.pointerId);
-  }, [THRESHOLD, handleNext, handlePrev]);
+      dragState.current.dragging = false;
+      dragState.current.pointerId = null;
+      setIsDragging(false);
+      setDragDx(0);
+      e.currentTarget.releasePointerCapture?.(e.pointerId);
+    },
+    [THRESHOLD, handleNext, handlePrev]
+  );
 
   const onPointerCancel = useCallback(() => {
     dragState.current.dragging = false;
@@ -109,7 +115,7 @@ export function Gallery({ images = [] }) {
           <ChevronLeftIcon className="h-6 w-6 text-white" />
         </button>
       )}
-      
+
       {images.length > 1 && (
         <button
           type="button"
@@ -121,18 +127,21 @@ export function Gallery({ images = [] }) {
         </button>
       )}
 
+      {/* Viewport COM altura definida desde o primeiro paint */}
       <div
         ref={containerRef}
         className="relative overflow-hidden"
-        style={{ touchAction: "pan-y" }}
+        style={{ touchAction: "pan-y", height: `${height}px` }}
       >
         <div
           ref={trackRef}
           className="flex items-center"
           style={{
+            width: width ? `${width * images.length}px` : "100%",
             transform: `translate3d(${translateX}px, 0, 0)`,
             transition: isDragging ? "none" : "transform 350ms ease",
             willChange: "transform",
+            height: `${height}px`, // garante que os filhos herdem a mesma altura
           }}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
@@ -143,16 +152,16 @@ export function Gallery({ images = [] }) {
             <div
               key={`gallery_${idx}`}
               className="shrink-0 flex items-center justify-center"
-              style={{ width: width || "100%" }}
+              style={{ width: `${width}px`, height: `${height}px` }}
             >
-              <picture>
+              <picture className="w-full h-full">
                 <source
                   type="image/avif"
                   srcSet={`
                     ${fileUrl(image.uuid, { locale: 'lang', size: 'md', format: 'avif' })} 1280w,
                     ${fileUrl(image.uuid, { locale: 'lang', size: 'lg', format: 'avif' })} 1920w
                   `}
-                  sizes="(max-width: 1024px) 90vw, 1200px"
+                  sizes={`${Math.min(width, 1200)}px`}
                 />
                 <source
                   type="image/webp"
@@ -160,20 +169,22 @@ export function Gallery({ images = [] }) {
                     ${fileUrl(image.uuid, { locale: 'lang', size: 'md', format: 'webp' })} 1280w,
                     ${fileUrl(image.uuid, { locale: 'lang', size: 'lg', format: 'webp' })} 1920w
                   `}
-                  sizes="(max-width: 1024px) 90vw, 1200px"
+                  sizes={`${Math.min(width, 1200)}px`}
                 />
                 <img
-                  src={fileUrl(image.uuid, { locale: 'lang', size: 'lg' })}              // fallback jpg
+                  src={fileUrl(image.uuid, { locale: 'lang', size: 'lg' })} // fallback jpg
                   srcSet={`
                     ${fileUrl(image.uuid, { locale: 'lang', size: 'md' })} 1280w,
                     ${fileUrl(image.uuid, { locale: 'lang', size: 'lg' })} 1920w
                   `}
-                  sizes="(max-width: 1024px) 90vw, 1200px"
+                  sizes={`${Math.min(width, 1200)}px`}
                   alt={image.alt || 'image'}
-                  loading="lazy"
+                  // primeira imagem pode ser carregada com prioridade
+                  loading={idx === 0 ? "eager" : "lazy"}
+                  fetchpriority={idx === 0 ? "high" : "auto"}
                   decoding="async"
                   draggable={false}
-                  className="max-h-[80vh] max-w-full object-contain select-none"
+                  className="w-full h-full object-contain select-none"
                 />
               </picture>
             </div>
