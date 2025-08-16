@@ -1,7 +1,9 @@
 import { fileUrl } from '@/helpers/images';
 import DOMPurify from 'dompurify';
+import { useState } from 'react';
 
 export default function AboutHome({ institucional }) {
+  const [loaded, setLoaded] = useState(false);
 
   const institucionalTranslation = institucional.translation ?? institucional.default_translation;
   const sanitizedDescription = DOMPurify.sanitize(institucionalTranslation.description, {
@@ -69,6 +71,10 @@ export default function AboutHome({ institucional }) {
                   loading="lazy"
                   decoding="async"
                   draggable={false}
+                  onLoad={() => setLoaded(true)}
+                  className={`w-full h-full object-cover transition-opacity duration-500 ${
+                    loaded ? "opacity-100" : "opacity-0"
+                  }`}
                 />
               </picture>
 
