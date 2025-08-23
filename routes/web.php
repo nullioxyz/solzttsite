@@ -122,6 +122,7 @@ Route::prefix('hall-of-justice')->group(function() {
         Route::get('/', [AvailableController::class, 'index'])->name('available_design.index');
         Route::get('/create', [AvailableController::class, 'create'])->name('available_design.create');
         Route::post('/store', [AvailableController::class, 'store'])->name('available_design.store');
+        Route::post('/sort', [AvailableController::class, 'sort'])->name('available_design.sort');
         Route::get('/edit/{available_design}', [AvailableController::class, 'edit'])->name('available_design.edit');
         Route::post('/save/{available_design}', [AvailableController::class, 'update'])->name('available_design.update');
         Route::post('/availability/{available_design}', [AvailableController::class, 'changeAvailability'])->name('available_design.changeAvailability');

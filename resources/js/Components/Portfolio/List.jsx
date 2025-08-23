@@ -1,27 +1,24 @@
 import Table from '@/Components/Portfolio/Table';
-import { useState } from 'react';
 import { useCallback } from 'react';
+import { useReorder } from '@/hooks/useReorder';
 
 export default function List({ items }) {
-  const [rows, setRows] = useState(items);
 
-  const persistOrder = useCallback(async (nextRows) => {
-    const order = nextRows.map((it, idx) => ({ id: it.id, order: idx + 1 }));
-    try {
-      await axios.post(route('portfolio.sort'), { order });
-    } catch (e) {
-      console.error('Falha ao salvar ordem', e);
-    }
+  const onSave = useCallback((payload) => {
+    return axios.post(route("portfolio.sort"), { order: payload });
   }, []);
-
-  const onReorder = useCallback((nextRows) => {
-    setRows(nextRows);
-    persistOrder(nextRows);
-  }, [persistOrder]);
+  
+  const { items: rows, onDragEnd, direction } = useReorder(items, {
+    onSave,
+    idKey: "id",
+    sortKey: "order",
+    direction: "vertical",
+    debounceMs: 0,
+  });
 
   return (
     <div className="bg-white overflow-x-auto shadow-sm sm:rounded-lg">
-      <Table items={rows} onReorder={onReorder}/>
+      <Table items={rows} onDragEnd={onDragEnd} direction={direction} />
     </div>
   )
 }

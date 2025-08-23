@@ -15,6 +15,7 @@ use App\Strategies\Files\MediaUploadStrategy;
 use App\Strategies\Translation\AvailableDesign\AvailableDesignLangStrategy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
 
@@ -36,7 +37,9 @@ class AvailableController extends Controller
     public function index()
     {
         $availableDesigns = $this->availableDesignRepo
-            ->with(['defaultTranslation'])->paginate();
+            ->with(['defaultTranslation'])
+            ->orderBy('order', 'asc')
+            ->paginate();
 
         return Inertia::render('AvailableDesign/Index', [
             'designs' => $availableDesigns
@@ -149,6 +152,53 @@ class AvailableController extends Controller
         }
         
         return redirect()->route('available_design.index')->with('success', __('Saved with success'));
+    }
+
+    public function sort(Request $request)
+    {
+        try {
+             $data = collect($request->input('order'))
+                ->map(fn ($row) => [
+                    'id'           => (int) $row['id'],
+                    'order' => (int) $row['order'],
+                    'updated_at'   => now(),
+                ])->all();
+
+            DB::beginTransaction();
+            
+            $this->bulkUpdateOrder($data);
+            
+            DB::commit();
+
+            return response()->noContent();
+        } catch (\Exception $e) {
+            Log::error($e->getMessage(), [$request]);
+        }
+    }
+
+    private function bulkUpdateOrder(array $pairs): void
+    {
+        if (empty($pairs)) return;
+
+        $pairs = array_map(fn($p) => [
+            'id' => (int) $p['id'],
+            'order' => (int) $p['order'],
+        ], $pairs);
+
+        $ids = array_column($pairs, 'id');
+
+        $caseSql = 'CASE `id`';
+        foreach ($pairs as $p) {
+            $caseSql .= ' WHEN ' . $p['id'] . ' THEN ' . $p['order'];
+        }
+
+        $caseSql .= ' END';
+
+        AvailableDesign::query()
+            ->whereIn('id', $ids)
+            ->update([
+                'order' => DB::raw($caseSql),
+            ]);
     }
 
     public function changeAvailability(Request $request, AvailableDesign $availableDesign)

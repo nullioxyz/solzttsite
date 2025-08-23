@@ -93,6 +93,7 @@ class AvailableController extends Controller
             }
         )
         ->active()
+        ->orderBy('order', 'asc')
         ->paginate(
             $this->perPage($request)
         );

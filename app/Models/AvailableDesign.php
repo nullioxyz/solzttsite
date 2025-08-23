@@ -6,10 +6,8 @@ use App\Models\Traits\MediaConvertions;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Session;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -24,6 +22,7 @@ class AvailableDesign extends Model implements HasMedia
         'category_id',
         'active',
         'available',
+        'order',
         'slug'
     ];
 
