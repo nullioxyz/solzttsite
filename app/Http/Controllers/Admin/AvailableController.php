@@ -157,16 +157,19 @@ class AvailableController extends Controller
     public function sort(Request $request)
     {
         try {
-             $data = collect($request->input('order'))
-                ->map(fn ($row) => [
-                    'id'           => (int) $row['id'],
-                    'order' => (int) $row['order'],
-                    'updated_at'   => now(),
-                ])->all();
+            $ids = array_column($request->input('order'), 'id');
+            $minOrder = AvailableDesign::whereIn('id', $ids)->min('order');
+
+            $step = 10;
+            $newOrder = $minOrder;
 
             DB::beginTransaction();
-            
-            $this->bulkUpdateOrder($data);
+
+            foreach ($request->input('order') as $row) {
+                AvailableDesign::where('id', $row['id'])
+                    ->update(['order' => $newOrder]);
+                $newOrder += $step;
+            }
             
             DB::commit();
 
@@ -174,31 +177,6 @@ class AvailableController extends Controller
         } catch (\Exception $e) {
             Log::error($e->getMessage(), [$request]);
         }
-    }
-
-    private function bulkUpdateOrder(array $pairs): void
-    {
-        if (empty($pairs)) return;
-
-        $pairs = array_map(fn($p) => [
-            'id' => (int) $p['id'],
-            'order' => (int) $p['order'],
-        ], $pairs);
-
-        $ids = array_column($pairs, 'id');
-
-        $caseSql = 'CASE `id`';
-        foreach ($pairs as $p) {
-            $caseSql .= ' WHEN ' . $p['id'] . ' THEN ' . $p['order'];
-        }
-
-        $caseSql .= ' END';
-
-        AvailableDesign::query()
-            ->whereIn('id', $ids)
-            ->update([
-                'order' => DB::raw($caseSql),
-            ]);
     }
 
     public function changeAvailability(Request $request, AvailableDesign $availableDesign)

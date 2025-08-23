@@ -170,15 +170,19 @@ class PortfolioController extends Controller
     public function sort(Request $request)
     {
         try {
-             $data = collect($request->input('order')) // [['id'=>1,'order_column'=>1], ...]
-                ->map(fn ($row) => [
-                    'id'           => (int) $row['id'],
-                    'order' => (int) $row['order'],
-                    'updated_at'   => now(),
-                ])->all();
+            $ids = array_column($request->input('order'), 'id');
+            $minOrder = Portfolio::whereIn('id', $ids)->min('order');
+
+            $step = 10;
+            $newOrder = $minOrder;
 
             DB::beginTransaction();
-            $this->bulkUpdateOrder($data);
+            
+            foreach ($request->input('order') as $row) {
+                Portfolio::where('id', $row['id'])
+                    ->update(['order' => $newOrder]);
+                $newOrder += $step;
+            }
 
             DB::commit();
 
