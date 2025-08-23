@@ -34,7 +34,7 @@ class ContactRequestController extends Controller
     {
         $contacts = $this->contactRepo
             ->with(['portfolioReferences', 'reservedDesign'])
-            ->orderBy('created_at', 'desc')->paginate();
+            ->orderBy('created_at', 'desc')->paginate(20);
 
         return Inertia::render('Contact/Index', [
             'contacts' => $contacts

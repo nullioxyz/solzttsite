@@ -21,7 +21,7 @@ class SocialController extends Controller
 
     public function index()
     {
-        $socials = $this->socialRepo->paginate();
+        $socials = $this->socialRepo->paginate(20);
 
         return Inertia::render('Social/Index', [
             'socials' => $socials

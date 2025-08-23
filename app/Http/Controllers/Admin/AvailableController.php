@@ -38,8 +38,8 @@ class AvailableController extends Controller
     {
         $availableDesigns = $this->availableDesignRepo
             ->with(['defaultTranslation'])
-            ->orderBy('order', 'asc')
-            ->paginate();
+            ->orderBy('order', 'ASC')
+            ->paginate(20);
 
         return Inertia::render('AvailableDesign/Index', [
             'designs' => $availableDesigns

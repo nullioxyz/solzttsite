@@ -1,6 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import List from '@/Components/Contacts/List';
 import { Head } from '@inertiajs/react';
+import Pagination from '@/Components/Pagination/Index';
 
 export default function Index({ auth, contacts }) {
 
@@ -15,6 +16,7 @@ export default function Index({ auth, contacts }) {
 
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
           <List items={contacts.data} />
+          <Pagination meta={contacts.meta} links={contacts.links} />
         </div>
       </div>
     </AuthenticatedLayout>

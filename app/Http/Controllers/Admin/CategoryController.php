@@ -29,7 +29,7 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = $this->categoryRepo
-            ->with(['defaultTranslation'])->paginate();
+            ->with(['defaultTranslation'])->paginate(20);
 
         return Inertia::render('Category/Index', [
             'categories' => $categories

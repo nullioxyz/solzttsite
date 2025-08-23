@@ -31,7 +31,7 @@ class SiteSettingController extends Controller
     public function index()
     {
         $settings = $this->siteSettingRepo
-            ->with(['defaultTranslation'])->paginate();
+            ->with(['defaultTranslation'])->paginate(20);
 
         return Inertia::render('SiteSetting/Index', [
             'settings' => $settings

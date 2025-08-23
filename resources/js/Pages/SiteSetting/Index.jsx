@@ -2,6 +2,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import List from '@/Components/SiteSetting/List';
 import { Head } from '@inertiajs/react';
 import AddButton from '@/Components/Buttons/AddButton/Index';
+import Pagination from '@/Components/Pagination/Index';
 
 export default function Index({ auth, settings }) {
 
@@ -20,6 +21,7 @@ export default function Index({ auth, settings }) {
 
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
           <List items={settings.data} />
+          <Pagination meta={settings} links={settings.links} />
         </div>
       </div>
     </AuthenticatedLayout>

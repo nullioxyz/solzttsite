@@ -33,7 +33,7 @@ class InstitucionalController extends Controller
     public function index()
     {
         $institucionals = $this->institucionalRepo
-            ->with(['defaultTranslation'])->paginate();
+            ->with(['defaultTranslation'])->paginate(20);
 
         return Inertia::render('Institucional/Index', [
             'institucionals' => $institucionals
