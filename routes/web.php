@@ -111,6 +111,7 @@ Route::prefix('hall-of-justice')->group(function() {
         Route::get('/', [PortfolioController::class, 'index'])->name('portfolio.index');
         Route::get('/create', [PortfolioController::class, 'create'])->name('portfolio.create');
         Route::post('/store', [PortfolioController::class, 'store'])->name('portfolio.store');
+        Route::post('/sort', [PortfolioController::class, 'sort'])->name('portfolio.sort');
         Route::get('/edit/{portfolio}', [PortfolioController::class, 'edit'])->name('portfolio.edit');
         Route::post('/save/{portfolio}', [PortfolioController::class, 'update'])->name('portfolio.update');
         Route::delete('/delete/{portfolio}', [PortfolioController::class, 'destroy'])->name('portfolio.delete');

@@ -1,22 +1,39 @@
-import { PencilSquareIcon } from '@heroicons/react/24/solid'
+import { forwardRef } from 'react';
+import { PencilSquareIcon, Bars3Icon } from '@heroicons/react/24/solid';
 import DeleteButton from '../Buttons/DeleteButton/Index';
 
-export default function TableRow({ item }) {
+const TableRow = forwardRef(function TableRow(
+  { item, index, dragProps, dragHandleProps, dragging },
+  ref
+) {
+  return (
+    <tr
+      ref={ref}
+      {...dragProps}
+      className={`border-b dark:border-gray-700 ${
+        index % 2 === 0 ? 'bg-white dark:bg-gray-900' : 'bg-gray-50 dark:bg-gray-800'
+      } ${dragging ? 'ring-2 ring-indigo-400' : ''}`}
+    >
+      {/* Drag handle */}
+      <td className="px-6 py-4 cursor-grab" {...dragHandleProps} title="Arraste para reordenar">
+        <Bars3Icon className="w-5 h-5 text-gray-400" />
+      </td>
 
-    return (
-        <tr className="odd:bg-whit  e odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-            <td className="px-6 py-4">
-                {item.default_translation.title}
-            </td>
-            <td className="px-6 py-4">
-                <a href={ route('portfolio.edit', item.slug) } className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                    <PencilSquareIcon className="size-6 text-blue-500" />
-                </a>
-            </td>
-            <td className="px-6 py-4">
-                <DeleteButton deleteUrl={route('portfolio.delete', item.slug)} />
-            </td>
-            
-        </tr>
-    )
-}
+      <td className="px-6 py-4">
+        {item.default_translation?.title ?? item.title}
+      </td>
+
+      <td className="px-6 py-4">
+        <a href={route('portfolio.edit', item.slug)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+          <PencilSquareIcon className="size-6 text-blue-500" />
+        </a>
+      </td>
+
+      <td className="px-6 py-4">
+        <DeleteButton deleteUrl={route('portfolio.delete', item.slug)} />
+      </td>
+    </tr>
+  );
+});
+
+export default TableRow;

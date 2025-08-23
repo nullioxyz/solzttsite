@@ -13,7 +13,9 @@ use App\Repositories\Category\CategoryRepository;
 use App\Repositories\Portfolio\PortfolioRepository;
 use App\Strategies\Files\MediaUploadStrategy;
 use App\Strategies\Translation\Portfolio\PortfolioLangStrategy;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
 
@@ -35,7 +37,9 @@ class PortfolioController extends Controller
     public function index()
     {
         $portfolio = $this->portfolioRepo
-            ->with(['defaultTranslation'])->paginate();
+            ->with(['defaultTranslation'])
+            ->orderBy('order', 'ASC')
+            ->paginate();
 
         return Inertia::render('Portfolio/Index', [
             'portfolio' => $portfolio
@@ -163,6 +167,51 @@ class PortfolioController extends Controller
         return Inertia::location(route('portfolio.index'));
     }
 
+    public function sort(Request $request)
+    {
+        try {
+             $data = collect($request->input('order')) // [['id'=>1,'order_column'=>1], ...]
+                ->map(fn ($row) => [
+                    'id'           => (int) $row['id'],
+                    'order' => (int) $row['order'],
+                    'updated_at'   => now(),
+                ])->all();
+
+            DB::beginTransaction();
+            $this->bulkUpdateOrder($data);
+
+            DB::commit();
+
+            return response()->noContent();
+        } catch (\Exception $e) {
+            Log::error($e->getMessage(), [$request]);
+        }
+    }
+
+    private function bulkUpdateOrder(array $pairs): void
+    {
+        if (empty($pairs)) return;
+
+        $pairs = array_map(fn($p) => [
+            'id' => (int) $p['id'],
+            'order' => (int) $p['order'],
+        ], $pairs);
+
+        $ids = array_column($pairs, 'id');
+
+        $caseSql = 'CASE `id`';
+        foreach ($pairs as $p) {
+            $caseSql .= ' WHEN ' . $p['id'] . ' THEN ' . $p['order'];
+        }
+        $caseSql .= ' END';
+
+        Portfolio::query()
+            ->whereIn('id', $ids)
+            ->update([
+                'order' => DB::raw($caseSql),
+            ]);
+    }
+
     public function destroyFile($fileId, Portfolio $portfolio)
     {
         try {
@@ -171,7 +220,6 @@ class PortfolioController extends Controller
             $this->mediaUploadStrategy->delete(
                 $this->mediaUploadStrategy->getMediaById($fileId, $portfolio)
             );
-
 
             DB::commit();
         } catch (\Exception $e) {

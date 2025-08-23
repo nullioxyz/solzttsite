@@ -24,7 +24,8 @@ class Portfolio extends Model implements HasMedia
         'content_type_id',
         'category_id',
         'active',
-        'slug'
+        'slug',
+        'order',
     ];
 
     public $timestamps = true;
