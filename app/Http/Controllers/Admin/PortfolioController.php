@@ -137,10 +137,15 @@ class PortfolioController extends Controller
             }
 
             $languages = $request->get('languages');
-            $categorySlug = Str::slug($languages[2]['title']);
+            
+            $portfolioSlug = Str::slug(
+                $languages[2]['title'] 
+                    ?? $languages[3]['title'] 
+                    ?? $languages[0]['title']
+            );
             
             $this->portfolioRepo->update($portfolio->id, [
-                'slug' => $categorySlug
+                'slug' => $portfolioSlug
             ]);
             
             $this->portfolioLangStrategy->decideCreateOrUpdate($request->get('languages'), $portfolio);
