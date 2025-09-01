@@ -70,7 +70,11 @@ class PortfolioController extends Controller
             }
 
             $languages = $request->get('languages');
-            $portfolioSlug = Str::slug($languages[2]['title']);
+            $portfolioSlug = Str::slug(
+                $languages[2]['title'] 
+                    ?? $languages[3]['title'] 
+                    ?? $languages[0]['title']
+            );
 
             $portfolio = $this->portfolioRepo->create(
                 [
@@ -81,15 +85,18 @@ class PortfolioController extends Controller
             );
 
             $this->portfolioLangStrategy->create($request->get('languages'), $portfolio);
+            
+            DB::commit();
 
             if(count($validator['files'])) {
                 $this->mediaUploadStrategy->uploadAsync($validator['files'], $portfolio, 'portfolio');
             }
-            
-            DB::commit();
             return redirect()->route('portfolio.index')->with('success', __('Saved with success'));
         } catch (\Exception $e) {
-            DB::rollback();
+
+            Log::error('Erro ao salvar portfolio: '.$e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
             
             return redirect()->route('portfolio.create')->with('warning', __('Try again'));
         }        
