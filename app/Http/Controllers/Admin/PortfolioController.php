@@ -144,14 +144,18 @@ class PortfolioController extends Controller
             ]);
             
             $this->portfolioLangStrategy->decideCreateOrUpdate($request->get('languages'), $portfolio);
-
+            
+            DB::commit();
+            
             if(count($validator['files'])) {
                 $this->mediaUploadStrategy->uploadAsync($validator['files'], $portfolio, 'portfolio');
             }
-
-            DB::commit();
         } catch (\Exception $e) {
             
+            Log::error('Erro ao salvar portfolio: '.$e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
+
             DB::rollBack();
 
             return redirect()->route('portfolio.edit', $portfolio)->with('warning', __('Something wrong. Please try again'));
