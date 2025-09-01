@@ -71,7 +71,12 @@ class AvailableController extends Controller
             }
 
             $languages = $request->get('languages');
-            $slug = Str::slug($languages[2]['title']);
+            
+            $slug = Str::slug(
+                $languages[2]['title'] 
+                    ?? $languages[3]['title'] 
+                    ?? $languages[0]['title']
+            );
 
             $availableDesigns = $this->availableDesignRepo->create(
                 [
@@ -83,11 +88,12 @@ class AvailableController extends Controller
 
             $this->availableDesignLangStrategy->create($request->get('languages'), $availableDesigns);
 
+            DB::commit();
+
             if(count($validator['files'])) {
                 $this->mediaUploadStrategy->upload($validator['files'], $availableDesigns, 'availableDesigns');
             }
             
-            DB::commit();
             return redirect()->route('available_design.index')->with('success', __('Saved with success'));
         } catch (\Exception $e) {
             DB::rollback();
@@ -130,7 +136,12 @@ class AvailableController extends Controller
             }
             
             $languages = $request->get('languages');
-            $slug = Str::slug($languages[2]['title']);
+
+            $slug = Str::slug(
+                $languages[2]['title'] 
+                    ?? $languages[3]['title'] 
+                    ?? $languages[0]['title']
+            );
 
             $this->availableDesignRepo->update($availableDesign->id, [
                 'slug' => $slug,
@@ -140,11 +151,11 @@ class AvailableController extends Controller
             
             $this->availableDesignLangStrategy->decideCreateOrUpdate($request->get('languages'), $availableDesign);
 
+            DB::commit();
+
             if(count($validator['files'])) {
                 $this->mediaUploadStrategy->upload($validator['files'], $availableDesign, 'availableDesigns');
             }
-
-            DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
 
