@@ -12,6 +12,7 @@ export function Gallery({ images = [] }) {
 
   // loaded por slide
   const [loaded, setLoaded] = useState(() => images.map(() => false));
+  
   useEffect(() => {
     // reajusta quando a lista de imagens muda
     setLoaded(images.map(() => false));

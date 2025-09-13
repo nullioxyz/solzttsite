@@ -1,13 +1,11 @@
-import { useEffect, useState, useRef, lazy, Suspense } from "react";
+import { useEffect, useState, useRef } from "react";
+import { router } from '@inertiajs/react';
 import axios from '@/Services/requests';
-import { Spinner } from "@material-tailwind/react";
+import { Card, Spinner } from "@material-tailwind/react";
 import anime from 'animejs';
 import { useTranslation } from 'react-i18next';
-import { useSelectReferences } from '@/Contexts/SelectReferencesContext';
-import { fileUrl } from "@/helpers/images";
 import { SkeletonCard } from "@/Components/Skeleton/SkeletonCard";
-
-const LazyImageModalComponent = lazy(() => import('@/Components/Site/Components/ImageToModal'));
+import { Thumb } from "../Components/Thumb";
 
 export default function Works({ currentLanguage }) {
 
@@ -17,27 +15,55 @@ export default function Works({ currentLanguage }) {
   const [loadingMore, setLoadingMore] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [newItems, setNewItems] = useState([]);
+  
+  const initialPage = new URLSearchParams(window.location.search).get("page") || 1;
 
   const { t } = useTranslation();
-  const { addAsReference, setSelectedReferences } = useSelectReferences();
 
-  const handlePortfolio = async () => {
+  const handlePortfolio = async (page = null) => {
     setLoadingMore(true);
 
     try {
-      const response = await axios.get(pagination.next_page_url ?? route('site.portfolio.load', 'lang'));
+      const url =
+        page !== null
+          ? route("site.portfolio.load", { locale: "lang", page })
+          : pagination.next_page_url ?? route("site.portfolio.load", { lang: "lang" });
+
+      const response = await axios.get(url);
+
       if (response.data) {
-        const { data, first_page, current_page, last_page, next_page_url } = response.data.portfolio;
+        const {
+          data,
+          first_page,
+          current_page,
+          last_page,
+          next_page_url,
+        } = response.data.portfolio;
 
         setNewItems(data);
-        setPortfolio(prevPortfolio => [...prevPortfolio, ...data]);
+
+        setPortfolio(prevPortfolio => {
+          // evita duplicados
+          const merged = [...prevPortfolio, ...data];
+          return Array.from(new Map(merged.map(item => [item.id, item])).values());
+        });
 
         setPagination({
           current_page,
           first_page,
           last_page,
-          next_page_url
+          next_page_url,
         });
+
+        router.get(
+          window.location.pathname + `?page=${current_page}`,
+          {},
+          {
+            replace: true,
+            preserveScroll: true,
+            preserveState: true,
+          }
+        );
       }
     } catch (error) {
       console.error("Failed to fetch portfolio data:", error);
@@ -50,25 +76,9 @@ export default function Works({ currentLanguage }) {
     await handlePortfolio();
   };
 
-  const handleAddAsReference = (item) => {
-    
-    setSelectedReferences(prevRefs =>
-      prevRefs.filter(ref => ref.type !== 'available_design')
-    );
-
-    const data = {
-      id: item.id,
-      image: route('file.index', {locale: 'lang', uuid: item.media[0].uuid}),
-      name: item.translation ? item.translation.title : item.default_translation.title,
-      type: 'portfolio'
-    }
-
-    addAsReference(data);
-  };
-
   useEffect(() => {
     if (isInitialLoad) {
-      handlePortfolio().finally(() => setIsInitialLoad(false));
+      handlePortfolio(initialPage).finally(() => setIsInitialLoad(false));
     }
   }, [isInitialLoad]);
 
@@ -100,28 +110,32 @@ export default function Works({ currentLanguage }) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 xs:grid-cols-2 md:grid-cols-2 gap-x-3 gap-y-4 mb-24">
           {isInitialLoad && portfolio.length === 0 ? (
-            // 6 placeholders, por exemplo
             Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={`sk_${i}`} />)
           ) : (
-            <Suspense fallback={null}>
-              {portfolio.map((item, index) => (
-                <LazyImageModalComponent
-                  key={`portfolio_${item.id}`}
-                  book={false}
-                  title={item.translation ? item.translation.title : item.default_translation.title}
-                  description={item.translation ? item.translation.description : item.default_translation.description}
-                  coverImage={item.media[0].uuid}
-                  images={item.media}
-                  onAddReference={() => handleAddAsReference(item)}
-                  itemId={item.id}
-                  available={true}
-                  alt={`Image ${index + 1}`}
-                  reference={el => boxRefs.current[index] = el}
-                  detailUrl={route('site.portfolio.show', { locale: currentLanguage.slug, slug: item.slug })}
-                  indexUrl={route('site.portfolio', { locale: currentLanguage.slug })}
-                />
+            <>
+              {portfolio.length > 0 && portfolio.map((item, index) => (
+                <Card
+                  key={index}
+                  className="
+                    relative w-full rounded-none 
+                    aspect-[3/4]
+                    lg:h-[800px] xl:h-[800px] 
+                    sm:w-full
+                    cursor-pointer overflow-hidden
+                ">
+                  <a href={route('site.portfolio.show', { locale: currentLanguage.slug, slug: item.slug })}>
+                    
+                    <Thumb
+                      uuid={item.media[0].uuid}
+                      alt={item.translation ? item.translation.title : item.default_translation.title}
+                      className={`w-full h-auto`}
+                      loading="lazy"
+                      />
+                  
+                  </a>
+                </Card>
               ))}
-            </Suspense>
+            </>
           )}
         </div>
 

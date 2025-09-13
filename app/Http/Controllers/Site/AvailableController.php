@@ -4,13 +4,12 @@ namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
 use App\Models\AvailableDesign;
-use App\Models\Institucional;
 use App\Models\Language;
-use App\Models\Portfolio;
 use App\Models\SiteSetting;
 use App\Models\Social;
 use App\Traits\PaginationTrait;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cookie;
 use Inertia\Inertia;
 
@@ -76,26 +75,34 @@ class AvailableController extends Controller
 
     public function load(Request $request)
     {
+        $page = (int) $request->get('page', 1);
+        $perPage = $this->perPage($request);
+
+        $query = AvailableDesign::with([
+            'media' => function($query) {
+                $query->orderBy('order_column', 'asc');
+            },
+            'defaultTranslation',
+            'translation'
+        ])->whereHas('media', function($query) {
+            $query->orderBy('order_column', 'asc');
+        });
+
+        $totalItems = $query->count();
+
+        $items = $query->orderBy('id', 'desc')
+            ->limit($page * $perPage)
+            ->get();
+
         $availableLangs = Language::select('slug', 'name', 'default')->get();
         $defaultLang = $availableLangs->firstWhere('default', 1);
 
-        $designs = AvailableDesign::with(
-            [
-                'media' =>  function($query) {
-                    $query->orderBy('order_column', 'asc');
-                },
-                'defaultTranslation',
-                'translation'
-            ]
-            )->whereHas(
-                'media', function($query) {
-                $query->orderBy('order_column', 'asc');
-            }
-        )
-        ->active()
-        ->orderBy('order', 'asc')
-        ->paginate(
-            $this->perPage($request)
+        $designs = new LengthAwarePaginator(
+            $items,
+            $totalItems,
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
         );
 
         return response()->json([

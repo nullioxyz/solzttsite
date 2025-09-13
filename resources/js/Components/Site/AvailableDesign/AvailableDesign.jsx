@@ -1,14 +1,12 @@
-import { lazy, useEffect, useRef, useState, Suspense } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import axios from '@/Services/requests'
-import { Spinner } from "@material-tailwind/react";
+import { Card, Spinner } from "@material-tailwind/react";
 import anime from 'animejs';
 import { useSelectReferences } from '@/Contexts/SelectReferencesContext';
 import { useTranslation } from 'react-i18next';
 import { router } from '@inertiajs/react'
 import { SkeletonCard } from '@/Components/Skeleton/SkeletonCard';
-
-
-const LazyImageModalComponent = lazy(() => import('@/Components/Site/Components/ImageToModal'))
+import { Thumb } from '../Components/Thumb';
 
 export default function AvailableDesign() {
   const boxRefs = useRef([]);
@@ -20,28 +18,48 @@ export default function AvailableDesign() {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const { t } = useTranslation();
 
-  const { addAsReference, setSelectedReferences } = useSelectReferences();
+  const initialPage = Number(new URLSearchParams(window.location.search).get("page") || 1);
 
-  const handleDesigns = async () => {
+  const handleDesigns = async (page = null) => {
     setLoadingMore(true);
     
     try {
-      const response = await axios.get(pagination.next_page_url ?? route('site.available_designs.load', 'lang'));
-      
+      const url =
+        page !== null
+          ? route("site.available_designs.load", { locale: "lang", page })
+          : pagination.next_page_url ?? route("site.available_designs.load", "lang");
+
+      const response = await axios.get(url);
+
       if (response.data) {
         const { data, first_page, current_page, last_page, next_page_url } = response.data.designs;
         const { currentLang } = response.data;
 
         setNewItems(data);
-        setDesigns(prevDesigns => [...prevDesigns, ...data]);
+        setDesigns(prevDesigns => {
+          // merge sem duplicar
+          const merged = [...prevDesigns, ...data];
+          return Array.from(new Map(merged.map(item => [item.id, item])).values());
+        });
+
         setCurrentLanguage(currentLang);
-        
         setPagination({
           current_page,
           first_page,
           last_page,
-          next_page_url
+          next_page_url,
         });
+
+        // atualiza a URL com Inertia
+        router.get(
+          window.location.pathname + `?page=${current_page}`,
+          {},
+          {
+            replace: true,
+            preserveScroll: true,
+            preserveState: true,
+          }
+        );
       }
     } catch (error) {
       console.error("Error fetching designs:", error);
@@ -49,21 +67,10 @@ export default function AvailableDesign() {
       setLoadingMore(false);
     }
   };
-
-  const handleAddAsReference = (item) => {
-    setSelectedReferences([]);
-    
-    addAsReference({
-      id: item.id,
-      image: route('file.index', {locale: 'lang', uuid: item.media[0].uuid}),
-      name: item.translation ? item.translation.title : item.default_translation.title,
-      type: 'available_design',
-    });
-  };
   
   useEffect(() => {
     if (isInitialLoad) {
-      handleDesigns().finally(() => setIsInitialLoad(false));
+      handleDesigns(initialPage).finally(() => setIsInitialLoad(false));
     }
   }, [isInitialLoad]);
 
@@ -84,51 +91,44 @@ export default function AvailableDesign() {
     }
   }, [newItems, designs.length]);
 
-
-  const handleBookNow = async (item) => {
-    handleAddAsReference(item);
-    
-    setTimeout(() => {
-      router.visit(route('site.contact', 'lang'));
-    }, 1000)
-  }
-
   return (
     <section id="available" className="flex flex-col justify-between xl:mt-20 lg:mt-20 md:mt-20 sm:mt-5 xs:mt-5 h-auto px-5 py-10">
       <div className="max-w-[1240px] mx-auto w-full">
         
-        {/* Título alinhado à esquerda em desktop, centralizado em mobile */}
         <div className="mb-10">
           <h1 className="text-[2.0rem] tracking-tight text-[#595954] lg:text-center xl:text-left md:text-center sm:text-center xs:text-center text-center">
             {t('available')}
           </h1>
         </div>
-  
+
         <div className="grid grid-cols-1 sm:grid-cols-2 xs:grid-cols-2 md:grid-cols-2 gap-x-3 gap-y-4 mb-24">
           {isInitialLoad && designs.length === 0 ? (
             Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={`sk_${i}`} />)
           ) : (
-            <Suspense fallback={null}>
+            <>
               {designs.length > 0 && designs.map((item, index) => (
-              <LazyImageModalComponent
-                key={`available_${item.id}`}
-                book={false}
-                title={item.translation ? item.translation.title : item.default_translation.title}
-                description={item.translation ? item.translation.description : item.default_translation.description}
-                coverImage={item.media[0].uuid}
-                images={item.media}
-                onAddReference={() => handleAddAsReference(item)}
-                onBookNow={() => handleBookNow(item)}
-                itemId={item.id}
-                available={item.available}
-                alt={`Image ${index + 1}`}
-                availableDesign={true}
-                reference={el => boxRefs.current[index] = el}
-                detailUrl={route('site.available_designs.show', { locale: currentLanguage.slug, slug: item.slug })}
-                indexUrl={route('site.available_designs', { locale: currentLanguage.slug })}
-              />
-            ))}
-            </Suspense>
+                <Card
+                  key={index}
+                  className="
+                    relative w-full rounded-none 
+                    aspect-[3/4]
+                    lg:h-[800px] xl:h-[800px] 
+                    cursor-pointer overflow-hidden
+                  "
+                >
+                  <a href={route('site.available_designs.show', { locale: currentLanguage.slug, slug: item.slug })}>
+                    <div className="w-full h-full">
+                      <Thumb
+                        uuid={item.media[0].uuid}
+                        alt={item.translation ? item.translation.title : item.default_translation.title}
+                        className={`object-cover w-full h-full ${!item.available ? 'grayscale' : ''}`}
+                        loading="lazy"
+                      />
+                    </div>
+                  </a>
+                </Card>
+              ))}
+            </>
           )}
         </div>
   
@@ -136,7 +136,7 @@ export default function AvailableDesign() {
           <div className="flex justify-center mb-10">
             <button
               className="px-6 py-3 bg-[#595954] text-white text-lg hover:bg-[#fff] hover:text-[#595954] transition duration-300 uppercase border-[#595954] border"
-              onClick={handleDesigns}
+              onClick={() => handleDesigns()}
               disabled={loadingMore}
               aria-label={t('load_more')}
               title={t('load_more')}
@@ -148,5 +148,4 @@ export default function AvailableDesign() {
       </div>
     </section>
   )
-  
 }
