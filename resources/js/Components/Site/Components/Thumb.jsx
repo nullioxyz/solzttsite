@@ -20,7 +20,6 @@ export function Thumb({ uuid, alt, onClick, className }) {
 
   return (
     <div className={`relative overflow-hidden ${className}`}>
-      {/* Skeleton (cinza pulsando) */}
       {!loaded && (
         <div className="absolute inset-0 bg-gray-200 animate-pulse" />
       )}
@@ -48,9 +47,12 @@ export function Thumb({ uuid, alt, onClick, className }) {
           decoding="async"
           onClick={onClick}
           onLoad={() => setLoaded(true)}
-          className={`w-full h-full object-cover transition-opacity duration-500 ${
-            loaded ? "opacity-100" : "opacity-0"
-          }`}
+           className={`
+            w-full h-full 
+            object-cover
+            transition-opacity duration-500 
+            ${loaded ? "opacity-100" : "opacity-0"}
+          `}
         />
       </picture>
     </div>

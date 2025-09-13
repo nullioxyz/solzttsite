@@ -43,13 +43,11 @@ const ImageToModal = ({ reference, coverImage, alt, images, available, title, de
       const next = !prev;
 
       if (next) {
-        // abriu → muda a URL para a página da galeria
         if (!didPushRef.current) {
           window.history.pushState({ modal: true }, "", detailUrl);
           didPushRef.current = true;
         }
       } else {
-        // fechou → volta para a listagem sem criar novo histórico
         window.history.replaceState({}, "", indexUrl);
         didPushRef.current = false;
       }

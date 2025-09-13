@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
-use App\Models\Institucional;
 use App\Models\Language;
 use App\Models\Portfolio;
 use App\Models\SiteSetting;
 use App\Models\Social;
 use App\Traits\PaginationTrait;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cookie;
 use Inertia\Inertia;
 
@@ -94,22 +94,32 @@ class PortfolioController extends Controller
 
     public function load(Request $request)
     {
-        $portfolio = Portfolio::with(
-            [
-                'media' =>  function($query) {
-                    $query->orderBy('order_column', 'asc');
-                },
-                'defaultTranslation',
-                'translation'
-            ]
-            )->whereHas(
-                'media', function($query) {
+        $page = (int) $request->get('page', 1);
+        $perPage = $this->perPage($request);
+
+        $query = Portfolio::with([
+            'media' => function($query) {
                 $query->orderBy('order_column', 'asc');
-            }
-        )
-        ->orderBy('order', 'asc')
-        ->paginate(
-            $this->perPage($request)
+            },
+            'defaultTranslation',
+            'translation'
+        ])->whereHas('media', function($query) {
+            $query->orderBy('order_column', 'asc');
+        });
+
+        $totalItems = $query->count();
+
+        // pega todas as páginas até a atual
+        $items = $query->orderBy('id', 'desc')
+            ->limit($page * $perPage)
+            ->get();
+
+        $portfolio = new LengthAwarePaginator(
+            $items,
+            $totalItems,
+            $perPage,
+            $page,
+            ['path' => $request->url(), 'query' => $request->query()]
         );
 
         return response()->json(['portfolio' => $portfolio]);
