@@ -1,19 +1,31 @@
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
-import InputLabel from "@/Components/InputLabel";
 import InputRadio from "@/Components/InputRadio";
 import TextArea from "@/Components/TextArea";
 import TextInput from "@/Components/TextInput";
-import { useForm } from "@inertiajs/react";
+import { useForm, useRemember } from "@inertiajs/react";
 import Swal from "sweetalert2";
-import ReCAPTCHA from 'react-google-recaptcha';
+import HCaptcha from "@hcaptcha/react-hcaptcha";
 import { useRef, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelectReferences } from "@/Contexts/SelectReferencesContext";
 import Attachments from "../Components/Attachments/Index";
 import axios from '@/Services/requests'
 import { FiX } from 'react-icons/fi';
+import confetti from "canvas-confetti";
 
+var count = 200;
+var defaults = {
+  origin: { y: 0.7 }
+};
+
+function fire(particleRatio, opts) {
+  confetti({
+    ...defaults,
+    ...opts,
+    particleCount: Math.floor(count * particleRatio)
+  });
+}
 
 const Toast = Swal.mixin({
   toast: true,
@@ -28,24 +40,32 @@ const Toast = Swal.mixin({
 });
 
 export default function Form({ currentLanguage, considerationTranslation }) {
+  const captchaRef = useRef(null);
+  const [disableButton, setDisableButton] = useState(false);
+  const savedData = JSON.parse(localStorage.getItem("contactForm") || "{}");
+
+  const handleVerify = (token) => {
+      setData("token", token);
+  };
 
   const { data, setData, post, processing, errors, reset } = useForm({
-    firstname: null,
-    lastname: null,
-    email: null,
-    email_confirmation: null,
-    phone: null,
-    contact_me_by: null,
-    tattoo_idea: null,
-    references: null,
-    size: null,
-    body_location: null,
-    gender: null,
-    city: null,
-    availability: null,
-    captcha_question: null,
-    attachments: null,
-    files: null,
+    firstname: savedData.firstname ?? null,
+    lastname: savedData.lastname ?? null,
+    email: savedData.email ?? null,
+    email_confirmation: savedData.email_confirmation ?? null,
+    phone: savedData.phone ?? null,
+    contact_me_by: savedData.contact_me_by ?? null,
+    tattoo_idea: savedData.tattoo_idea ?? null,
+    references: savedData.references ?? null,
+    size: savedData.size ?? null,
+    body_location: savedData.body_location ?? null,
+    gender: savedData.gender ?? null,
+    city: savedData.city ?? null,
+    availability: savedData.availability ?? null,
+    captcha_question: savedData.captcha_question ?? null,
+    attachments: savedData.attachments ?? null,
+    files: savedData.files ?? null,
+    token: savedData.token ?? null,
   });
 
   const [files, setFiles] = useState([]);
@@ -55,6 +75,10 @@ export default function Form({ currentLanguage, considerationTranslation }) {
   const { t } = useTranslation();
 
   const { selectedReferences, setSelectedReferences } = useSelectReferences();
+
+  useEffect(() => {
+    localStorage.setItem("contactForm", JSON.stringify(data));
+  }, [data]);
 
   useEffect(() => {
     setData({ ...data, files });
@@ -103,23 +127,56 @@ export default function Form({ currentLanguage, considerationTranslation }) {
 
   const formSubmit = async (e) => {
     e.preventDefault();
+    setDisableButton(true);
 
     post(route('contact.store', { locale: currentLanguage.slug }), {
       data: data,
       preserveScroll: true,
       preserveState: true,
       onSuccess: () => {
+
+        fire(0.25, {
+          spread: 26,
+          startVelocity: 55,
+        });
+        
+        fire(0.2, {
+          spread: 60,
+        });
+        
+        fire(0.35, {
+          spread: 100,
+          decay: 0.91,
+          scalar: 0.8
+        });
+        
+        fire(0.1, {
+          spread: 120,
+          startVelocity: 25,
+          decay: 0.92,
+          scalar: 1.2
+        });
+
+        fire(0.1, {
+          spread: 120,
+          startVelocity: 45,
+        });
+
         Toast.fire({
           icon: "success",
-          title: t("Soon I'll be in touch to discuss about your project")
+          title: t("Soon I'll be in touch to discuss about your project"),
         });
 
         setData([]);
         setFiles([]);
+        localStorage.removeItem("contactForm");
         document.getElementById("contactForm").reset();
         setSelectedReferences([]);
+        setDisableButton(false);
       },
       onError: (error) => {
+        setDisableButton(false);
+
         Toast.fire({
           icon: "warning",
           title: t("Check your information and submit the form again")
@@ -128,9 +185,6 @@ export default function Form({ currentLanguage, considerationTranslation }) {
     });
   }
 
-  //TODO: FIX THIS.
-  const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY ?? "6LcNenErAAAAAJBKpTssnlu_Z66_uvf46nDU_WOF";
-  
   return (
     <div className="form">
       <form id="contactForm" onSubmit={(e) => formSubmit(e)} encType="multipart/form-data"      >
@@ -139,7 +193,7 @@ export default function Form({ currentLanguage, considerationTranslation }) {
           <div className="text-xl text-[#4d4c4c]" dangerouslySetInnerHTML={{ __html: considerationTranslation.description }} />
   
           <div className="space-y-3">
-            <label className="block text-md text-[#4d4c4c]">{t("First name")}</label>
+            <label className="block text-md text-[#4d4c4c]">{t("Name")}</label>
             <TextInput
               className="block w-full rounded-none py-3 px-4 text-[#4d4c4c] focus:border-none"
               type="text"
@@ -148,29 +202,30 @@ export default function Form({ currentLanguage, considerationTranslation }) {
             />
             {errors.firstname && <p className="text-[#7d3636] text-md italic">{errors.firstname}</p>}
           </div>
-
-          <div className="space-y-3">
-            <label className="block text-md text-[#4d4c4c]">{t("Last name")}</label>
-            <TextInput
-              className="block w-full rounded-none py-3 px-4 text-[#4d4c4c] focus:border-none"
-              type="text"
-              value={data.lastname}
-              onChange={(e) => setData({ ...data, lastname: e.target.value })}
-            />
-            {errors.lastname && <p className="text-[#7d3636] text-md italic">{errors.lastname}</p>}
-          </div>
   
-
           <div className="space-y-3">
             <label className="block text-md text-[#4d4c4c]">{t("Email")}</label>
             <TextInput
               className="block w-full rounded-none py-3 px-4 text-[#4d4c4c] focus:border-none"
               type="text"
-              placeholder={t("my@email.com")}
+              placeholder={t("Your best e-mail")}
               value={data.email}
               onChange={(e) => setData({ ...data, email: e.target.value })}
             />
             {errors.email && <p className="text-[#7d3636] text-md italic">{errors.email}</p>}
+          </div>
+
+          <div className="space-y-3">
+            <label className="block text-md text-[#4d4c4c]">{t("cityPlaceholder")}</label>
+
+            <TextInput
+              className="block w-full rounded-none py-3 px-4 text-[#4d4c4c] focus:border-none"
+              type="text"
+              value={data.city}
+              onChange={(e) => setData({ ...data, city: e.target.value })}
+            />
+
+            {errors.city && <p className="text-[#7d3636] text-md italic">{errors.city}</p>}
           </div>
   
           <div className="space-y-3">
@@ -265,7 +320,6 @@ export default function Form({ currentLanguage, considerationTranslation }) {
             )}
           </div>
 
-  
           <div className="space-y-3">
             <label className="block text-md text-[#4d4c4c]">{t("sizePlaceholder")}</label>
             {Object.entries(sizeOptions).map(([key, value]) => (
@@ -290,7 +344,7 @@ export default function Form({ currentLanguage, considerationTranslation }) {
               className="block w-full rounded-none py-3 px-4 text-[#4d4c4c]"
               usedefaultclass={false}
               type="text"
-              placeholder={t("Arm, Forearm")}
+              placeholder={t("Body area")}
               value={data.body_location}
               onChange={(e) => setData({ ...data, body_location: e.target.value })}
             />
@@ -314,20 +368,7 @@ export default function Form({ currentLanguage, considerationTranslation }) {
               </div>
             ))}
           </div>
-  
-          <div className="space-y-3">
-            <label className="block text-md text-[#4d4c4c]">{t("cityPlaceholder")}</label>
 
-            <TextInput
-              className="block w-full rounded-none py-3 px-4 text-[#4d4c4c] focus:border-none"
-              type="text"
-              value={data.city}
-              onChange={(e) => setData({ ...data, city: e.target.value })}
-            />
-
-            {errors.city && <p className="text-[#7d3636] text-md italic">{errors.city}</p>}
-          </div>
-  
           <div className="space-y-3">
             <label className="block text-md text-[#4d4c4c]">{t("availabilityPlaceholder")}</label>
             <TextArea
@@ -367,25 +408,22 @@ export default function Form({ currentLanguage, considerationTranslation }) {
             autoComplete="off"
           />
 
-          <div className="space-y-3">
-            <label className="block text-md text-[#4d4c4c]">{t("captcha_question")}</label>
-            <TextInput
-              className="block w-full rounded-none py-3 px-4 text-[#4d4c4c] focus:border-none"
-              type="text"
-              placeholder={t("captcha_question")}
-              value={data.captcha_question}
-              onChange={(e) => setData({ ...data, captcha_question: e.target.value })}
-            />
-          </div>
-
           {selectedReferences.length > 0 && <Attachments />}
+
+          <HCaptcha
+            sitekey="8702a8cc-c5cc-4718-a1a4-4d549d324f02"
+            onVerify={handleVerify}
+            ref={captchaRef}
+          />
   
           <button
+            disabled={disableButton}
             type="submit"
             className="mt-6 bg-black text-white px-6 py-3 rounded-none"
           >
-            {t('requestquote')}
+            {!disableButton ? t('requestquote') : t("sending...")}
           </button>
+
         </div>
       </form>
     </div>

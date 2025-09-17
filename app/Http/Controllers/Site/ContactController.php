@@ -10,6 +10,7 @@ use App\Models\Social;
 use App\Services\ContactService;
 use App\Strategies\Files\MediaUploadStrategy;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
@@ -66,10 +67,28 @@ class ContactController extends Controller
     public function store(StoreContactRequest $request)
     {
         $validatedData = $request->validated();
+        $availableLangs = Language::select('slug', 'name', 'default')->get();
+        $defaultLang = $availableLangs->firstWhere('default', 1);
+        $lang = Cookie::get('locale') ?? $defaultLang->slug;
+        $token = $request->input('token');
 
-        if (trim($request->input('captcha_question')) !== '4') {
-            return back()->withErrors(['captcha' => __('This is not good')]);
+        if (!$token) {
+            return redirect()->route('site.contact', ["locale" => $lang])
+                            ->withErrors(['error' => __("Fail to check recaptcha")]);
         }
+
+        $response = Http::asForm()->post('https://hcaptcha.com/siteverify', [
+            'secret'   => env('HCAPTCHA_SECRET'),
+            'response' => $token,
+        ]);
+
+        $result = $response->json();
+
+        if (!($result['success'] ?? false)) {
+            return redirect()->route('site.contact', ["locale" => $lang])
+                            ->withErrors(['error' => __("Fail to check recaptcha")]);
+        }
+        
 
         try {
             
@@ -79,11 +98,11 @@ class ContactController extends Controller
                 $this->mediaUploadStrategy->upload($request->file('files'), $contact, 'contact');
             }
 
-            return redirect()->route('site.contact', $request->cookie('locale'));
+            return redirect()->route('site.contact', ["locale" => $lang]);
         } catch (\Exception $e) {
-            dd($e);
+
             Log::error($e->getMessage());
-            return redirect()->route('site.contact', $request->cookie('locale'))->withErrors(['error' => 'Something went wrong. Please try again.']);
+            return redirect()->route('site.contact', ["locale" => $lang])->withErrors(['error' => 'Something went wrong. Please try again.']);
         }
     }
 }
