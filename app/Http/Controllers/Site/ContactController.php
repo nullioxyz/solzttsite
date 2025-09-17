@@ -95,7 +95,7 @@ class ContactController extends Controller
             $contact = $this->contactService->storeContact($validatedData);
 
             if(count($validatedData['files'])) {
-                $this->mediaUploadStrategy->upload($request->file('files'), $contact, 'contact');
+                $this->mediaUploadStrategy->uploadAsync($validatedData['files'], $contact, 'contact');
             }
 
             return redirect()->route('site.contact', ["locale" => $lang]);
