@@ -27,7 +27,7 @@ class ContactController extends Controller
 
     public function index()
     {
-        $consideration = Institucional::with('defaultTranslation.language', 'translation.language')
+        $consideration = Institucional::with('media', 'defaultTranslation.language', 'translation.language')
             ->where('id', 7)->first();
 
         $availableLangs = Language::select('slug', 'name', 'default')->get();

@@ -80,7 +80,7 @@
             <h2>{{ __('Hello') }},</h2>
             <p>{{ __('You have received a new contact request from your website. Here are the details:') }}</p>
 
-            <p><strong>{{ __('Name: ') }}</strong> {{ $contact['firstname'] }} {{ $contact['lastname'] }}</p>
+            <p><strong>{{ __('Name: ') }}</strong> {{ $contact['firstname'] }}</p>
             <p><strong>{{ __('Email:') }}</strong> {{ $contact['email'] }}</p>
             <p><strong>{{ __('Phone:') }}</strong> {{ $contact['phone'] }}</p>
             <p><strong>{{ __('Preferred Contact Method:') }}</strong> {{ $contact['contact_me_by'] }}</p>
