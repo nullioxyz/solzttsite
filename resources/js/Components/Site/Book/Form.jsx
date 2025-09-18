@@ -187,7 +187,7 @@ export default function Form({ currentLanguage, considerationTranslation }) {
 
   return (
     <div className="form">
-      <form id="contactForm" onSubmit={(e) => formSubmit(e)} encType="multipart/form-data"      >
+      <form id="contactForm" onSubmit={(e) => formSubmit(e)} encType="multipart/form-data">
         <div className="xl:w-[1240px] lg:w-[1240px] mx-auto space-y-6">
           
           <div className="text-xl text-[#4d4c4c]" dangerouslySetInnerHTML={{ __html: considerationTranslation.description }} />
