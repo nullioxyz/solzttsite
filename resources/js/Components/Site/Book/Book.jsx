@@ -16,7 +16,7 @@ export default function Book({ consideration, currentLanguage }) {
   return (
     <section id="book" className="flex flex-col justify-between h-auto mx-auto">
       {hasMedia && (
-        <div className="w-full relative aspect-[4/1] overflow-hidden">
+        <div className="w-full relative aspect-[5/2] overflow-hidden">
           {!loaded && (
             <div className="absolute inset-0 bg-gray-200 animate-pulse" />
           )}
@@ -36,7 +36,7 @@ export default function Book({ consideration, currentLanguage }) {
         </div>
       )}
     
-      <div className="max-w-[1240px] mx-auto w-full xl:mt-20 lg:mt-20 md:mt-20 sm:mt-5 xs:mt-5 h-auto p-5">
+      <div className="max-w-[1240px] mx-auto w-full xl:mt-5 lg:mt-5 md:mt-20 sm:mt-5 xs:mt-5 h-auto p-5">
         <div className="mb-10">
           <h1 className="text-[2.0rem] tracking-tight text-[#595954] lg:text-center xl:text-left md:text-center sm:text-center xs:text-center text-center">
             {t('requestatatto')}
