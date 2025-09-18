@@ -143,7 +143,7 @@ export default function Form(props) {
                       {design.media?.map((image, imgIndex) => (
                         <div key={imgIndex} className="p-2">
                           <img
-                            src={route('file.index', {'locale': 'lang', 'uuid': uuid})}
+                            src={route('file.index', {'locale': 'lang', 'uuid': image.uuid})}
                             alt={`Reserved Design Image ${imgIndex + 1}`}
                             className="w-full h-[200px] object-cover rounded"
                           />
@@ -167,7 +167,7 @@ export default function Form(props) {
                       {design.media?.map((image, imgIndex) => (
                         <div key={imgIndex} className="p-2">
                           <img
-                            src={route('file.index', {'locale': 'lang', 'uuid': uuid})}
+                            src={route('file.index', {'locale': 'lang', 'uuid': image.uuid})}
                             alt={`Reserved Design Image ${imgIndex + 1}`}
                             className="w-full h-[200px] object-cover rounded"
                           />
