@@ -44,6 +44,7 @@ class PortfolioController extends Controller
                 $query->orderBy('order_column', 'asc');
             }
         )
+        ->active()
         ->orderBy("order", "asc")
         ->paginate(
             $this->perPage($request)
@@ -108,6 +109,7 @@ class PortfolioController extends Controller
         ])->whereHas('media', function($query) {
             $query->orderBy('order_column', 'asc');
         })
+        ->active()
         ->orderBy("order", "asc");
 
         $totalItems = $query->count();

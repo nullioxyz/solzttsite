@@ -87,6 +87,7 @@ class AvailableController extends Controller
         ])->whereHas('media', function($query) {
             $query->orderBy('order_column', 'asc');
         })
+        ->active()
         ->orderBy("order", "asc");
 
         $totalItems = $query->count();
