@@ -21,8 +21,8 @@ export default function MainLayout({
 }) {
 
 
-  const imageUrl = metaImage?.media 
-    ? fileUrl(metaImage.media[0].uuid, { locale: 'lang', size: 'lg' })
+  const imageUrl = metaImage?.media && metaImage?.media[0].uuid
+    ? fileUrl(metaImage?.media[0].uuid, { locale: 'lang', size: 'lg' })
     : `${import.meta.env.VITE_APP_URL}/images/logo.jpg`;
 
   return (
