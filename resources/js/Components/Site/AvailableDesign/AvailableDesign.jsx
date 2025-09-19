@@ -114,8 +114,7 @@ export default function AvailableDesign() {
                     sm:w-full
                     cursor-pointer overflow-hidden
                   ">
-                  <a
-                    href={route('site.portfolio.show', { locale: currentLanguage.slug, slug: item.slug })}
+                  <a href={route('site.available_designs.show', { locale: currentLanguage.slug, slug: item.slug })}
                     className="block"
                   >
                     {/* O aspect ratio vive AQUI */}
