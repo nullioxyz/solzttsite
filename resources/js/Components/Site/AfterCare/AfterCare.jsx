@@ -36,7 +36,7 @@ export default function AfterCare({ institucional }) {
 
         <div className="flex flex-col-reverse xl:flex-row gap-10 items-center xl:items-start">
           <div className="text text-justify text-[20px] w-full xl:w-1/2 roboto text-[#4d4c4c]">
-            <div class="ck-content" dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
+            <div className="ck-content" dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
           </div>
 
           {hasMedia && (

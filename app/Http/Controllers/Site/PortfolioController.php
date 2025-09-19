@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
+use App\Models\Institucional;
 use App\Models\Language;
 use App\Models\Portfolio;
 use App\Models\SiteSetting;
@@ -30,7 +31,10 @@ class PortfolioController extends Controller
         $social['facebook'] = $socials->get('facebook');
 
         $metatags = SiteSetting::with(['defaultTranslation.language', 'translation.language'])->where('slug', 'default-conf')->first();
-        
+        $metaImage = Institucional::where('id', 11)
+            ->with('media')
+            ->first();
+            
         $portfolio = Portfolio::with(
             [
                 'media' =>  function($query) {
@@ -54,6 +58,7 @@ class PortfolioController extends Controller
             'defaultLang' => $defaultLang,
             'social' => $social,
             'metatags' => $metatags,
+            'metaImage' => $metaImage,
             'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? $defaultLang,
             'portfolio' => $portfolio
         ]);

@@ -17,11 +17,12 @@ export default function Index({
   currentLanguage,
   social,
   metatags,
-  portfolio
+  portfolio,
+  metaImage
 }) {
   return (
 
-    <MainLayout languages={languages} defaultLang={defaultLang} social={social} metatags={metatags} currentLanguage={currentLanguage}>
+    <MainLayout languages={languages} defaultLang={defaultLang} social={social} metatags={metatags} currentLanguage={currentLanguage} metaImage={metaImage}>
         <Suspense fallback={<Spinner />}>
           <Works
             portfolio={portfolio}

@@ -20,6 +20,10 @@ class HomeController extends Controller
         $institucional = Institucional::where('id', 1)
             ->with('defaultTranslation.language', 'translation.language', 'media')
             ->first();
+
+        $metaImage = Institucional::where('id', 11)
+            ->with('media')
+            ->first();
     
         $availableLangs = Language::select('slug', 'name', 'default')->get();
         $defaultLang = $availableLangs->firstWhere('default', 1);
@@ -36,6 +40,7 @@ class HomeController extends Controller
             'defaultLang' => $defaultLang,
             'social' => $social,
             'metatags' => $metatags,
+            'metaImage' => $metaImage,
             'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? $defaultLang
         ]);
     }

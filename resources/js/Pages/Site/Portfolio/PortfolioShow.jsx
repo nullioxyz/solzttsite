@@ -21,6 +21,7 @@ export default function AvailableDesignShow({
       social={social}
       metatags={metatags}
       currentLanguage={currentLanguage}
+      metaImage={portfolio}
     >
     <WorkDetail
       metatags={metatags}

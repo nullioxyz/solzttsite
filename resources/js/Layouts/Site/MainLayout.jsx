@@ -4,8 +4,7 @@ import Nav from '@/Components/Site/Nav/Index';
 import { SelectReferencesProvider } from '@/Contexts/SelectReferencesContext';
 import { Head } from '@inertiajs/react';
 import Footer from '@/Components/Site/Footer/Index';
-
-const logoUrl = `${window.location.origin}/images/logo.jpg`;
+import { fileUrl } from '@/helpers/images';
 
 const  stripHtmlTags = (html) => {
   return html.replace(/<[^>]*>/g, '');
@@ -17,9 +16,17 @@ export default function MainLayout({
   defaultLang,
   currentLanguage,
   social,
-  metatags
+  metatags,
+  metaImage
 }) {
+
+
+  const imageUrl = metaImage?.media 
+    ? fileUrl(metaImage.media[0].uuid, { locale: 'lang', size: 'lg' })
+    : `${import.meta.env.VITE_APP_URL}/images/logo.jpg`;
+
   return (
+    
 
     <SelectReferencesProvider>
       <Head>
@@ -28,7 +35,7 @@ export default function MainLayout({
         <meta name="keywords" content={metatags.translation ? metatags.translation.keywords : metatags.default_translation.keywords } />
         <meta property="og:title" content={metatags.translation ? metatags.translation.title : metatags.default_translation.title } />
         <meta property="og:description" content={stripHtmlTags(metatags.translation ? metatags.translation.description : metatags.default_translation.description) } />
-        <meta property="og:image" content={logoUrl} />
+        <meta property="og:image" content={imageUrl} />
         <meta property="og:url" content={window.location.href} />
         <meta property="og:type" content="website" />
         <link rel="canonical" href={window.location.href} />

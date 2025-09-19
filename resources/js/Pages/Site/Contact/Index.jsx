@@ -11,11 +11,12 @@ export default function Index({
   defaultLang,
   currentLanguage,
   social,
-  metatags
+  metatags,
+  metaImage
 }) {
   return (
 
-    <MainLayout languages={languages} defaultLang={defaultLang} social={social} metatags={metatags} currentLanguage={currentLanguage}>
+    <MainLayout languages={languages} defaultLang={defaultLang} social={social} metatags={metatags} currentLanguage={currentLanguage} metaImage={consideration?.media ? consideration : metaImage}>
         <Book
             consideration={consideration}
             currentLanguage={currentLanguage}

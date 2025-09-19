@@ -20,6 +20,7 @@ export default function AvailableDesignShow({
       social={social}
       metatags={metatags}
       currentLanguage={currentLanguage}
+      metaImage={availableDesign}
     >
     <AvailableDesignDetail
       metatags={metatags}

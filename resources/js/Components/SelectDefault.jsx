@@ -4,7 +4,7 @@ export default function SelectDefault(props) {
   }
 
   return (
-    <div class="relative h-10 w-full min-w-[200px]">
+    <div className="relative h-10 w-full min-w-[200px]">
       <select
         className="h-full w-full rounded-[7px] border text-sm font-normal"
         onChange={(e) => setCategoryValue(e.target.value) }

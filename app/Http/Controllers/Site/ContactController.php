@@ -30,6 +30,10 @@ class ContactController extends Controller
         $consideration = Institucional::with('media', 'defaultTranslation.language', 'translation.language')
             ->where('id', 7)->first();
 
+        $metaImage = Institucional::where('id', 11)
+            ->with('media')
+            ->first();
+
         $availableLangs = Language::select('slug', 'name', 'default')->get();
         $defaultLang = $availableLangs->firstWhere('default', 1);
 
@@ -59,6 +63,7 @@ class ContactController extends Controller
             'defaultLang' => $defaultLang,
             'social' => $social,
             'metatags' => $metatags,
+            'metaImage' => $metaImage,
             'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? $defaultLang,
             'portfolio' => $portfolio,
         ]);
