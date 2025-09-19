@@ -19,7 +19,7 @@ export function Thumb({ uuid, alt, onClick, className }) {
   const lgWebp = fileUrl(uuid, { locale: "lang", size: "lg", format: "webp" });
 
   return (
-    <div className={`relative overflow-hidden ${className}`}>
+    <div className={`relative w-full h-full overflow-hidden ${className}`}>
       {!loaded && (
         <div className="absolute inset-0 bg-gray-200 animate-pulse" />
       )}
@@ -49,7 +49,7 @@ export function Thumb({ uuid, alt, onClick, className }) {
           onLoad={() => setLoaded(true)}
            className={`
             w-full h-full 
-            object-cover
+            object-cover object-center
             transition-opacity duration-500 
             ${loaded ? "opacity-100" : "opacity-0"}
           `}

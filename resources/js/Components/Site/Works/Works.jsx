@@ -118,20 +118,22 @@ export default function Works({ currentLanguage }) {
                   key={index}
                   className="
                     relative w-full rounded-none 
-                    aspect-[3/4]
-                    lg:h-[800px] xl:h-[800px] 
                     sm:w-full
                     cursor-pointer overflow-hidden
                 ">
-                  <a href={route('site.portfolio.show', { locale: currentLanguage.slug, slug: item.slug })}>
-                    
-                    <Thumb
-                      uuid={item.media[0].uuid}
-                      alt={item.translation ? item.translation.title : item.default_translation.title}
-                      className={`w-full h-auto`}
-                      loading="lazy"
+                  <a
+                    href={route('site.portfolio.show', { locale: currentLanguage.slug, slug: item.slug })}
+                    className="block"
+                  >
+                    {/* O aspect ratio vive AQUI */}
+                    <div className="relative aspect-[3/4]">
+                      {/* O conteúdo preenche a caixa 3:4 */}
+                      <Thumb
+                        uuid={item.media[0].uuid}
+                        alt={item.translation ? item.translation.title : item.default_translation.title}
+                        className="absolute inset-0"
                       />
-                  
+                    </div>
                   </a>
                 </Card>
               ))}
