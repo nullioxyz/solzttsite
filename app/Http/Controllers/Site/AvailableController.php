@@ -86,7 +86,8 @@ class AvailableController extends Controller
             'translation'
         ])->whereHas('media', function($query) {
             $query->orderBy('order_column', 'asc');
-        });
+        })
+        ->orderBy("order", "asc");
 
         $totalItems = $query->count();
 

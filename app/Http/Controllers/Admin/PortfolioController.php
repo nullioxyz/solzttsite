@@ -39,7 +39,7 @@ class PortfolioController extends Controller
         $portfolio = $this->portfolioRepo
             ->with(['defaultTranslation'])
             ->orderBy('order', 'ASC')
-            ->paginate(20);
+            ->paginate(80);
 
         return Inertia::render('Portfolio/Index', [
             'portfolio' => $portfolio

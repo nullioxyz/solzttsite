@@ -43,7 +43,9 @@ class PortfolioController extends Controller
                 'media', function($query) {
                 $query->orderBy('order_column', 'asc');
             }
-        )->paginate(
+        )
+        ->orderBy("order", "asc")
+        ->paginate(
             $this->perPage($request)
         );
 
