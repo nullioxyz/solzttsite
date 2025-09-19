@@ -50,7 +50,10 @@ return [
     'availabilityPlaceholder' => 'Availability',
     'contact_preference' => 'Contact preference',
     'allopt' => 'All options',
-    'requestquote' => 'Request a quote',
+    'requestquote' => 'Send message',
+    "sending..." => "Sending...",
+
+    "Your best e-mail" => 'Your best e-mail',
 
     //lang selection
     'select_lang' => 'Select a language',

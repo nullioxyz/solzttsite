@@ -44,7 +44,8 @@ return [
     'availability' => '<span class="M7eMe">Qual è la tua&nbsp;<b>disponibilità di date e orari</b>?</span>',
     'contact_preference' => 'Preferenza di contatto',
     'allopt' => 'Tutte le opzioni',
-    'requestquote' => 'Richiedi un preventivo',
+    'requestquote' => 'Invia messaggio',
+    "sending..." => "Invio in corso...",
 
     'firstnamePlaceholder' => 'Il tuo nome',
     'lastnamePlaceholder' => 'Il tuo cognome',
@@ -52,6 +53,8 @@ return [
     'tattoTattoIdeaPlaceholder' => 'La tua idea',
     'referencesPlaceholder' => 'Le tue referenze',
     'cityPlaceholder' => 'La tua città',
+
+    "Your best e-mail" => 'La tua migliore e-mail',
 
     //lang selection
     'select_lang' => 'Seleziona una lingua',

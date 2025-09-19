@@ -43,7 +43,8 @@ return [
     'contact_preference' => 'Qual a sua preferência de contato',
     'all' => 'Todas',
     'allopt' => 'Todas as opções', 
-    'requestquote' => 'Solicitar orçamento',
+    'requestquote' => 'Enviar mensagem',
+    "sending..." => "Enviando...",
     
     'firstnamePlaceholder' => 'Seu nome',
     'lastnamePlaceholder' => 'Seu sobrenome',
@@ -51,6 +52,9 @@ return [
     'tattoTattoIdeaPlaceholder' => 'Sua ideia',
     'referencesPlaceholder' => 'Sua referencias',
     'cityPlaceholder' => 'Sua cidade',
+
+    "Your best e-mail" => 'Seu melhor e-mail',
+
 
     //lang selection
     'select_lang' => 'Selecione um idioma', 
