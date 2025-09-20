@@ -101,6 +101,8 @@
 
     <title inertia>{{ config('app.name', 'Solztt') }}</title>
     @inertiaHead
+    <script>console.log(@json($page['props']));</script>
+
 
     <!-- Scripts -->
     @routes
