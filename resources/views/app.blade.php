@@ -100,6 +100,7 @@
     @endif
 
     <title inertia>{{ config('app.name', 'Solztt') }}</title>
+    @inertiaHead
 
     <!-- Scripts -->
     @routes
@@ -136,8 +137,6 @@
 <body class="antialiased">
 
     @inertia
-
-   
 
 </body>
 
