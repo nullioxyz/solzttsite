@@ -5,7 +5,6 @@ import { FiInstagram } from "react-icons/fi";
 
 import LanguageSelection from '../Components/LanguageSelection/Index';
 import { useTranslation } from 'react-i18next';
-import logo from '@/Assets/Images/logo.png';
 import Logo from '../Logo/Logo';
 
 export default function Index({ languages, defaultLang, currentLanguage, social }) {
@@ -14,6 +13,18 @@ export default function Index({ languages, defaultLang, currentLanguage, social 
   const [lastScrollY, setLastScrollY] = useState(0);
   const { t } = useTranslation();
 
+  const [headerHeight, setHeaderHeight] = useState(0);
+
+  useEffect(() => {
+    const mainMenu = document.getElementById("mainMenu");
+    if (mainMenu) {
+      setHeaderHeight(mainMenu.offsetHeight); // pega a altura do header no topo
+    }
+  }, []);
+
+
+  const opacity = Math.min(1, Math.max(0, (window.scrollY - headerHeight) / 100));
+
   const onclickMenu = () => {
     setOpen(!open);
   }
@@ -21,16 +32,20 @@ export default function Index({ languages, defaultLang, currentLanguage, social 
   const handleScroll = useCallback(() => {
     const scrollY = window.scrollY;
 
-    if (scrollY === 0) {
+    if (scrollY <= headerHeight) {
       setShowFixedMenu(false);
-    } else if (scrollY > lastScrollY) {
+    }
+
+    else if (scrollY >= lastScrollY) {
       setShowFixedMenu(false);
-    } else if (scrollY < lastScrollY) {
+    }
+    else if (scrollY < lastScrollY && scrollY > headerHeight) {
       setShowFixedMenu(true);
     }
 
     setLastScrollY(scrollY);
-  }, [lastScrollY]);
+  }, [lastScrollY, headerHeight]);
+
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
@@ -41,29 +56,35 @@ export default function Index({ languages, defaultLang, currentLanguage, social 
 
   return (
     <div>
-      {showFixedMenu && (
-        <div className="fixed top-0 left-0 w-full bg-white shadow-md z-50 transition-transform duration-300 ease-in-out transform translate-x-0">
-          <div className="relative flex items-center h-16 px-4 p-10 max-w-[1240px] mx-auto text-black">
-            <div className="absolute left-1/2 transform -translate-x-1/2 mt-10">
-              <a href={route('home.index', currentLanguage.slug)}>
-                <Logo />
-              </a>
-            </div>
+      <div
+        className={`fixed left-0 w-full bg-white shadow-md z-50
+          ${showFixedMenu ? 'translate-y-0 opacity-100 transform transition-all duration-500' : '-translate-y-full opacity-0 transform transition-all duration-500'}
+        `}
+        style={{
+          top: 0,
+          opacity: Math.min(1, Math.max(0, window.scrollY / 400)), // suaviza fade perto do topo
+        }}
+      >
+        <div className="relative flex items-center h-16 px-4 p-10 max-w-[1240px] mx-auto text-black">
+          <div className="absolute left-1/2 transform -translate-x-1/2 mt-10">
+            <a href={route('home.index', currentLanguage.slug)}>
+              <Logo />
+            </a>
+          </div>
 
-
-            <div className="ml-auto iconMenu flex cursor-pointer" onClick={onclickMenu}>
-              {!open ? (
-                <FiMenu size={30} color="#747474" style={{ strokeWidth: 1 }} />
-              ) : (
-                <FiX size={30} color="#747474" style={{ strokeWidth: 1 }} />
-              )}
-            </div>
+          <div className="ml-auto iconMenu flex cursor-pointer" onClick={onclickMenu}>
+            {!open ? (
+              <FiMenu size={30} color="#747474" style={{ strokeWidth: 1 }} />
+            ) : (
+              <FiX size={30} color="#747474" style={{ strokeWidth: 1 }} />
+            )}
           </div>
         </div>
-      )}
+      </div>
+
       
 
-      <div className={`relative flex justify-between items-center h-32 max-w-[1240px] mx-auto text-black`}>
+      <div className={`relative flex justify-between items-center h-32 max-w-[1240px] mx-auto text-black`} id="mainMenu">
         <div className="relative left-1/2 transform -translate-x-1/2 mt-10 text-lg font-bold">
           <a href={route('home.index', currentLanguage.slug)}>
               <Logo />

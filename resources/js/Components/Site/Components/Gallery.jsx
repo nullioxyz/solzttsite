@@ -69,6 +69,12 @@ export function Gallery({ images = [] }) {
   const onPointerMove = useCallback(
     (e) => {
       if (!dragState.current.dragging) return;
+
+      // se for multi-touch, não cancela (deixa o zoom nativo acontecer)
+      if (e.pointerType === "touch" && e.isPrimary === false) {
+        return;
+      }
+
       const dx = e.clientX - dragState.current.startX;
       const dy = e.clientY - dragState.current.startY;
       if (Math.abs(dx) > Math.abs(dy) && e.cancelable) e.preventDefault();
@@ -162,7 +168,7 @@ export function Gallery({ images = [] }) {
       <div
         ref={containerRef}
         className="relative overflow-hidden"
-        style={{ touchAction: "pan-y", height: `${height}px` }}
+        style={{ touchAction: "pan-y pinch-zoom", height: `${height}px` }}
       >
         <div
           ref={trackRef}
