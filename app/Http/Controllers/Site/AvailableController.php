@@ -42,6 +42,7 @@ class AvailableController extends Controller
             'social' => $social,
             'metatags' => $metatags,
             'metaImage' => $metaImage,
+            'meta_title' => trans('site.available'),
             'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? $defaultLang,
         ]);
     }  
@@ -69,13 +70,22 @@ class AvailableController extends Controller
 
         $metatags = SiteSetting::with(['defaultTranslation.language', 'translation.language'])->where('slug', 'default-conf')->first();
         
+        $title = $availableDesign->translation->title 
+            ?? $availableDesign->defaultTranslation->title;
+
+        $description = $availableDesign->translation->description 
+            ?? $availableDesign->defaultTranslation->description;
+
         return Inertia::render('Site/AvailableDesign/AvailableDesignShow', [
             'languages' => $availableLangs,
             'defaultLang' => $defaultLang,
             'social' => $social,
             'metatags' => $metatags,
+            'meta_title' => $title,
+            'meta_description' => $description,
             'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? $defaultLang,
-            'availableDesign' => $availableDesign
+            'availableDesign' => $availableDesign,
+            'metaImage' => $availableDesign,
         ]);
     }
 

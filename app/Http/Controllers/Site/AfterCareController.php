@@ -37,6 +37,7 @@ class AfterCareController extends Controller
             'defaultLang' => $defaultLang,
             'metatags' => $metatags,
             'metaImage' => $metaImage,
+            'meta_title' => trans('site.Tattoo Aftercare'),
             'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? $defaultLang,
             'social' => $social
         ]);

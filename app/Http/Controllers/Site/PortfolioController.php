@@ -59,6 +59,7 @@ class PortfolioController extends Controller
             'social' => $social,
             'metatags' => $metatags,
             'metaImage' => $metaImage,
+            'meta_title' => trans('site.portfolio'),
             'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? $defaultLang,
             'portfolio' => $portfolio
         ]);
@@ -88,14 +89,22 @@ class PortfolioController extends Controller
         $social['facebook'] = $socials->get('facebook');
 
         $metatags = SiteSetting::with(['defaultTranslation.language', 'translation.language'])->where('slug', 'default-conf')->first();
+        $title = $portfolio->translation->title 
+            ?? $portfolio->defaultTranslation->title;
+
+        $description = $portfolio->translation->description 
+            ?? $portfolio->defaultTranslation->description;
         
         return Inertia::render('Site/Portfolio/PortfolioShow', [
             'languages' => $availableLangs,
             'defaultLang' => $defaultLang,
             'social' => $social,
             'metatags' => $metatags,
+            'meta_title' => $title,
+            'meta_description' => $description,
             'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? $defaultLang,
-            'portfolio' => $portfolio
+            'portfolio' => $portfolio,
+            'metaImage' => $portfolio,
         ]);
     }
 

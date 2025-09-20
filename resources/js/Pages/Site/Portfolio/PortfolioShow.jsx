@@ -1,8 +1,5 @@
 import React from "react";
 import MainLayout from "@/Layouts/Site/MainLayout";
-
-
-import AvailableDesignDetail from "@/Components/Site/AvailableDesign/AvailableDesignDetail";
 import WorkDetail from "@/Components/Site/Works/WorkDetail";
 
 export default function AvailableDesignShow({

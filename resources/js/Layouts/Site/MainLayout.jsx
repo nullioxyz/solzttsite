@@ -15,31 +15,11 @@ export default function MainLayout({
   languages,
   defaultLang,
   currentLanguage,
-  social,
-  metatags,
-  metaImage
+  social
 }) {
 
-
-  const imageUrl = metaImage?.media && metaImage?.media[0].uuid
-    ? fileUrl(metaImage?.media[0].uuid, { locale: 'lang', size: 'lg' })
-    : `${import.meta.env.VITE_APP_URL}/images/logo.jpg`;
-
   return (
-    
-
     <SelectReferencesProvider>
-      <Head>
-        <title>{metatags.translation ? metatags.translation.title : metatags.default_translation.title }</title>
-        <meta name="description" content={stripHtmlTags(metatags.translation ? metatags.translation.description : metatags.default_translation.description) } />
-        <meta name="keywords" content={metatags.translation ? metatags.translation.keywords : metatags.default_translation.keywords } />
-        <meta property="og:title" content={metatags.translation ? metatags.translation.title : metatags.default_translation.title } />
-        <meta property="og:description" content={stripHtmlTags(metatags.translation ? metatags.translation.description : metatags.default_translation.description) } />
-        <meta property="og:image" content={imageUrl} />
-        <meta property="og:url" content={window.location.href} />
-        <meta property="og:type" content="website" />
-        <link rel="canonical" href={window.location.href} />
-      </Head>
 
       <div className="flex flex-col min-h-screen bg-white">
         <header className="w-full mt-5">

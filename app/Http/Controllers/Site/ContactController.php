@@ -63,9 +63,10 @@ class ContactController extends Controller
             'defaultLang' => $defaultLang,
             'social' => $social,
             'metatags' => $metatags,
-            'metaImage' => $metaImage,
+            'metaImage' => $consideration->media ? $consideration : $metaImage,
             'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? $defaultLang,
             'portfolio' => $portfolio,
+            'meta_title' => trans('site.contact'),
         ]);
     }
 

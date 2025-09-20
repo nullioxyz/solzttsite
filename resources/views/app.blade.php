@@ -4,10 +4,75 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    @inertiaHead
+
+    @if(isset($page['props']['metatags']))
+        <title>{{ isset($page['props']['meta_title']) 
+                ? $page['props']['meta_title'].' | '.config('app.name') 
+                : (($page['props']['metatags']['translation']['title'] 
+                    ?? $page['props']['metatags']['default_translation']['title'] 
+                    ?? config('app.name'))
+                    .' | '.config('app.name')) }}</title>
+
+        <meta name="description" content="{{ isset($page['props']['meta_description']) 
+                ? strip_tags($page['props']['meta_description']) 
+                : strip_tags(
+                    $page['props']['metatags']['translation']['description'] 
+                    ?? $page['props']['metatags']['default_translation']['description'] 
+                    ?? ''
+                    ) }}">
+
+        <meta name="keywords" content="{{ $page['props']['metatags']['translation']['keywords'] ?? $page['props']['metatags']['default_translation']['keywords'] ?? '' }}">
+
+        {{-- Open Graph --}}
+        <meta property="og:title" 
+            content="{{ isset($page['props']['meta_title']) 
+                ? $page['props']['meta_title'].' | '.config('app.name') 
+                : (($page['props']['metatags']['translation']['title'] 
+                    ?? $page['props']['metatags']['default_translation']['title'] 
+                    ?? config('app.name'))
+                    .' | '.config('app.name')) }}">
+
+
+        <meta property="og:description" 
+            content="{{ isset($page['props']['meta_description']) 
+                ? strip_tags($page['props']['meta_description']) 
+                : strip_tags(
+                    $page['props']['metatags']['translation']['description'] 
+                    ?? $page['props']['metatags']['default_translation']['description'] 
+                    ?? ''
+                    ) }}">
+
+        <meta property="og:image" content="{{ isset($page['props']['metaImage']['media']) && $page['props']['metaImage']['media']['0']['uuid'] ? route('file.index', ['locale' => $page['props']['currentLanguage']['slug'], 'uuid' => $page['props']['metaImage']['media']['0']['uuid']]) : asset('images/logo.jpg') }}">
+        <meta property="og:url" content="{{ url()->current() }}">
+        <meta property="og:type" content="website">
+
+        {{-- Twitter Card --}}
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="{{ isset($page['props']['meta_title']) 
+                ? $page['props']['meta_title'].' | '.config('app.name') 
+                : (($page['props']['metatags']['translation']['title'] 
+                    ?? $page['props']['metatags']['default_translation']['title'] 
+                    ?? config('app.name'))
+                    .' | '.config('app.name')) }}">
+                    
+        <meta name="twitter:description" content="{{ isset($page['props']['meta_description']) 
+                ? strip_tags($page['props']['meta_description']) 
+                : strip_tags(
+                    $page['props']['metatags']['translation']['description'] 
+                    ?? $page['props']['metatags']['default_translation']['description'] 
+                    ?? ''
+                    ) }}">
+
+        <meta name="twitter:image" content="{{ isset($page['props']['metaImage']['media']) && $page['props']['metaImage']['media']['0']['uuid'] ? route('file.index', ['locale' => $page['props']['currentLanguage']['slug'], 'uuid' => $page['props']['metaImage']['media']['0']['uuid']]) : asset('images/logo.jpg') }}">
+
+        <link rel="canonical" href="{{ url()->current() }}">
+    @endif
+
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Merriweather:wght@300;400&display=swap" rel="stylesheet">
     <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-L1M0C8JWXT"></script>
+
+
 
     <script>
         window.dataLayer = window.dataLayer || [];
