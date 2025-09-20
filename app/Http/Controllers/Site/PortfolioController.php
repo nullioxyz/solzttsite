@@ -88,7 +88,7 @@ class PortfolioController extends Controller
         $social['instagram'] = $socials->get('instagram');
         $social['facebook'] = $socials->get('facebook');
 
-        $metatags = SiteSetting::with(['defaultTranslation.language', 'translation.language'])->where('slug', 'default-conf')->first();
+        $metatags = SiteSetting::with(['defaultTranslation.language', 'translation.language'])->where('id', 1)->first();
         $title = $portfolio->translation->title 
             ?? $portfolio->defaultTranslation->title;
 
