@@ -47,6 +47,8 @@ return [
     'requestquote' => 'Invia messaggio',
     "sending..." => "Invio in corso...",
 
+    'remove' => 'Rimuovere',
+
     'firstnamePlaceholder' => 'Il tuo nome',
     'lastnamePlaceholder' => 'Il tuo cognome',
     'sizePlaceholder' => 'Dimensione desiderata',

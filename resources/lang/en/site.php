@@ -76,6 +76,7 @@ return [
     "+39 389 748 2409" => "+39 389 748 2409",
     "Jane" => 'Jane',
     "Joseph" => 'Joseph',
+    'remove' => 'Remove',
 
     "not available" => "Not Available",
     "remove_reference" => "Remove Reference",

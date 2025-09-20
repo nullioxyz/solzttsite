@@ -45,6 +45,8 @@ return [
     'allopt' => 'Todas as opções', 
     'requestquote' => 'Enviar mensagem',
     "sending..." => "Enviando...",
+
+    'remove' => 'Remover',
     
     'firstnamePlaceholder' => 'Seu nome',
     'lastnamePlaceholder' => 'Seu sobrenome',
