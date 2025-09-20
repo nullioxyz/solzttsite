@@ -10,7 +10,8 @@
                 ? $page['props']['meta_title'].' | '.config('app.name') 
                 : (($page['props']['metatags']['translation']['title'] 
                     ?? $page['props']['metatags']['default_translation']['title'] 
-                    ?? config('app.name'))) }}</title>
+                    ?? config('app.name'))
+                    .' | '.config('app.name')) }}</title>
 
         <meta name="description" content="{{ isset($page['props']['meta_description']) 
                 ? strip_tags($page['props']['meta_description']) 
@@ -28,7 +29,8 @@
                 ? $page['props']['meta_title'].' | '.config('app.name') 
                 : (($page['props']['metatags']['translation']['title'] 
                     ?? $page['props']['metatags']['default_translation']['title'] 
-                    ?? config('app.name'))) }}">
+                    ?? config('app.name'))
+                    .' | '.config('app.name')) }}">
 
 
         <meta property="og:description" 
