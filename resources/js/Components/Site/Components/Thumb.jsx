@@ -29,19 +29,19 @@ export function Thumb({ uuid, alt, onClick, className }) {
         <source
           type="image/avif"
           srcSet={`${smAvif} 480w, ${mdAvif} 768w, ${lgAvif} 1280w`}
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 600px"
         />
         {/* WEBP */}
         <source
           type="image/webp"
           srcSet={`${smWebp} 480w, ${mdWebp} 768w, ${lgWebp} 1280w`}
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 600px"
         />
         {/* Fallback JPG */}
         <img
           src={lg}
           srcSet={`${sm} 480w, ${md} 768w, ${lg} 1280w`}
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 600px"
           alt={alt}
           loading="lazy"
           decoding="async"

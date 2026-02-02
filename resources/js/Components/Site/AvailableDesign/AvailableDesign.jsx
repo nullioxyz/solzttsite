@@ -92,7 +92,7 @@ export default function AvailableDesign() {
   }, [newItems, designs.length]);
 
   return (
-    <section id="available" className="flex flex-col justify-between xl:mt-20 lg:mt-20 md:mt-20 sm:mt-5 xs:mt-5 h-auto px-5 py-10">
+    <section id="available" className="flex flex-col justify-between xl:mt-20 lg:mt-20 md:mt-20 sm:mt-5 xs:mt-5 h-auto p-[0.5rem] py-10">
       <div className="max-w-[1240px] mx-auto w-full">
         
         <div className="mb-10">
@@ -118,7 +118,7 @@ export default function AvailableDesign() {
                     className="block"
                   >
                     {/* O aspect ratio vive AQUI */}
-                    <div className="relative aspect-[4/4]">
+                    <div className="relative aspect-[3/4]">
                       {/* O conteúdo preenche a caixa 3:4 */}
                       <Thumb
                         uuid={item.media[0].uuid}

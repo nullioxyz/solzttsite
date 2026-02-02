@@ -100,7 +100,7 @@ export default function Works({ currentLanguage }) {
   }, [newItems, portfolio.length]);
 
   return (
-    <section id="works" className="mx-auto xl:mt-20 lg:mt-20 md:mt-20 sm:mt-5 xs:mt-5 p-5">
+    <section id="works" className="mx-auto xl:mt-20 lg:mt-20 md:mt-20 sm:mt-5 xs:mt-5 p-[0.5rem]">
       <div className="max-w-[1240px] mx-auto w-full">
         <div className="mb-10">
           <h1 className="text-[2.0rem] tracking-tight text-[#595954] lg:text-center xl:text-left md:text-center sm:text-center xs:text-center text-center">
@@ -126,7 +126,7 @@ export default function Works({ currentLanguage }) {
                     className="block"
                   >
                     {/* O aspect ratio vive AQUI */}
-                    <div className="relative aspect-[4/4]">
+                    <div className="relative aspect-[3/4]">
                       {/* O conteúdo preenche a caixa 4:4 */}
                       <Thumb
                         uuid={item.media[0].uuid}
