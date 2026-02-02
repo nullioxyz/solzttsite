@@ -108,7 +108,7 @@ export default function Works({ currentLanguage }) {
           </h1>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 xs:grid-cols-2 md:grid-cols-2 gap-x-3 gap-y-4 mb-24">
+        <div className="grid grid-cols-3 sm:grid-cols-3 xs:grid-cols-3 md:grid-cols-3 gap-x-1 gap-y-1 mb-24">
           {isInitialLoad && portfolio.length === 0 ? (
             Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={`sk_${i}`} />)
           ) : (
@@ -117,7 +117,7 @@ export default function Works({ currentLanguage }) {
                 <Card
                   key={index}
                   className="
-                    relative w-full rounded-none 
+                    relative w-full rounded-none
                     sm:w-full
                     cursor-pointer overflow-hidden
                 ">
@@ -126,8 +126,8 @@ export default function Works({ currentLanguage }) {
                     className="block"
                   >
                     {/* O aspect ratio vive AQUI */}
-                    <div className="relative aspect-[3/4]">
-                      {/* O conteúdo preenche a caixa 3:4 */}
+                    <div className="relative aspect-[4/4]">
+                      {/* O conteúdo preenche a caixa 4:4 */}
                       <Thumb
                         uuid={item.media[0].uuid}
                         alt={item.translation ? item.translation.title : item.default_translation.title}
