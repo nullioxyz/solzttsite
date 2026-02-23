@@ -71,46 +71,24 @@
     <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
     @php
         $gaMeasurementId = config('services.google_analytics.measurement_id');
-        $gaEnabled = app()->environment('production') || filter_var(config('services.google_analytics.enabled'), FILTER_VALIDATE_BOOLEAN);
+        $gaEnabled = app()->environment('production');
     @endphp
     @if($gaEnabled && !empty($gaMeasurementId))
         <script async src="https://www.googletagmanager.com/gtag/js?id={{ $gaMeasurementId }}"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
-            function gtag() {
+            window.gtag = window.gtag || function gtag() {
                 dataLayer.push(arguments);
-            }
-
-            function trackGaPageView(url) {
-                const parsed = new URL(url, window.location.origin);
-                gtag('event', 'page_view', {
-                    page_location: parsed.href,
-                    page_path: parsed.pathname + parsed.search + parsed.hash,
-                    page_title: document.title
-                });
-            }
+            };
 
             gtag('js', new Date());
             gtag('config', @js($gaMeasurementId), { send_page_view: false });
-            trackGaPageView(window.location.href);
-
-            let lastGaTrackedUrl = window.location.href;
-            document.addEventListener('inertia:navigate', function (event) {
-                const nextUrl = event?.detail?.page?.url
-                    ? new URL(event.detail.page.url, window.location.origin).href
-                    : window.location.href;
-
-                if (nextUrl !== lastGaTrackedUrl) {
-                    trackGaPageView(nextUrl);
-                    lastGaTrackedUrl = nextUrl;
-                }
-            });
         </script>
     @endif
 
     @php
         $facebookPixelId = config('services.facebook.pixel_id');
-        $facebookPixelEnabled = app()->environment('production') || filter_var(config('services.facebook.pixel_enabled'), FILTER_VALIDATE_BOOLEAN);
+        $facebookPixelEnabled = app()->environment('production');
     @endphp
     @if($facebookPixelEnabled && !empty($facebookPixelId))
         <script>
@@ -123,23 +101,126 @@
             s.parentNode.insertBefore(t,s)}(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
             fbq('init', @js($facebookPixelId));
-            fbq('track', 'PageView');
+        </script>
+        <noscript>
+            <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id={{ $facebookPixelId }}&ev=PageView&noscript=1" />
+        </noscript>
+    @endif
+
+    @if(app()->environment('production'))
+        <script>
+            function sanitizeEventName(name) {
+                return String(name || '')
+                    .toLowerCase()
+                    .replace(/[^a-z0-9_]/g, '_')
+                    .replace(/_+/g, '_')
+                    .replace(/^_+|_+$/g, '')
+                    .slice(0, 40);
+            }
+
+            function buildPageContext(url) {
+                const parsed = new URL(url, window.location.origin);
+                const allSegments = parsed.pathname.split('/').filter(Boolean);
+                const locale = allSegments[0] || 'unknown';
+                const isLocalePrefix = /^[a-z]{2}$/i.test(locale);
+                const segments = isLocalePrefix ? allSegments.slice(1) : allSegments;
+
+                let pageKey = 'home';
+                if (segments.length === 0) {
+                    pageKey = 'home';
+                } else if (segments[0] === 'portfolio' && segments[1] === 'detail') {
+                    pageKey = 'portfolio_detail';
+                } else if (segments[0] === 'portfolio') {
+                    pageKey = 'portfolio';
+                } else if (segments[0] === 'available-designs' && segments[1] === 'detail') {
+                    pageKey = 'available_design_detail';
+                } else if (segments[0] === 'available-designs') {
+                    pageKey = 'available_designs';
+                } else if (segments[0] === 'contact') {
+                    pageKey = 'contact';
+                } else if (segments[0] === 'after-care') {
+                    pageKey = 'after_care';
+                } else {
+                    pageKey = segments
+                        .slice(0, 2)
+                        .join('_')
+                        .replace(/[^a-zA-Z0-9]/g, '_')
+                        .toLowerCase();
+                }
+
+                return {
+                    page_key: pageKey || 'unknown',
+                    locale: locale.toLowerCase(),
+                    page_path: parsed.pathname + parsed.search + parsed.hash,
+                    page_location: parsed.href,
+                    page_title: document.title,
+                };
+            }
+
+            function trackGaPageView(context) {
+                if (typeof window.gtag !== 'function') return;
+                gtag('event', 'page_view', {
+                    page_location: context.page_location,
+                    page_path: context.page_path,
+                    page_title: context.page_title,
+                });
+            }
+
+            function trackMetaPageView() {
+                if (typeof window.fbq !== 'function') return;
+                fbq('track', 'PageView');
+            }
+
+            window.trackAnalyticsEvent = function (eventName, params) {
+                const safeEventName = sanitizeEventName(eventName);
+                if (!safeEventName) return;
+
+                const payload = params || {};
+
+                if (typeof window.gtag === 'function') {
+                    gtag('event', safeEventName, payload);
+                }
+
+                if (typeof window.fbq === 'function') {
+                    fbq('trackCustom', safeEventName, payload);
+                }
+            };
+
+            window.trackLeadConversion = function (params) {
+                const payload = params || {};
+
+                if (typeof window.gtag === 'function') {
+                    gtag('event', 'generate_lead', payload);
+                }
+
+                if (typeof window.fbq === 'function') {
+                    fbq('track', 'Lead', payload);
+                }
+            };
+
+            function trackPage(url) {
+                const context = buildPageContext(url);
+
+                trackGaPageView(context);
+                trackMetaPageView();
+                window.trackAnalyticsEvent('site_page_view', context);
+                window.trackAnalyticsEvent('page_' + context.page_key, context);
+            }
 
             let lastTrackedUrl = window.location.href;
+            trackPage(lastTrackedUrl);
+
             document.addEventListener('inertia:navigate', function (event) {
                 const nextUrl = event?.detail?.page?.url
                     ? new URL(event.detail.page.url, window.location.origin).href
                     : window.location.href;
 
-                if (nextUrl !== lastTrackedUrl) {
-                    fbq('track', 'PageView');
-                    lastTrackedUrl = nextUrl;
-                }
+                if (nextUrl === lastTrackedUrl) return;
+
+                lastTrackedUrl = nextUrl;
+                trackPage(nextUrl);
             });
         </script>
-        <noscript>
-            <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id={{ $facebookPixelId }}&ev=PageView&noscript=1" />
-        </noscript>
     @endif
 
     <title inertia>{{ config('app.name', 'Solztt') }}</title>

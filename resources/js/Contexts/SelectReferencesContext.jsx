@@ -1,6 +1,7 @@
 import React, {createContext, useContext} from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
+import { trackActionEvent } from '@/helpers/tracking';
 
 const SelectReferencesContext = createContext();
 
@@ -16,10 +17,22 @@ export function SelectReferencesProvider({ children }) {
   }, [selectedReferences]);
 
   const addAsReference = (data) => {
+    const alreadyAdded = selectedReferences.some(
+      (ref) => ref.id === data.id && ref.type === data.type
+    );
+    if (alreadyAdded) return;
 
-    const dataArray = [{ ...data }];
-    
-    setSelectedReferences(prevSelectedReferences => [...prevSelectedReferences, ...dataArray]);
+    setSelectedReferences(prevSelectedReferences => [...prevSelectedReferences, { ...data }]);
+
+    const referenceType = data?.type === 'available_design' ? 'available_design' : 'portfolio';
+    const payload = {
+      reference_type: referenceType,
+      reference_id: String(data?.id ?? ''),
+      reference_name: data?.name ?? '',
+    };
+
+    trackActionEvent('reference_added', payload);
+    trackActionEvent(`reference_added_${referenceType}`, payload);
   }
 
   return (

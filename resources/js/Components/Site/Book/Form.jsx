@@ -13,6 +13,7 @@ import Attachments from "../Components/Attachments/Index";
 import axios from '@/Services/requests'
 import { FiX } from 'react-icons/fi';
 import confetti from "canvas-confetti";
+import { trackActionEvent, trackLeadConversion } from '@/helpers/tracking';
 
 var count = 200;
 var defaults = {
@@ -134,6 +135,17 @@ export default function Form({ currentLanguage, considerationTranslation }) {
       preserveScroll: true,
       preserveState: true,
       onSuccess: () => {
+        const referencesCount = Array.isArray(data.attachments) ? data.attachments.length : 0;
+        const uploadedFilesCount = Array.isArray(files) ? files.length : 0;
+        const trackingPayload = {
+          references_count: referencesCount,
+          uploaded_files_count: uploadedFilesCount,
+          preferred_contact: data.contact_me_by ?? 'unknown',
+        };
+
+        trackActionEvent('contact_form_submitted', trackingPayload);
+        trackLeadConversion(trackingPayload);
+
 
         fire(0.25, {
           spread: 26,

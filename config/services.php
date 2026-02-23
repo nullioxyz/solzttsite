@@ -38,7 +38,7 @@ return [
     ],
 
     'facebook' => [
-        'pixel_id' => env('FACEBOOK_PIXEL_ID', '1042966984401150'),
+        'pixel_id' => env('FACEBOOK_PIXEL_ID', '1537290374142296'),
         'pixel_enabled' => env('FACEBOOK_PIXEL_ENABLED', false),
     ],
 
