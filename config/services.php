@@ -37,4 +37,14 @@ return [
         'project_id' => env('GOOGLE_CLOUD_PROJECT_ID'),
     ],
 
+    'facebook' => [
+        'pixel_id' => env('FACEBOOK_PIXEL_ID', '1042966984401150'),
+        'pixel_enabled' => env('FACEBOOK_PIXEL_ENABLED', false),
+    ],
+
+    'google_analytics' => [
+        'measurement_id' => env('GA_MEASUREMENT_ID', 'G-L1M0C8JWXT'),
+        'enabled' => env('GA_ENABLED', false),
+    ],
+
 ];

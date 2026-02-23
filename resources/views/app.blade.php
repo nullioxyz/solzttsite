@@ -69,20 +69,50 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Merriweather:wght@300;400&display=swap" rel="stylesheet">
     <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-L1M0C8JWXT"></script>
+    @php
+        $gaMeasurementId = config('services.google_analytics.measurement_id');
+        $gaEnabled = app()->environment('production') || filter_var(config('services.google_analytics.enabled'), FILTER_VALIDATE_BOOLEAN);
+    @endphp
+    @if($gaEnabled && !empty($gaMeasurementId))
+        <script async src="https://www.googletagmanager.com/gtag/js?id={{ $gaMeasurementId }}"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
 
+            function trackGaPageView(url) {
+                const parsed = new URL(url, window.location.origin);
+                gtag('event', 'page_view', {
+                    page_location: parsed.href,
+                    page_path: parsed.pathname + parsed.search + parsed.hash,
+                    page_title: document.title
+                });
+            }
 
+            gtag('js', new Date());
+            gtag('config', @js($gaMeasurementId), { send_page_view: false });
+            trackGaPageView(window.location.href);
 
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-        gtag('config', 'G-L1M0C8JWXT');
-    </script>
+            let lastGaTrackedUrl = window.location.href;
+            document.addEventListener('inertia:navigate', function (event) {
+                const nextUrl = event?.detail?.page?.url
+                    ? new URL(event.detail.page.url, window.location.origin).href
+                    : window.location.href;
 
-    @if(app()->environment('production'))
+                if (nextUrl !== lastGaTrackedUrl) {
+                    trackGaPageView(nextUrl);
+                    lastGaTrackedUrl = nextUrl;
+                }
+            });
+        </script>
+    @endif
+
+    @php
+        $facebookPixelId = config('services.facebook.pixel_id');
+        $facebookPixelEnabled = app()->environment('production') || filter_var(config('services.facebook.pixel_enabled'), FILTER_VALIDATE_BOOLEAN);
+    @endphp
+    @if($facebookPixelEnabled && !empty($facebookPixelId))
         <script>
             !function(f,b,e,v,n,t,s)
             {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -92,11 +122,23 @@
             t.src=v;s=b.getElementsByTagName(e)[0];
             s.parentNode.insertBefore(t,s)}(window, document,'script',
             'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '1042966984401150');
+            fbq('init', @js($facebookPixelId));
             fbq('track', 'PageView');
+
+            let lastTrackedUrl = window.location.href;
+            document.addEventListener('inertia:navigate', function (event) {
+                const nextUrl = event?.detail?.page?.url
+                    ? new URL(event.detail.page.url, window.location.origin).href
+                    : window.location.href;
+
+                if (nextUrl !== lastTrackedUrl) {
+                    fbq('track', 'PageView');
+                    lastTrackedUrl = nextUrl;
+                }
+            });
         </script>
         <noscript>
-            <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1042966984401150&ev=PageView&noscript=1" />
+            <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id={{ $facebookPixelId }}&ev=PageView&noscript=1" />
         </noscript>
     @endif
 
