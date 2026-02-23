@@ -63,12 +63,8 @@ class PortfolioController extends Controller
 
             $validator = $request->validated();
 
-            $languages = $request->get('languages');
-            $portfolioSlug = Str::slug(
-                $languages[2]['title'] 
-                    ?? $languages[3]['title'] 
-                    ?? $languages[0]['title']
-            );
+            $languages = $request->input('languages', []);
+            $portfolioSlug = $this->resolveSlugFromLanguages($languages);
 
             $portfolio = $this->portfolioRepo->create(
                 [
@@ -87,6 +83,7 @@ class PortfolioController extends Controller
             }
             return redirect()->route('portfolio.index')->with('success', __('Saved with success'));
         } catch (\Exception $e) {
+            DB::rollBack();
 
             Log::error('Erro ao salvar portfolio: '.$e->getMessage(), [
                 'trace' => $e->getTraceAsString(),
@@ -124,16 +121,12 @@ class PortfolioController extends Controller
 
             $validator = $request->validated();
 
-            $languages = $request->get('languages');
-            
-            $portfolioSlug = Str::slug(
-                $languages[2]['title'] 
-                    ?? $languages[3]['title'] 
-                    ?? $languages[0]['title']
-            );
+            $languages = $request->input('languages', []);
+            $portfolioSlug = $this->resolveSlugFromLanguages($languages);
             
             $this->portfolioRepo->update($portfolio->id, [
-                'slug' => $portfolioSlug
+                'slug' => $portfolioSlug,
+                'category_id' => $request->input('category_id'),
             ]);
             
             $this->portfolioLangStrategy->decideCreateOrUpdate($request->get('languages'), $portfolio);
@@ -238,5 +231,24 @@ class PortfolioController extends Controller
         }
 
         return response()->noContent();
+    }
+
+    private function resolveSlugFromLanguages(array $languages): string
+    {
+        $defaultLanguageId = Language::query()->where('default', 1)->value('id');
+        $defaultTitle = $defaultLanguageId ? data_get($languages, $defaultLanguageId . '.title') : null;
+
+        $fallbackTitle = collect($languages)
+            ->pluck('title')
+            ->filter(fn ($value) => filled($value))
+            ->first();
+
+        $title = $defaultTitle ?: $fallbackTitle;
+
+        if (blank($title)) {
+            $title = Str::lower(Str::random(10));
+        }
+
+        return Str::slug($title);
     }
 }

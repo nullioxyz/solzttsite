@@ -2,11 +2,20 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Http\Requests\Admin\Concerns\NormalizesLanguagesInput;
+use App\Models\Language;
 use Illuminate\Foundation\Http\FormRequest;
 
 
 class StoreSiteSettingRequest extends FormRequest
 {
+    use NormalizesLanguagesInput;
+
+    protected function prepareForValidation(): void
+    {
+        $this->normalizeLanguagesInput();
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -22,13 +31,23 @@ class StoreSiteSettingRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'theme_id' => 'required',
+        $defaultLanguageId = (int) Language::query()->where('default', 1)->value('id');
+
+        $rules = [
+            'theme_id' => 'required|exists:theme,id',
             'languages' => 'required|array',
-            'languages.*.title' => 'required|string',
-            'languages.*.description' => 'string',
-            'languages.*.keywords' => 'string',
+            'languages.*.title' => 'nullable|string',
+            'languages.*.description' => 'nullable|string',
+            'languages.*.keywords' => 'nullable|string',
         ];
+
+        if ($defaultLanguageId > 0) {
+            $rules["languages.$defaultLanguageId.title"] = 'required|string';
+        } else {
+            $rules['languages.*.title'] = 'required|string';
+        }
+
+        return $rules;
     }
 
     public function messages()

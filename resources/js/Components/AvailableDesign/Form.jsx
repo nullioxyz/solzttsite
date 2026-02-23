@@ -2,15 +2,36 @@ import { router, useForm } from '@inertiajs/react';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
 import FormLang from '@/Components/Language/Form';
 import Dropfile from '@/Components/Files/Dropfile';
 import { useState } from 'react';
 import { Gallery } from '../Files/Gallery';
 import Swal from 'sweetalert2';
-import { Inertia } from '@inertiajs/inertia';
 import SelectDefault from '../SelectDefault';
-import { Checkbox } from '@material-tailwind/react';
+
+function ToggleSwitch({ checked, onToggle, onLabel = 'On', offLabel = 'Off' }) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      onClick={onToggle}
+      className={`relative inline-flex h-7 w-14 items-center rounded-full border transition ${
+        checked
+          ? 'border-emerald-500 bg-emerald-500/20'
+          : 'border-slate-300 bg-slate-200/70'
+      }`}
+    >
+      <span
+        className={`inline-flex h-6 w-6 transform items-center justify-center rounded-full bg-white text-[10px] font-semibold shadow-sm transition ${
+          checked ? 'translate-x-7 text-emerald-700' : 'translate-x-0.5 text-slate-500'
+        }`}
+      >
+        {checked ? onLabel : offLabel}
+      </span>
+    </button>
+  );
+}
 
 export default function Form (props) {
 
@@ -110,9 +131,13 @@ export default function Form (props) {
 
   return (
     <form onSubmit={submit}>
-      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div className="mx-auto max-w-7xl space-y-6 px-3 sm:px-6 lg:px-8">
 
-        <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div className="border-b border-slate-200 bg-slate-50 px-5 py-3.5">
+              <h3 className="text-sm font-semibold text-slate-700">General</h3>
+            </div>
+            <div className="p-5 sm:p-7">
             <InputLabel htmlFor="category_id" value="Category" className={`mt-1 block w-full text-black ${errors.category_id ? 'text-[red]' : ''}`} />
 
             <SelectDefault
@@ -126,32 +151,39 @@ export default function Form (props) {
             {errors.category_id && 
               <InputError message={errors.category_id} className='mt-5'/>
             }
+            </div>
         </div>
 
-        <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-            <InputLabel htmlFor="active" value="Active" className='mt-1 text-black' />
-            <Checkbox
-              defaultChecked={data.active}
-              ripple={false}
-              onClick={(e) => setData('active', !data.active)}
-              className="h-8 w-8 rounded-full border-green-900/20 bg-green-900/10 transition-all hover:scale-105 hover:before:opacity-0"
-            />
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+          <div className="border-b border-slate-200 bg-slate-50 px-5 py-3.5">
+            <h3 className="text-sm font-semibold text-slate-700">Status</h3>
+          </div>
+          <div className="grid gap-4 p-5 sm:grid-cols-2 sm:p-7">
+            <label className="flex items-center justify-between rounded-lg border border-slate-200 px-4 py-3">
+              <span className="text-sm font-medium text-slate-700">
+                Active
+              </span>
+              <ToggleSwitch
+                checked={Boolean(data.active)}
+                onToggle={() => setData('active', !data.active)}
+              />
+            </label>
+
+            <label className="flex items-center justify-between rounded-lg border border-slate-200 px-4 py-3">
+              <span className="text-sm font-medium text-slate-700">Available</span>
+              <ToggleSwitch
+                checked={Boolean(data.available)}
+                onToggle={() => setData('available', !data.available)}
+              />
+            </label>
+          </div>
         </div>
 
-
-        <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-
-          <InputLabel htmlFor="available" value="available" className='mt-1 text-black' />
-
-          <Checkbox
-            onClick={(e) => setData('available', !data.available)}
-            defaultChecked={data.available}
-            ripple={false}
-            className="h-8 w-8 rounded-full border-green-900/20 bg-green-900/10 transition-all hover:scale-105 hover:before:opacity-0"
-          />
-        </div>
-
-        <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+          <div className="border-b border-slate-200 bg-slate-50 px-5 py-3.5">
+            <h3 className="text-sm font-semibold text-slate-700">Media Upload</h3>
+          </div>
+          <div className="p-5 sm:p-7">
           <InputLabel htmlFor="files" value="Dropfiles here" className="mt-1 block w-full text-black" />
 
           <Dropfile
@@ -161,25 +193,36 @@ export default function Form (props) {
             count={10}
             formats={["jpg", "jpeg", "png"]}
           />
+          </div>
         </div>
 
         {data.existingFiles && Array.isArray(data.existingFiles) && data.existingFiles.length > 0 ? (
-          <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+          <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div className="border-b border-slate-200 bg-slate-50 px-5 py-3.5">
+              <h3 className="text-sm font-semibold text-slate-700">Uploaded Files</h3>
+            </div>
+            <div className="p-5 sm:p-7">
             <InputLabel htmlFor="files" value="Uploaded files" className="mt-1 block w-full " />
             <Gallery files={data.existingFiles} onDelete={removeExistingFile} onReorder={handleReorder} />
+            </div>
           </div>
         ) : null}
 
 
-        <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div className="border-b border-slate-200 bg-slate-50 px-5 py-3.5">
+              <h3 className="text-sm font-semibold text-slate-700">Translations</h3>
+            </div>
+            <div className="p-5 sm:p-7">
             <FormLang
               onLangChange={handleLangChange}
               existingData={data.languages}
               errors={errors}
             />
+            </div>
         </div>
 
-        <PrimaryButton disabled={processing}>Save</PrimaryButton>
+        <PrimaryButton className="w-full justify-center sm:w-auto" disabled={processing}>Save</PrimaryButton>
 
       </div>
     </form>

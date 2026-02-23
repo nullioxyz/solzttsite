@@ -88,36 +88,52 @@ export default function Form (props) {
 
   return (
     <form onSubmit={submit}>
-      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div className="mx-auto max-w-7xl space-y-6 px-3 sm:px-6 lg:px-8">
 
-        <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-          <InputLabel htmlFor="files" value="Dropfiles here" className="mt-1 block w-full text-black" />
-          <Dropfile
-            uploadedFiles={uploadedFiles}
-            onUpload={uploadFiles}
-            onDelete={deleteFile}
-            count={1}
-            formats={["jpg", "jpeg", "png"]}
-          />
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+          <div className="border-b border-slate-200 bg-slate-50 px-5 py-3.5">
+            <h3 className="text-sm font-semibold text-slate-700">Media Upload</h3>
+            <p className="text-xs text-slate-500">Upload a featured image for this institutional content.</p>
+          </div>
+          <div className="p-5 sm:p-7">
+            <InputLabel htmlFor="files" value="Drop files here" className="mt-1 block w-full text-black" />
+            <Dropfile
+              uploadedFiles={uploadedFiles}
+              onUpload={uploadFiles}
+              onDelete={deleteFile}
+              count={1}
+              formats={["jpg", "jpeg", "png"]}
+            />
+          </div>
         </div>
 
         {data.existingFiles && Array.isArray(data.existingFiles) && data.existingFiles.length > 0 ? (
-          <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-            <InputLabel htmlFor="files" value="Uploaded files" className="mt-1 block w-full text-black" />
-            <Gallery files={data.existingFiles} onDelete={removeExistingFile} />
+          <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div className="border-b border-slate-200 bg-slate-50 px-5 py-3.5">
+              <h3 className="text-sm font-semibold text-slate-700">Uploaded Files</h3>
+            </div>
+            <div className="p-5 sm:p-7">
+              <InputLabel htmlFor="files" value="Uploaded files" className="mt-1 block w-full text-black" />
+              <Gallery files={data.existingFiles} onDelete={removeExistingFile} />
+            </div>
           </div>
         ) : null}
 
 
-        <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg text-black">
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div className="border-b border-slate-200 bg-slate-50 px-5 py-3.5">
+              <h3 className="text-sm font-semibold text-slate-700">Translations</h3>
+            </div>
+            <div className="p-5 text-black sm:p-7">
             <FormLang
               onLangChange={handleLangChange}
               existingData={data.languages}
               errors={errors}
             />
+            </div>
         </div>
 
-        <PrimaryButton disabled={processing}>Save</PrimaryButton>
+        <PrimaryButton className="w-full justify-center sm:w-auto" disabled={processing}>Save</PrimaryButton>
 
       </div>
     </form>

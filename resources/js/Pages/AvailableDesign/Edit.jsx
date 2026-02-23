@@ -21,7 +21,7 @@ export default function Edit({ auth, design, languages, translationFields, trans
 
       <div className="py-12">
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-          <div className="flex justify-end mb-4">
+          <div className="mb-6 flex flex-wrap justify-end gap-3">
             <DeleteButton deleteUrl={route('available_design.delete', design.slug)} />
             <BackButton url={route('available_design.index')} text="Back to list" />
           </div>

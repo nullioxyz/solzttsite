@@ -2,12 +2,19 @@
 
 namespace App\Http\Requests\Admin;
 
-use App\Models\PortfolioLang;
+use App\Http\Requests\Admin\Concerns\NormalizesLanguagesInput;
+use App\Models\Language;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class UpdatePortfolioRequest extends FormRequest
 {
+    use NormalizesLanguagesInput;
+
+    protected function prepareForValidation(): void
+    {
+        $this->normalizeLanguagesInput();
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -23,14 +30,25 @@ class UpdatePortfolioRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $defaultLanguageId = (int) Language::query()->where('default', 1)->value('id');
+
+        $rules = [
             'active' => 'nullable',
+            'category_id' => 'required|exists:category,id',
             'languages' => 'required|array',
-            'languages.*.title' => 'required|string',
-            'languages.*.description' => 'string',
+            'languages.*.title' => 'nullable|string',
+            'languages.*.description' => 'nullable|string',
             'files' => 'nullable|array',
             'files.*' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
         ];
+
+        if ($defaultLanguageId > 0) {
+            $rules["languages.$defaultLanguageId.title"] = 'required|string';
+        } else {
+            $rules['languages.*.title'] = 'required|string';
+        }
+
+        return $rules;
     }
 
     public function messages()

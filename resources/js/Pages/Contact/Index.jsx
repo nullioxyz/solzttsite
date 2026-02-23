@@ -12,9 +12,9 @@ export default function Index({ auth, contacts }) {
     >
       <Head title="Contacts" />
 
-      <div className="py-12">
+      <div className="py-8">
 
-        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
           <List items={contacts.data} />
           <Pagination meta={contacts.meta} links={contacts.links} />
         </div>

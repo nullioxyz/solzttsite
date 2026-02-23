@@ -42,8 +42,13 @@ export default function Form (props) {
 
   return (
     <form onSubmit={submit}>
-      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-        <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+      <div className="mx-auto max-w-7xl space-y-6 px-3 sm:px-6 lg:px-8">
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div className="border-b border-slate-200 bg-slate-50 px-5 py-3.5">
+              <h3 className="text-sm font-semibold text-slate-700">Theme</h3>
+              <p className="text-xs text-slate-500">Select the visual theme used on your site.</p>
+            </div>
+            <div className="p-5 sm:p-7">
             <InputLabel htmlFor="theme_id" value="Theme" className={`mt-1 block w-full text-black ${errors.theme_id ? 'text-[red]' : ''}`} />
 
             <SelectDefault
@@ -57,17 +62,23 @@ export default function Form (props) {
             {errors.theme_id && 
               <InputError message={errors.theme_id} className='mt-5'/>
             }
+            </div>
         </div>
 
-        <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div className="border-b border-slate-200 bg-slate-50 px-5 py-3.5">
+              <h3 className="text-sm font-semibold text-slate-700">SEO & Texts</h3>
+            </div>
+            <div className="p-5 sm:p-7">
             <FormLang
               onLangChange={handleLangChange}
               existingData={data.languages}
               errors={errors}
             />
+            </div>
         </div>
 
-        <PrimaryButton disabled={processing}>Save</PrimaryButton>
+        <PrimaryButton className="w-full justify-center sm:w-auto" disabled={processing}>Save</PrimaryButton>
 
       </div>
     </form>

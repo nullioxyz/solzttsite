@@ -24,13 +24,13 @@ export default function Edit({ auth, institucional, languages, translationFields
     return (
         <AuthenticatedLayout
             user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Create institucional</h2>}
+            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Edit institucional</h2>}
         >
             <Head title="Institucional" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-                    <div className="flex justify-end mb-4">
+                    <div className="mb-6 flex flex-wrap justify-end gap-3">
                         <DeleteButton deleteUrl={route('institucional.delete', data.slug)} />
                         <BackButton url={route('institucional.index')} text="Back to list" />
                     </div>

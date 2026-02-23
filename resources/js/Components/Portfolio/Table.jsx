@@ -6,8 +6,9 @@ export default function Table({ items, onDragEnd, direction = "vertical" }) {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <div className="overflow-x-auto">
+      <table className="w-full min-w-[680px] text-left text-sm text-slate-600">
+        <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
           <tr>
             <th scope="col" className="px-6 py-3">
                 <ArrowsUpDownIcon className="w-5 h-5 text-gray-400" />
@@ -42,6 +43,7 @@ export default function Table({ items, onDragEnd, direction = "vertical" }) {
           )}
         </Droppable>
       </table>
+      </div>
     </DragDropContext>
 
   )

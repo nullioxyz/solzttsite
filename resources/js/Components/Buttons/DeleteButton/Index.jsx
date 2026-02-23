@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
-import { TrashIcon } from '@heroicons/react/24/solid'
+import React from 'react';
+import { TrashIcon } from '@heroicons/react/24/solid';
 import { Inertia } from '@inertiajs/inertia';
 import Swal from 'sweetalert2';
 
-export default function DeleteButton ({  deleteUrl }) {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+export default function DeleteButton ({ deleteUrl, compact = false, label = 'Delete' }) {
   const handleDelete = () => {
     Swal.fire({
       title: "Are you sure?",
@@ -20,9 +18,7 @@ export default function DeleteButton ({  deleteUrl }) {
         Inertia.delete(deleteUrl, {
           preserveScroll: true,
           preserveState: false,
-          onSuccess: () => {
-            setIsDialogOpen(false);
-          }
+          onSuccess: () => {},
         });
 
         Swal.fire({
@@ -35,11 +31,19 @@ export default function DeleteButton ({  deleteUrl }) {
   };
 
   return (
-    <>
-      <button onClick={() => handleDelete()} className="flex items-center bg-red-500 text-white mr-5 px-4 py-2 rounded">
-        <TrashIcon className="w-5 h-5 mr-2" />
-        <span>delete</span>
-      </button>
-    </>
-  );
+    <button
+      type="button"
+      onClick={handleDelete}
+      className={
+        compact
+          ? 'inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition hover:border-red-200 hover:bg-red-50 hover:text-red-700'
+          : 'inline-flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-sm font-medium text-red-700 transition hover:bg-red-100'
+      }
+      aria-label={label}
+      title={label}
+    >
+      <TrashIcon className="h-5 w-5" />
+      {!compact && <span>{label}</span>}
+    </button>
+  )
 };

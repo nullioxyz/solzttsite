@@ -47,7 +47,7 @@ export default function View({ auth, contact }) {
 
       <div className="py-12">
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-          <div className="flex justify-end mb-4">
+          <div className="mb-6 flex flex-wrap justify-end gap-3">
             {!contact.read && !read && (
               <PrimaryButton onClick={() => markAsRead()}>Mark as read</PrimaryButton>
             )}

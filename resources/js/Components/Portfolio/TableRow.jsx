@@ -1,5 +1,6 @@
 import { forwardRef } from 'react';
 import { PencilSquareIcon, Bars3Icon } from '@heroicons/react/24/solid';
+import { Link } from '@inertiajs/react';
 import DeleteButton from '../Buttons/DeleteButton/Index';
 
 const TableRow = forwardRef(function TableRow(
@@ -10,27 +11,30 @@ const TableRow = forwardRef(function TableRow(
     <tr
       ref={ref}
       {...dragProps}
-      className={`border-b dark:border-gray-700 ${
-        index % 2 === 0 ? 'bg-white dark:bg-gray-900' : 'bg-gray-50 dark:bg-gray-800'
-      } ${dragging ? 'ring-2 ring-indigo-400' : ''}`}
+      className={`border-b border-slate-200 ${
+        index % 2 === 0 ? 'bg-white' : 'bg-slate-50/60'
+      } ${dragging ? 'ring-2 ring-slate-400' : ''}`}
     >
       {/* Drag handle */}
-      <td className="px-6 py-4 cursor-grab" {...dragHandleProps} title="Arraste para reordenar">
-        <Bars3Icon className="w-5 h-5 text-gray-400" />
+      <td className="cursor-grab px-6 py-4" {...dragHandleProps} title="Drag to reorder">
+        <Bars3Icon className="h-5 w-5 text-slate-400" />
       </td>
 
-      <td className="px-6 py-4">
+      <td className="px-6 py-4 text-slate-700">
         {item.default_translation?.title ?? item.title}
       </td>
 
       <td className="px-6 py-4">
-        <a href={route('portfolio.edit', item.slug)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-          <PencilSquareIcon className="size-6 text-blue-500" />
-        </a>
+        <Link
+          href={route('portfolio.edit', item.slug)}
+          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition hover:border-slate-300 hover:bg-slate-100"
+        >
+          <PencilSquareIcon className="h-5 w-5" />
+        </Link>
       </td>
 
       <td className="px-6 py-4">
-        <DeleteButton deleteUrl={route('portfolio.delete', item.slug)} />
+        <DeleteButton compact deleteUrl={route('portfolio.delete', item.slug)} />
       </td>
     </tr>
   );

@@ -58,4 +58,18 @@ class SiteSettingLang extends Model
         ]);
     }
 
+    public static function translationFieldValues($siteSettingLangs): array
+    {
+        $fields = [];
+
+        foreach ($siteSettingLangs as $lang) {
+            $fields[$lang->language_id]['title'] = $lang->title;
+            $fields[$lang->language_id]['description'] = $lang->description;
+            $fields[$lang->language_id]['keywords'] = $lang->keywords;
+            $fields[$lang->language_id]['slug'] = $lang->slug;
+        }
+
+        return $fields;
+    }
+
 }

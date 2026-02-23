@@ -31,16 +31,21 @@ export default function Form (props) {
 
   return (
     <form onSubmit={submit}>
-      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-        <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-            <InputLabel htmlFor="ñame" value="name" className={`mt-1 block w-full text-black ${errors.name ? 'text-[red]' : ''}`} />
+      <div className="mx-auto max-w-7xl space-y-6 px-3 sm:px-6 lg:px-8">
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div className="border-b border-slate-200 bg-slate-50 px-5 py-3.5">
+              <h3 className="text-sm font-semibold text-slate-700">Social Link</h3>
+              <p className="text-xs text-slate-500">Configure the social network name and URL.</p>
+            </div>
+            <div className="p-5 sm:p-7">
+            <InputLabel htmlFor="name" value="name" className={`mt-1 block w-full text-black ${errors.name ? 'text-[red]' : ''}`} />
 
             <TextInput
                 id="name"
                 type="text"
                 name="name"
                 value={data.name}
-                className={`mt-1 block w-full ${errors.slug ? 'border-red-500' : ''}`}
+                className={`mt-1 block w-full ${errors.name ? 'border-red-500' : ''}`}
                 autoComplete="name"
                 onChange={(e) => setData('name', e.target.value)}
             />
@@ -48,9 +53,14 @@ export default function Form (props) {
             {errors.name && 
               <InputError message={errors.name} className='mt-5'/>
             }
+            </div>
         </div>
 
-        <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div className="border-b border-slate-200 bg-slate-50 px-5 py-3.5">
+              <h3 className="text-sm font-semibold text-slate-700">Destination</h3>
+            </div>
+            <div className="p-5 sm:p-7">
             <InputLabel htmlFor="url" value="url" className={`mt-1 block w-full text-black ${errors.url ? 'text-[red]' : ''}`} />
 
             <TextInput
@@ -66,9 +76,10 @@ export default function Form (props) {
             {errors.url && 
               <InputError message={errors.url} className='mt-5'/>
             }
+            </div>
         </div>
 
-        <PrimaryButton disabled={processing}>Save</PrimaryButton>
+        <PrimaryButton className="w-full justify-center sm:w-auto" disabled={processing}>Save</PrimaryButton>
       </div>
     </form>
   )

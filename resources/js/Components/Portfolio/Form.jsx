@@ -105,9 +105,13 @@ export default function Form (props) {
 
   return (
     <form onSubmit={submit}>
-      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+      <div className="mx-auto max-w-7xl space-y-6 px-3 sm:px-6 lg:px-8">
 
-        <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div className="border-b border-slate-200 bg-slate-50 px-5 py-3.5">
+              <h3 className="text-sm font-semibold text-slate-700">General</h3>
+            </div>
+            <div className="p-5 sm:p-7">
             <InputLabel htmlFor="category_id" value="Category" className={`mt-1 block w-full text-black ${errors.category_id ? 'text-[red]' : ''}`} />
 
             <SelectDefault
@@ -121,9 +125,14 @@ export default function Form (props) {
             {errors.category_id && 
               <InputError message={errors.category_id} className='mt-5'/>
             }
+            </div>
         </div>
 
-        <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+          <div className="border-b border-slate-200 bg-slate-50 px-5 py-3.5">
+            <h3 className="text-sm font-semibold text-slate-700">Media Upload</h3>
+          </div>
+          <div className="p-5 sm:p-7">
           <InputLabel htmlFor="files" value="Dropfiles here" className="mt-1 block w-full text-black" />
 
           <Dropfile
@@ -133,25 +142,36 @@ export default function Form (props) {
             count={10}
             formats={["jpg", "jpeg", "png"]}
           />
+          </div>
         </div>
 
         {data.existingFiles && Array.isArray(data.existingFiles) && data.existingFiles.length > 0 ? (
-          <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+          <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div className="border-b border-slate-200 bg-slate-50 px-5 py-3.5">
+              <h3 className="text-sm font-semibold text-slate-700">Uploaded Files</h3>
+            </div>
+            <div className="p-5 sm:p-7">
             <InputLabel htmlFor="files" value="Uploaded files" className="mt-1 block w-full text-black" />
             <Gallery files={data.existingFiles} onDelete={removeExistingFile} onReorder={handleReorder} />
+            </div>
           </div>
         ) : null}
 
 
-        <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+            <div className="border-b border-slate-200 bg-slate-50 px-5 py-3.5">
+              <h3 className="text-sm font-semibold text-slate-700">Translations</h3>
+            </div>
+            <div className="p-5 sm:p-7">
             <FormLang
               onLangChange={handleLangChange}
               existingData={data.languages}
               errors={errors}
             />
+            </div>
         </div>
 
-        <PrimaryButton disabled={processing}>Save</PrimaryButton>
+        <PrimaryButton className="w-full justify-center sm:w-auto" disabled={processing}>Save</PrimaryButton>
 
       </div>
     </form>

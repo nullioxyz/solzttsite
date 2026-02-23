@@ -11,7 +11,7 @@ import {
 } from "@material-tailwind/react";
 import TextInput from "../TextInput";
 import InputLabel from "../InputLabel";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import InputError from "../InputError";
 
 function normalizeExistingData(data) {
@@ -71,13 +71,13 @@ export default function Form({ onLangChange, existingData, errors }) {
   return (
     <Tabs value={initialTabValue}>
       <TabsHeader
-        className="bg-transparent"
+        className="rounded-lg bg-slate-50 p-1"
         indicatorProps={{
-          className: "bg-gray-900/10 shadow-none !text-gray-900",
+          className: "rounded-md bg-white shadow-sm border border-slate-200",
         }}>
         {orderedLanguages.map(lang => (
-          <Tab key={lang.slug} value={getTabValue(lang)}>
-            <div className="text-black">
+          <Tab key={lang.slug} value={getTabValue(lang)} className="text-slate-700">
+            <div className="text-sm font-medium">
               {lang.name} {lang.default ? ' (required)' : ''}
             </div>
           </Tab>
@@ -85,18 +85,19 @@ export default function Form({ onLangChange, existingData, errors }) {
       </TabsHeader>
       <TabsBody>
         {orderedLanguages.map(lang => (
-          <TabPanel key={lang.id} value={getTabValue(lang)}>
+          <TabPanel key={lang.id} value={getTabValue(lang)} className="mt-4 p-0">
             {errors.languages &&
-              <InputError message={errors.languages} className='mt-5' />
+              <InputError message={errors.languages} className='mb-4' />
             }
-            {translationFields.map((field, index) => (
-              <div key={lang.id + index}>
+            <div className="space-y-5">
+              {translationFields.map((field, index) => (
+              <div key={lang.id + index} className="space-y-2">
                 {field.field == 'title' ? (
-                  <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                  <div>
                     <InputLabel
                       htmlFor={field.field}
-                      value={field.label}
-                      className={`mt-1 block w-full text-black ${getErrorMessage(lang.id, 'title') ? 'text-[red]' : ''}`}
+                      value={field.label + (lang.default ? ' *' : '')}
+                      className={`${getErrorMessage(lang.id, 'title') ? 'text-red-600' : ''}`}
                     />
 
                     <TextInput
@@ -109,50 +110,51 @@ export default function Form({ onLangChange, existingData, errors }) {
                       onChange={(e) => handleInputChange(lang.id, field.field, e.target.value)}
                     />
 
-                    {getErrorMessage(lang.id, 'title') &&
-                      <InputError message={getErrorMessage(lang.id, 'title')} className='mt-5' />
+                    {getErrorMessage(lang.id, 'title') && (
+                      <InputError message={getErrorMessage(lang.id, 'title')} className='mt-2' />
+                    )
                     }
                   </div>
                 ) : null}
 
                 {field.field == 'description' ? (
-                  <div key={`lang[${lang.id}][${lang.name}][${lang.id}]`} className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                  <div key={`lang[${lang.id}][${lang.name}][${lang.id}]`}>
                     <InputLabel
                       htmlFor={field.field}
-                      value={field.label}
-                      className={`mt-1 block w-full text-black ${getErrorMessage(lang.id, 'description') ? 'text-[red]' : ''}`}
+                      value={field.label + (lang.default ? ' *' : '')}
+                      className={`${getErrorMessage(lang.id, 'description') ? 'text-red-600' : ''}`}
                     />
+                    <div className="rounded-lg bg-white p-0.5">
                       <CKEditor
-                        editor={ClassicEditor}
-                        config={{
-                          removePlugins: ['ImageUpload', 'EasyImage', 'MediaEmbed', 'MediaEmbedToolbar'],
-                          image: {
-                            toolbar: [ 'imageTextAlternative' ]
-                          },
-                          mediaEmbed: {
-                            previewsInData: true
-                          },
-                        }}
-                        data={languagesData && languagesData[lang.id] !== undefined && languagesData[lang.id].description ? languagesData[lang.id].description : ''}
-                        required={lang.default ? true : false}
-                        name={`lang[${lang.id}][${field.field}]`}
-                        onReady={editor => {
-
-                        }}
-                        onChange={(e, editor) => handleInputChange(lang.id, field.field, editor.getData())}
-                      />
+                          editor={ClassicEditor}
+                          config={{
+                            removePlugins: ['ImageUpload', 'EasyImage', 'MediaEmbed', 'MediaEmbedToolbar'],
+                            image: {
+                              toolbar: [ 'imageTextAlternative' ]
+                            },
+                            mediaEmbed: {
+                              previewsInData: true
+                            },
+                          }}
+                          data={languagesData && languagesData[lang.id] !== undefined && languagesData[lang.id].description ? languagesData[lang.id].description : ''}
+                          required={lang.default ? true : false}
+                          name={`lang[${lang.id}][${field.field}]`}
+                          onReady={() => {}}
+                          onChange={(e, editor) => handleInputChange(lang.id, field.field, editor.getData())}
+                        />
+                    </div>
                     {getErrorMessage(lang.id, 'description') &&
-                      <InputError message={getErrorMessage(lang.id, 'description')} className='mt-5' />
+                      <InputError message={getErrorMessage(lang.id, 'description')} className='mt-2' />
                     }
                   </div>
                 ) : null}
 
                 {field.field == 'keywords' ? (
-                  <div key={`lang[${lang.id}][${lang.name}][${lang.id}]`} className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                  <div key={`lang[${lang.id}][${lang.name}][${lang.id}]`}>
                     <InputLabel
                       htmlFor={field.field}
                       value={field.label}
-                      className={`mt-1 block w-full text-black ${getErrorMessage(lang.id, 'keywords') ? 'text-[red]' : ''}`}
+                      className={`${getErrorMessage(lang.id, 'keywords') ? 'text-red-600' : ''}`}
                     />
 
                     <TextInput
@@ -166,7 +168,7 @@ export default function Form({ onLangChange, existingData, errors }) {
                     />
 
                     {getErrorMessage(lang.id, 'keywords') &&
-                      <InputError message={getErrorMessage(lang.id, 'keywords')} className='mt-5' />
+                      <InputError message={getErrorMessage(lang.id, 'keywords')} className='mt-2' />
                     }
                   </div>
                 ) : null}
@@ -174,6 +176,7 @@ export default function Form({ onLangChange, existingData, errors }) {
                 
               </div>
             ))}
+            </div>
           </TabPanel>
         ))}
       </TabsBody>

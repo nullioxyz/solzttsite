@@ -68,7 +68,7 @@ class ContactRequestController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('contact.edit', $contact)->with('warning', __('Something wrong. Please try again'));
+            return redirect()->route('contact.view', $contact)->with('warning', __('Something wrong. Please try again'));
         }
 
         return Inertia::location(route('contact.index'));

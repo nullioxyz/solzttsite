@@ -21,8 +21,10 @@ export default function Edit({ auth, setting, languages, translationFields, tran
 
       <div className="py-12">
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-          <div className="flex justify-end mb-4">
-            <DeleteButton deleteUrl={route('site.setting.delete', setting.slug)} />
+          <div className="mb-6 flex flex-wrap justify-end gap-3">
+            {setting.id !== 1 && (
+              <DeleteButton deleteUrl={route('site.setting.delete', setting.slug)} />
+            )}
             <BackButton url={route('site.setting.index')} text="Back to list" />
           </div>
         </div>

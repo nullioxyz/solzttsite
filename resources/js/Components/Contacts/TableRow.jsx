@@ -1,39 +1,42 @@
+import { Link } from '@inertiajs/react';
 import { EyeIcon } from '@heroicons/react/24/solid'
-import { Chip } from '@material-tailwind/react';
 
 export default function TableRow({ item }) {
 
   return (
-    <tr className="odd:bg-whit  e odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-      <td className="px-6 py-4">
+    <tr className="border-b border-slate-200 last:border-b-0 even:bg-slate-50/60">
+      <td className="px-6 py-4 text-slate-700">
         {item.firstname} {item.lastname}
       </td>
 
-      <td className="px-6 py-4">
+      <td className="px-6 py-4 text-slate-600">
         {item.city}
       </td>
 
-      <td className="px-6 py-4">
+      <td className="px-6 py-4 text-slate-600">
         {item.size}
       </td>
 
-      <td className="px-6 py-4">
+      <td className="px-6 py-4 text-slate-600">
         {item.created_at}
       </td>
 
       <td className="px-6 py-4">
         {item.read ? (
-          <Chip color="green" value="Readed" />
+          <span className="inline-flex rounded-full border border-slate-300 bg-slate-100 px-2 py-1 text-xs font-medium text-slate-700">Read</span>
 
         ): (
-          <Chip color="red" value="Not read" />
+          <span className="inline-flex rounded-full border border-slate-300 bg-white px-2 py-1 text-xs font-medium text-slate-700">Not read</span>
         )}
       </td>
 
       <td className="px-6 py-4">
-        <a href={route('contact.view', item.id)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-          <EyeIcon className="size-6 text-blue-500" />
-        </a>
+        <Link
+          href={route('contact.view', item.id)}
+          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition hover:border-slate-300 hover:bg-slate-100"
+        >
+          <EyeIcon className="h-5 w-5" />
+        </Link>
       </td>
 
     </tr>

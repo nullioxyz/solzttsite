@@ -59,8 +59,8 @@ class CategoryController extends Controller
                             ->withInput();
             }
 
-            $languages = $request->get('languages');
-            $categorySlug = Str::slug($languages[2]['title']);
+            $languages = $request->input('languages', []);
+            $categorySlug = $this->resolveSlugFromLanguages($languages);
 
             $category = $this->categoryRepo->create(
                 [
@@ -104,8 +104,8 @@ class CategoryController extends Controller
                         ->withInput();
             }
             
-            $languages = $request->get('languages');
-            $categorySlug = Str::slug($languages[2]['title']);
+            $languages = $request->input('languages', []);
+            $categorySlug = $this->resolveSlugFromLanguages($languages);
 
             $this->categoryRepo->update($category->id, [
                 'slug' => $categorySlug
@@ -136,5 +136,24 @@ class CategoryController extends Controller
         }
 
         return Inertia::location(route('category.index'));
+    }
+
+    private function resolveSlugFromLanguages(array $languages): string
+    {
+        $defaultLanguageId = Language::query()->where('default', 1)->value('id');
+        $defaultTitle = $defaultLanguageId ? data_get($languages, $defaultLanguageId . '.title') : null;
+
+        $fallbackTitle = collect($languages)
+            ->pluck('title')
+            ->filter(fn ($value) => filled($value))
+            ->first();
+
+        $title = $defaultTitle ?: $fallbackTitle;
+
+        if (blank($title)) {
+            $title = Str::lower(Str::random(10));
+        }
+
+        return Str::slug($title);
     }
 }

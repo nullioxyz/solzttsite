@@ -62,8 +62,8 @@ class InstitucionalController extends Controller
                             ->withInput();
             }
 
-            $languages = $request->get('languages');
-            $institucionalSlug = Str::slug($languages[3]['title']);
+            $languages = $request->input('languages', []);
+            $institucionalSlug = $this->resolveSlugFromLanguages($languages);
 
             $institucional = $this->institucionalRepo->create(
                 [
@@ -74,7 +74,7 @@ class InstitucionalController extends Controller
 
             $this->institucionalLangStrategy->create($request->get('languages'), $institucional);
 
-            if(count($validator['files'])) {
+            if (!empty($validator['files']) && is_array($validator['files'])) {
                 $this->mediaUploadStrategy->upload($validator['files'], $institucional, 'institucional');
             }
             
@@ -113,8 +113,8 @@ class InstitucionalController extends Controller
                         ->withInput();
             }
 
-            $languages = $request->get('languages');
-            $institucionalSlug = Str::slug($languages[3]['title']);;
+            $languages = $request->input('languages', []);
+            $institucionalSlug = $this->resolveSlugFromLanguages($languages);
 
             $this->institucionalRepo->update($institucional->id, [
                 'slug' => $institucionalSlug,
@@ -123,7 +123,7 @@ class InstitucionalController extends Controller
             
             $this->institucionalLangStrategy->decideCreateOrUpdate($request->get('languages'), $institucional);
 
-            if(count($validator['files'])) {
+            if (!empty($validator['files']) && is_array($validator['files'])) {
                 $this->mediaUploadStrategy->upload($validator['files'], $institucional, 'institucional');
             }
 
@@ -171,5 +171,24 @@ class InstitucionalController extends Controller
             Log::error($e->getMessage());
             DB::rollBack();
         }
+    }
+
+    private function resolveSlugFromLanguages(array $languages): string
+    {
+        $defaultLanguageId = Language::query()->where('default', 1)->value('id');
+        $defaultTitle = $defaultLanguageId ? data_get($languages, $defaultLanguageId . '.title') : null;
+
+        $fallbackTitle = collect($languages)
+            ->pluck('title')
+            ->filter(fn ($value) => filled($value))
+            ->first();
+
+        $title = $defaultTitle ?: $fallbackTitle;
+
+        if (blank($title)) {
+            $title = Str::lower(Str::random(10));
+        }
+
+        return Str::slug($title);
     }
 }

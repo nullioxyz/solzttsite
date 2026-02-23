@@ -11,8 +11,8 @@ export default function Index({ auth, institucionals  }) {
     >
       <Head title="Institucional" />
 
-      <div className="py-12">
-        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+      <div className="py-8">
+        <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
           <List items={institucionals.data}/>
           <Pagination meta={institucionals} links={institucionals.links} />
         </div>

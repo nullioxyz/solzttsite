@@ -1,6 +1,6 @@
 export default function InputLabel({ value, className = '', children, ...props }) {
     return (
-        <label {...props} className={`block font-medium text-sm text-[#e5e7eb] ` + className}>
+        <label {...props} className={`mb-1.5 block text-sm font-medium text-slate-700 ` + className}>
 
             {value ? (
                 <div dangerouslySetInnerHTML={{ __html: value }} />

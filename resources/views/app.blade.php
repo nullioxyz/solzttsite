@@ -128,6 +128,8 @@
 
     @if(app()->environment('production'))
         <script>
+            const internalAnalyticsEndpoint = @js(route('analytics.collect'));
+
             function sanitizeEventName(name) {
                 return String(name || '')
                     .toLowerCase()
@@ -176,6 +178,58 @@
                 };
             }
 
+            function getOrCreateSessionKey() {
+                const storageKey = 'solztt_visitor_key';
+                try {
+                    const existing = window.localStorage.getItem(storageKey);
+                    if (existing) return existing;
+                    const random = window.crypto?.randomUUID
+                        ? window.crypto.randomUUID()
+                        : `${Date.now()}_${Math.random().toString(36).slice(2, 12)}`;
+                    window.localStorage.setItem(storageKey, random);
+                    return random;
+                } catch (_) {
+                    return `${Date.now()}_${Math.random().toString(36).slice(2, 12)}`;
+                }
+            }
+
+            const sessionKey = getOrCreateSessionKey();
+
+            function sendInternalAnalytics(eventName, context = {}, payload = {}) {
+                if (!internalAnalyticsEndpoint) return;
+
+                const body = {
+                    event_name: sanitizeEventName(eventName),
+                    page_key: context.page_key ?? null,
+                    page_path: context.page_path ?? window.location.pathname,
+                    page_location: context.page_location ?? window.location.href,
+                    page_title: context.page_title ?? document.title,
+                    locale: context.locale ?? null,
+                    session_key: sessionKey,
+                    source: 'site',
+                    referrer: document.referrer || null,
+                    payload,
+                    occurred_at: new Date().toISOString(),
+                };
+
+                if (!body.event_name) return;
+
+                const encodedBody = JSON.stringify(body);
+                const blob = new Blob([encodedBody], { type: 'application/json' });
+
+                if (navigator.sendBeacon) {
+                    navigator.sendBeacon(internalAnalyticsEndpoint, blob);
+                    return;
+                }
+
+                fetch(internalAnalyticsEndpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: encodedBody,
+                    keepalive: true,
+                }).catch(() => {});
+            }
+
             function trackGaPageView(context) {
                 if (typeof window.gtag !== 'function') return;
                 gtag('event', 'page_view', {
@@ -195,6 +249,7 @@
                 if (!safeEventName) return;
 
                 const payload = params || {};
+                const context = buildPageContext(window.location.href);
 
                 if (typeof window.gtag === 'function') {
                     gtag('event', safeEventName, payload);
@@ -203,10 +258,13 @@
                 if (typeof window.fbq === 'function') {
                     fbq('trackCustom', safeEventName, payload);
                 }
+
+                sendInternalAnalytics(safeEventName, context, payload);
             };
 
             window.trackLeadConversion = function (params) {
                 const payload = params || {};
+                const context = buildPageContext(window.location.href);
 
                 if (typeof window.gtag === 'function') {
                     gtag('event', 'generate_lead', payload);
@@ -215,6 +273,8 @@
                 if (typeof window.fbq === 'function') {
                     fbq('track', 'Lead', payload);
                 }
+
+                sendInternalAnalytics('generate_lead', context, payload);
             };
 
             function trackPage(url) {

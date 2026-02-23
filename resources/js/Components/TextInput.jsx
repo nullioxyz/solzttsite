@@ -12,7 +12,8 @@ export default forwardRef(function TextInput(
     }
   }, [isFocused]);
 
-  const defaultClass = 'border-gray-300 rounded-md MontSerratLight shadow-sm text-[#4d4c4c]';
+  const defaultClass =
+    'h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-sm text-slate-800 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-slate-900 focus:ring-2 focus:ring-slate-200';
 
   return (
     <input

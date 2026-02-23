@@ -10,15 +10,16 @@ use App\Http\Controllers\Admin\ContactRequestController;
 use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Admin\SocialController;
 use App\Http\Controllers\Site\AfterCareController;
+use App\Http\Controllers\Site\AnalyticsController;
 use App\Http\Controllers\Site\AvailableController as SiteAvailableController;
 use App\Http\Controllers\Site\ContactController;
 use App\Http\Controllers\Site\FileController;
 use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\PortfolioController as PortfolioSiteController;
 use App\Http\Controllers\Site\TranslationController;
+use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 
 Route::prefix('/')->group(function() {
@@ -29,6 +30,10 @@ Route::prefix('/')->group(function() {
     
     Route::get('/{locale}', [HomeController::class, 'index'])->name('home.index');
 });
+
+Route::post('/analytics/collect', [AnalyticsController::class, 'collect'])
+    ->middleware('throttle:240,1')
+    ->name('analytics.collect');
 
 Route::middleware(['lang'])->prefix('/{locale}')->group(function() {
     Route::get('/portfolio', [PortfolioSiteController::class, 'index'])->name('site.portfolio');
@@ -61,11 +66,13 @@ Route::prefix('hall-of-justice')->group(function() {
         return redirect()->route('login');
     });
     
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->middleware(['auth', 'verified'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->middleware(['auth', 'verified'])
+        ->name('dashboard');
 
     Route::middleware('auth')->group(function () {
+        Route::get('/dashboard/metrics', [DashboardController::class, 'metrics'])->name('dashboard.metrics');
+
         Route::prefix('site-settings')->group(function() {
             Route::get('/', [SiteSettingController::class, 'index'])->name('site.setting.index');
             Route::get('/create', [SiteSettingController::class, 'create'])->name('site.setting.create');
@@ -126,6 +133,7 @@ Route::prefix('hall-of-justice')->group(function() {
             Route::get('/edit/{available_design}', [AvailableController::class, 'edit'])->name('available_design.edit');
             Route::post('/save/{available_design}', [AvailableController::class, 'update'])->name('available_design.update');
             Route::post('/availability/{available_design}', [AvailableController::class, 'changeAvailability'])->name('available_design.changeAvailability');
+            Route::post('/active/{available_design}', [AvailableController::class, 'changeActive'])->name('available_design.changeActive');
             Route::delete('/delete/{available_design}', [AvailableController::class, 'destroy'])->name('available_design.delete');
             Route::delete('/delete-file/{fileId}/{available_design}', [AvailableController::class, 'destroyFile'])->name('available.removeFile');
         });
@@ -144,4 +152,3 @@ Route::prefix('hall-of-justice')->group(function() {
     
     require __DIR__.'/auth.php';
 });
-
