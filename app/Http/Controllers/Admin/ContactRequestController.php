@@ -43,13 +43,7 @@ class ContactRequestController extends Controller
         try {
             DB::beginTransaction();
 
-            $validator = $request->validated();
-
-            if (!$validator) {
-                return redirect()->route('contact.read')
-                        ->withErrors($validator)
-                        ->withInput();
-            }
+            $request->validated();
             
             $this->contactRepo->update($contact->id, [
                 'read' => $request->get('read')

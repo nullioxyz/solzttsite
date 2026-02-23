@@ -55,12 +55,6 @@ class SiteSettingController extends Controller
             DB::beginTransaction();
 
             $validator = $request->validated();
-            
-            if (!$validator) {
-                return redirect()->route('site.setting.create')
-                            ->withErrors($validator)
-                            ->withInput();
-            }
 
             $languages = $request->get('languages');
             $slug = Str::slug($languages[2]['title']);
@@ -101,12 +95,6 @@ class SiteSettingController extends Controller
             DB::beginTransaction();
 
             $validator = $request->validated();
-
-            if (!$validator) {
-                return redirect()->route('site.setting.create')
-                        ->withErrors($validator)
-                        ->withInput();
-            }
 
             $languages = $request->get('languages');
             $slug = Str::slug($languages[2]['title']);

@@ -63,7 +63,9 @@ class ContactController extends Controller
             'defaultLang' => $defaultLang,
             'social' => $social,
             'metatags' => $metatags,
-            'metaImage' => $consideration->media ? $consideration : $metaImage,
+            'metaImage' => ($consideration && $consideration->media && $consideration->media->count())
+                ? $consideration
+                : $metaImage,
             'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? $defaultLang,
             'portfolio' => $portfolio,
             'hcaptchaSiteKey' => config('services.hcaptcha.site_key'),
@@ -112,7 +114,7 @@ class ContactController extends Controller
             
             $contact = $this->contactService->storeContact($validatedData);
 
-            if(count($validatedData['files'])) {
+            if (!empty($validatedData['files']) && is_array($validatedData['files'])) {
                 $this->mediaUploadStrategy->uploadAsync($validatedData['files'], $contact, 'contact');
             }
 

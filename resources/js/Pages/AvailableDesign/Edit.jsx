@@ -9,7 +9,6 @@ import { LanguageProvider } from '@/Contexts/LanguageContext';
 export default function Edit({ auth, design, languages, translationFields, translationValues, categories }) {
   
   const handleFileRemoved = () => {
-    console.log('fff');
     router.reload();
   };
 

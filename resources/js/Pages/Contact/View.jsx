@@ -23,7 +23,6 @@ const Toast = Swal.mixin({
 
 export default function View({ auth, contact }) {
   const [read, setRead] = useState(false);
-  console.log(contact);
   const markAsRead = async () => {
     const response = await axios.post(route('contact.update', contact.id),
     {

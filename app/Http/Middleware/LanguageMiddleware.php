@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Language;
 use Closure;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cookie;
@@ -11,11 +12,21 @@ class LanguageMiddleware
 {
     public function handle($request, Closure $next)
     {
-        if (Session::has('locale') || Cookie::get('locale')) {
-            App::setLocale(Session::get('locale') ?? Cookie::get('locale'));
-        } else {
-            App::setLocale('en');
+        $requestedLocale = Session::get('locale') ?? Cookie::get('locale');
+        $defaultLocale = config('app.fallback_locale', 'en');
+
+        $locale = $defaultLocale;
+        if ($requestedLocale) {
+            $isAllowedLocale = Language::query()
+                ->where('slug', $requestedLocale)
+                ->exists();
+
+            if ($isAllowedLocale) {
+                $locale = $requestedLocale;
+            }
         }
+
+        App::setLocale($locale);
 
         return $next($request);
     }

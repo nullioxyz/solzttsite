@@ -3,21 +3,37 @@
 namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
-use App\Models\Institucional;
 use App\Models\Language;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cookie;
-use Inertia\Inertia;
 
 class TranslationController extends Controller
 {
+    protected function getAllowedLocales(): array
+    {
+        return Language::query()->pluck('slug')->all();
+    }
+
+    protected function resolveLocale(?string $locale = null): string
+    {
+        $allowedLocales = $this->getAllowedLocales();
+        $defaultLocale = Language::query()->where('default', 1)->value('slug')
+            ?? config('app.fallback_locale', 'en');
+
+        if ($locale && in_array($locale, $allowedLocales, true)) {
+            return $locale;
+        }
+
+        return $defaultLocale;
+    }
+
     /**
      * Display the user's profile form.
      */
     public function getTranslations()
     {
-        $locale = Cookie::get('locale') ?? App::getLocale();
+        $locale = $this->resolveLocale(Cookie::get('locale') ?? App::getLocale());
         
         $filePath = resource_path("lang/{$locale}/site.php");
         
@@ -33,8 +49,12 @@ class TranslationController extends Controller
     public function setLanguage(Request $request)
     {
         try {
+            $requestedLocale = $request->lang;
+            if (!in_array($requestedLocale, $this->getAllowedLocales(), true)) {
+                return response()->json(['error' => 'Invalid language'], 422);
+            }
 
-            $locale = $request->lang;
+            $locale = $this->resolveLocale($requestedLocale);
             App::setLocale($locale);
 
             $cookie = cookie()->forever('locale', $locale);
@@ -48,6 +68,8 @@ class TranslationController extends Controller
 
     public function getCurrentTranslation()
     {
-        return response()->json(['lang' => Cookie::get('locale') ?? App::getLocale()]);
+        return response()->json([
+            'lang' => $this->resolveLocale(Cookie::get('locale') ?? App::getLocale()),
+        ]);
     }
 }

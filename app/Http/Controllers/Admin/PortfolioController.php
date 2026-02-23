@@ -62,12 +62,6 @@ class PortfolioController extends Controller
             DB::beginTransaction();
 
             $validator = $request->validated();
-            
-            if (!$validator) {
-                return redirect()->route('portfolio.create')
-                            ->withErrors($validator)
-                            ->withInput();
-            }
 
             $languages = $request->get('languages');
             $portfolioSlug = Str::slug(
@@ -88,7 +82,7 @@ class PortfolioController extends Controller
             
             DB::commit();
 
-            if(count($validator['files'])) {
+            if (!empty($validator['files']) && is_array($validator['files'])) {
                 $this->mediaUploadStrategy->uploadAsync($validator['files'], $portfolio, 'portfolio');
             }
             return redirect()->route('portfolio.index')->with('success', __('Saved with success'));
@@ -130,12 +124,6 @@ class PortfolioController extends Controller
 
             $validator = $request->validated();
 
-            if (!$validator) {
-                return redirect()->route('portfolio.create')
-                        ->withErrors($validator)
-                        ->withInput();
-            }
-
             $languages = $request->get('languages');
             
             $portfolioSlug = Str::slug(
@@ -152,7 +140,7 @@ class PortfolioController extends Controller
             
             DB::commit();
             
-            if(count($validator['files'])) {
+            if (!empty($validator['files']) && is_array($validator['files'])) {
                 $this->mediaUploadStrategy->uploadAsync($validator['files'], $portfolio, 'portfolio');
             }
         } catch (\Exception $e) {
@@ -205,6 +193,7 @@ class PortfolioController extends Controller
             return response()->noContent();
         } catch (\Exception $e) {
             Log::error($e->getMessage(), [$request]);
+            return response()->json(['message' => __('Unable to sort portfolio items')], 500);
         }
     }
 
@@ -244,6 +233,10 @@ class PortfolioController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error($e->getMessage(), ['fileId' => $fileId, 'portfolio' => $portfolio->id]);
+            return response()->json(['message' => __('Unable to remove file')], 500);
         }
+
+        return response()->noContent();
     }
 }

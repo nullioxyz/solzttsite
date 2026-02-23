@@ -36,9 +36,7 @@ export default function Form (props) {
             icon: "success"
           });
         },
-        onError: (errors) => {
-            console.log(errors);
-        },
+        onError: () => {},
     });
   };
 

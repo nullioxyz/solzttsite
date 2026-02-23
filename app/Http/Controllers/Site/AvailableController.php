@@ -10,7 +10,6 @@ use App\Models\SiteSetting;
 use App\Models\Social;
 use App\Traits\PaginationTrait;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cookie;
 use Inertia\Inertia;
 
@@ -70,11 +69,13 @@ class AvailableController extends Controller
 
         $metatags = SiteSetting::with(['defaultTranslation.language', 'translation.language'])->where('id', 1)->first();
         
-        $title = $availableDesign->translation->title 
-            ?? $availableDesign->defaultTranslation->title;
+        $title = $availableDesign->translation?->title
+            ?? $availableDesign->defaultTranslation?->title
+            ?? config('app.name');
 
-        $description = $availableDesign->translation->description 
-            ?? $availableDesign->defaultTranslation->description;
+        $description = $availableDesign->translation?->description
+            ?? $availableDesign->defaultTranslation?->description
+            ?? '';
 
         return Inertia::render('Site/AvailableDesign/AvailableDesignShow', [
             'languages' => $availableLangs,
@@ -91,10 +92,9 @@ class AvailableController extends Controller
 
     public function load(Request $request)
     {
-        $page = (int) $request->get('page', 1);
         $perPage = $this->perPage($request);
 
-        $query = AvailableDesign::with([
+        $designs = AvailableDesign::with([
             'media' => function($query) {
                 $query->orderBy('order_column', 'asc');
             },
@@ -104,24 +104,11 @@ class AvailableController extends Controller
             $query->orderBy('order_column', 'asc');
         })
         ->active()
-        ->orderBy("order", "asc");
-
-        $totalItems = $query->count();
-
-        $items = $query->orderBy('id', 'desc')
-            ->limit($page * $perPage)
-            ->get();
+        ->orderBy("order", "asc")
+        ->paginate($perPage);
 
         $availableLangs = Language::select('slug', 'name', 'default')->get();
         $defaultLang = $availableLangs->firstWhere('default', 1);
-
-        $designs = new LengthAwarePaginator(
-            $items,
-            $totalItems,
-            $perPage,
-            $page,
-            ['path' => $request->url(), 'query' => $request->query()]
-        );
 
         return response()->json([
             'designs' => $designs,

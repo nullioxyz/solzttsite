@@ -63,12 +63,6 @@ class AvailableController extends Controller
             DB::beginTransaction();
 
             $validator = $request->validated();
-            
-            if (!$validator) {
-                return redirect()->route('available_design.create')
-                            ->withErrors($validator)
-                            ->withInput();
-            }
 
             $languages = $request->get('languages');
             
@@ -90,7 +84,7 @@ class AvailableController extends Controller
 
             DB::commit();
 
-            if(count($validator['files'])) {
+            if (!empty($validator['files']) && is_array($validator['files'])) {
                 $this->mediaUploadStrategy->upload($validator['files'], $availableDesigns, 'availableDesigns');
             }
             
@@ -128,12 +122,6 @@ class AvailableController extends Controller
             DB::beginTransaction();
 
             $validator = $request->validated();
-
-            if (!$validator) {
-                return redirect()->route('available_design.create')
-                        ->withErrors($validator)
-                        ->withInput();
-            }
             
             $languages = $request->get('languages');
 
@@ -153,7 +141,7 @@ class AvailableController extends Controller
 
             DB::commit();
 
-            if(count($validator['files'])) {
+            if (!empty($validator['files']) && is_array($validator['files'])) {
                 $this->mediaUploadStrategy->upload($validator['files'], $availableDesign, 'availableDesigns');
             }
         } catch (\Exception $e) {
@@ -187,6 +175,7 @@ class AvailableController extends Controller
             return response()->noContent();
         } catch (\Exception $e) {
             Log::error($e->getMessage(), [$request]);
+            return response()->json(['message' => __('Unable to sort available designs')], 500);
         }
     }
 
@@ -201,7 +190,11 @@ class AvailableController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error($e->getMessage(), ['availableDesign' => $availableDesign->id]);
+            return response()->json(['message' => __('Unable to change availability')], 500);
         }
+
+        return response()->noContent();
     }
 
     public function destroy(AvailableDesign $availableDesign)
@@ -231,6 +224,10 @@ class AvailableController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error($e->getMessage(), ['fileId' => $fileId, 'availableDesign' => $availableDesign->id]);
+            return response()->json(['message' => __('Unable to remove file')], 500);
         }
+
+        return response()->noContent();
     }
 }

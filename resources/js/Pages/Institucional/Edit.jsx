@@ -17,9 +17,7 @@ export default function Edit({ auth, institucional, languages, translationFields
             preserveScroll: true,
             data: data,
             onSuccess: () => reset(),
-            onError: (errors) => {
-                console.log(errors);
-            },
+            onError: () => {},
         });
     };
 

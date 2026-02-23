@@ -11,75 +11,72 @@ import {
 } from "@material-tailwind/react";
 import TextInput from "../TextInput";
 import InputLabel from "../InputLabel";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import InputError from "../InputError";
+
+function normalizeExistingData(data) {
+  if (!data) return {};
+
+  if (Array.isArray(data)) {
+    return data.reduce((acc, item) => {
+      if (!item?.language_id) return acc;
+      acc[item.language_id] = item;
+      return acc;
+    }, {});
+  }
+
+  return data;
+}
 
 export default function Form({ onLangChange, existingData, errors }) {
 
-  const [languagesData, setLanguagesData] = useState(existingData || {});
+  const [languagesData, setLanguagesData] = useState(() => normalizeExistingData(existingData));
   const { languages, translationFields } = useLanguages();
-  const [normalizedData, setNormalizedData] = useState(false);
+  const orderedLanguages = useMemo(() => {
+    return [...(languages || [])].sort((a, b) => Number(Boolean(b.default)) - Number(Boolean(a.default)));
+  }, [languages]);
 
-  useEffect(() => {
-    if (!normalizedData && Object.keys(languagesData).length && existingData) {
-      normalizeDataToState(languagesData);
-    }
-  }, [languagesData, existingData, onLangChange]);
+  const getTabValue = (lang) => String(lang.slug || lang.id);
+  const initialTabValue = useMemo(() => {
+    if (!orderedLanguages.length) return '';
+
+    const preferredLang =
+      orderedLanguages.find((lang) => lang.default) ||
+      orderedLanguages.find((lang) => lang.slug === 'en') ||
+      orderedLanguages[0];
+
+    return getTabValue(preferredLang);
+  }, [orderedLanguages]);
 
   const getErrorMessage = (id, field) => {
     const errorKey = `languages.${id}.${field}`;
-    return errors[errorKey];
-  };
-
-  const normalizeDataToState = (data) => {
-    if (data.length > 0) {
-      const languagesTemp = {};
-
-      data.forEach(obj => {
-        languagesTemp[obj.language_id] = obj;
-      });
-
-      setLanguagesData(languagesTemp);
-      setNormalizedData(true);
-    }
+    return errors?.[errorKey];
   };
 
   const handleInputChange = (langId, field, fieldValue) => {
-    if (Object.keys(languagesData).length === 0 && !normalizedData) {
-      setLanguagesData(() => {
-        const updatedData = {};
+    const updatedData = {
+      ...languagesData,
+      [langId]: {
+        ...languagesData[langId],
+        [field]: fieldValue,
+      },
+    };
 
-        updatedData[langId] = {
-          [field]: fieldValue
-        };
-
-        onLangChange(updatedData);
-        return updatedData;
-      });
-    } else {
-      setLanguagesData(prevData => {
-        const updatedData = { ...prevData };
-
-        updatedData[langId] = {
-          ...updatedData[langId],
-          [field]: fieldValue
-        };
-
-        onLangChange(updatedData);
-        return updatedData;
-      });
-    }
+    setLanguagesData(updatedData);
+    onLangChange(updatedData);
   };
 
+  if (!initialTabValue) return null;
+
   return (
-    <Tabs>
+    <Tabs value={initialTabValue}>
       <TabsHeader
         className="bg-transparent"
         indicatorProps={{
           className: "bg-gray-900/10 shadow-none !text-gray-900",
         }}>
-        {languages.map(lang => (
-          <Tab key={lang.slug} value={lang.name}>
+        {orderedLanguages.map(lang => (
+          <Tab key={lang.slug} value={getTabValue(lang)}>
             <div className="text-black">
               {lang.name} {lang.default ? ' (required)' : ''}
             </div>
@@ -87,8 +84,8 @@ export default function Form({ onLangChange, existingData, errors }) {
         ))}
       </TabsHeader>
       <TabsBody>
-        {languages.map(lang => (
-          <TabPanel key={lang.id} value={lang.name}>
+        {orderedLanguages.map(lang => (
+          <TabPanel key={lang.id} value={getTabValue(lang)}>
             {errors.languages &&
               <InputError message={errors.languages} className='mt-5' />
             }

@@ -72,8 +72,20 @@
         <meta name="twitter:image" content="{{ $metaImageUrl }}">
 
         <link rel="canonical" href="{{ url()->current() }}">
+    @else
+        <title>{{ config('app.name') }}</title>
+        <meta name="description" content="{{ config('app.name') }}">
+        <link rel="canonical" href="{{ url()->current() }}">
     @endif
 
+    <meta name="robots" content="index,follow">
+    <meta property="og:site_name" content="{{ config('app.name') }}">
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link rel="dns-prefetch" href="//www.googletagmanager.com">
+    <link rel="dns-prefetch" href="//connect.facebook.net">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Merriweather:wght@300;400&display=swap" rel="stylesheet">
     <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
     @php

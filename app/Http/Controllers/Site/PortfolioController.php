@@ -10,7 +10,6 @@ use App\Models\SiteSetting;
 use App\Models\Social;
 use App\Traits\PaginationTrait;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cookie;
 use Inertia\Inertia;
 
@@ -82,18 +81,20 @@ class PortfolioController extends Controller
                 'media', function($query) {
                 $query->orderBy('order_column', 'asc');
             }
-        )->where('slug', $slugPortfolio)->first();
+        )->where('slug', $slugPortfolio)->firstOrFail();
 
         $socials = Social::get()->keyBy('name');
         $social['instagram'] = $socials->get('instagram');
         $social['facebook'] = $socials->get('facebook');
 
         $metatags = SiteSetting::with(['defaultTranslation.language', 'translation.language'])->where('id', 1)->first();
-        $title = $portfolio->translation->title 
-            ?? $portfolio->defaultTranslation->title;
+        $title = $portfolio->translation?->title
+            ?? $portfolio->defaultTranslation?->title
+            ?? config('app.name');
 
-        $description = $portfolio->translation->description 
-            ?? $portfolio->defaultTranslation->description;
+        $description = $portfolio->translation?->description
+            ?? $portfolio->defaultTranslation?->description
+            ?? '';
         
         return Inertia::render('Site/Portfolio/PortfolioShow', [
             'languages' => $availableLangs,
@@ -110,10 +111,9 @@ class PortfolioController extends Controller
 
     public function load(Request $request)
     {
-        $page = (int) $request->get('page', 1);
         $perPage = $this->perPage($request);
 
-        $query = Portfolio::with([
+        $portfolio = Portfolio::with([
             'media' => function($query) {
                 $query->orderBy('order_column', 'asc');
             },
@@ -122,22 +122,8 @@ class PortfolioController extends Controller
         ])->whereHas('media', function($query) {
             $query->orderBy('order_column', 'asc');
         })
-        ->orderBy("order", "asc");
-
-        $totalItems = $query->count();
-
-        // pega todas as páginas até a atual
-        $items = $query->orderBy('id', 'desc')
-            ->limit($page * $perPage)
-            ->get();
-
-        $portfolio = new LengthAwarePaginator(
-            $items,
-            $totalItems,
-            $perPage,
-            $page,
-            ['path' => $request->url(), 'query' => $request->query()]
-        );
+        ->orderBy("order", "asc")
+        ->paginate($perPage);
 
         return response()->json(['portfolio' => $portfolio]);
     }

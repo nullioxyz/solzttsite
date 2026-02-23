@@ -23,7 +23,7 @@ class StoreContactRequest extends FormRequest
             'availability' => 'required',
             'attachments' => 'array|nullable',
             'files' => 'nullable|array|max:5',
-            'files.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+            'files.*' => 'file|mimes:jpeg,png,jpg,pdf|max:5120',
         ];
     }
 
@@ -40,8 +40,8 @@ class StoreContactRequest extends FormRequest
             'firstname.required' => trans('validation.firstname.required'),
             'city.required' => trans("validation.city.required"),
             'availability.required' => trans('validation.availability.required'),
-            'files.file'     => trans('validation.file.file'),
-            'files.mimes'    => trans('validation.file.mimes'),
+            'files.*.file'     => trans('validation.file.file'),
+            'files.*.mimes'    => trans('validation.file.mimes'),
             'files.*.max'      => trans('validation.file.max'),
         ];
     }

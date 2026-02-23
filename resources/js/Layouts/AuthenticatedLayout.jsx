@@ -38,7 +38,7 @@ export default function Authenticated({ user, header, children }) {
                 <NavLink href={route('portfolio.index')} active={route().current('portfolio.index')}>
                   Portfolio
                 </NavLink>
-                <NavLink href={route('available_design.index')} active={route().current('available.index')}>
+                <NavLink href={route('available_design.index')} active={route().current('available_design.*')}>
                   Available Designs
                 </NavLink>
                 <NavLink href={route('contact.index')} active={route().current('contact.index')}>
@@ -130,7 +130,7 @@ export default function Authenticated({ user, header, children }) {
             <ResponsiveNavLink href={route('portfolio.index')} active={route().current('portfolio.index')}>
               Portfolio
             </ResponsiveNavLink>
-            <ResponsiveNavLink href={route('available_design.index')} active={route().current('available.index')}>
+            <ResponsiveNavLink href={route('available_design.index')} active={route().current('available_design.*')}>
               Available Designs
             </ResponsiveNavLink>
             <ResponsiveNavLink href={route('contact.index')} active={route().current('contact.index')}>

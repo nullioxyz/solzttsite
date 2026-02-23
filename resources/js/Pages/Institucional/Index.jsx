@@ -4,7 +4,6 @@ import { Head } from '@inertiajs/react';
 import Pagination from '@/Components/Pagination/Index';
 
 export default function Index({ auth, institucionals  }) {
-  console.log(institucionals);
   return (
     <AuthenticatedLayout
     user={auth.user}
