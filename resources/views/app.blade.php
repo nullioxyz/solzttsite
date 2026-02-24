@@ -47,9 +47,8 @@
     $hasLocalePrefix = isset($segments[0]) && $languages->contains($segments[0]);
     $queryString = request()->getQueryString();
 
-    $analyticsCollectUrl = app()->environment('production')
-        ? \Illuminate\Support\Facades\URL::temporarySignedRoute('analytics.collect', now()->addHours(12))
-        : route('analytics.collect');
+    $analyticsEnabledForRuntime = app()->environment('production') || filter_var(env('ANALYTICS_ENABLE_LOCAL', false), FILTER_VALIDATE_BOOL);
+    $analyticsCollectUrl = \Illuminate\Support\Facades\URL::temporarySignedRoute('analytics.collect', now()->addHours(12), [], absolute: false);
     $isContactPage = request()->is('*/contact');
     $isPortfolioPage = request()->is('*/portfolio');
     $isAvailableDesignPage = request()->is('*/available-designs');
@@ -136,82 +135,53 @@
 
     @php
         $gaMeasurementId = config('services.google_analytics.measurement_id');
-        $gaEnabled = app()->environment('production') && !$isAdminPath;
-    @endphp
-    @if($gaEnabled && !empty($gaMeasurementId))
-        <link rel="dns-prefetch" href="//www.googletagmanager.com">
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            window.gtag = window.gtag || function gtag() {
-                dataLayer.push(arguments);
-            };
-
-            gtag('js', new Date());
-            gtag('config', @js($gaMeasurementId), { send_page_view: false });
-
-            (function loadGaWhenIdle() {
-                function inject() {
-                    const script = document.createElement('script');
-                    script.async = true;
-                    script.src = 'https://www.googletagmanager.com/gtag/js?id={{ $gaMeasurementId }}';
-                    document.head.appendChild(script);
-                }
-
-                if (document.readyState === 'complete') {
-                    inject();
-                    return;
-                }
-
-                window.addEventListener('load', inject, { once: true });
-            })();
-        </script>
-    @endif
-
-    @php
         $facebookPixelId = config('services.facebook.pixel_id');
-        $facebookPixelEnabled = app()->environment('production') && !$isAdminPath;
     @endphp
-    @if($facebookPixelEnabled && !empty($facebookPixelId))
+    @if($analyticsEnabledForRuntime && !$isAdminPath)
+        <link rel="dns-prefetch" href="//www.googletagmanager.com">
         <link rel="dns-prefetch" href="//connect.facebook.net">
         <script>
-            !function(f){
-                if (f.fbq) return;
-                const n = f.fbq = function() {
-                    n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
-                };
-                if (!f._fbq) f._fbq = n;
-                n.push = n;
-                n.loaded = true;
-                n.version = '2.0';
-                n.queue = [];
-            }(window);
-
-            fbq('init', @js($facebookPixelId));
-
-            (function loadMetaWhenIdle() {
-                function inject() {
-                    const script = document.createElement('script');
-                    script.async = true;
-                    script.src = 'https://connect.facebook.net/en_US/fbevents.js';
-                    document.head.appendChild(script);
-                }
-
-                if (document.readyState === 'complete') {
-                    inject();
-                    return;
-                }
-
-                window.addEventListener('load', inject, { once: true });
-            })();
-        </script>
-        <noscript>
-            <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id={{ $facebookPixelId }}&ev=PageView&noscript=1" />
-        </noscript>
-    @endif
-
-    @if(app()->environment('production') && !$isAdminPath)
-        <script>
             const internalAnalyticsEndpoint = @js($analyticsCollectUrl);
+            const gaMeasurementId = @js($gaMeasurementId);
+            const facebookPixelId = @js($facebookPixelId);
+            const consentStorageKey = 'solztt_cookie_consent_v1';
+            const visitorStorageKey = 'solztt_visitor_key';
+            const sessionStorageKey = 'solztt_session_key';
+
+            let hasGaLoaded = false;
+            let hasMetaLoaded = false;
+
+            function readConsent() {
+                try {
+                    const raw = window.localStorage.getItem(consentStorageKey);
+                    if (!raw) return null;
+                    const parsed = JSON.parse(raw);
+                    if (typeof parsed !== 'object' || parsed === null) return null;
+                    return {
+                        necessary: true,
+                        analytics: Boolean(parsed.analytics),
+                        marketing: Boolean(parsed.marketing),
+                        updated_at: parsed.updated_at || null,
+                    };
+                } catch (_) {
+                    return null;
+                }
+            }
+
+            function saveConsent(preferences) {
+                const payload = {
+                    necessary: true,
+                    analytics: Boolean(preferences.analytics),
+                    marketing: Boolean(preferences.marketing),
+                    updated_at: new Date().toISOString(),
+                };
+
+                try {
+                    window.localStorage.setItem(consentStorageKey, JSON.stringify(payload));
+                } catch (_) {}
+
+                return payload;
+            }
 
             function sanitizeEventName(name) {
                 return String(name || '')
@@ -261,22 +231,37 @@
                 };
             }
 
-            function getOrCreateSessionKey() {
-                const storageKey = 'solztt_visitor_key';
+            function getOrCreateVisitorKey() {
                 try {
-                    const existing = window.localStorage.getItem(storageKey);
+                    const existing = window.localStorage.getItem(visitorStorageKey);
                     if (existing) return existing;
                     const random = window.crypto?.randomUUID
                         ? window.crypto.randomUUID()
                         : `${Date.now()}_${Math.random().toString(36).slice(2, 12)}`;
-                    window.localStorage.setItem(storageKey, random);
+                    window.localStorage.setItem(visitorStorageKey, random);
                     return random;
                 } catch (_) {
                     return `${Date.now()}_${Math.random().toString(36).slice(2, 12)}`;
                 }
             }
 
+            function getOrCreateSessionKey() {
+                try {
+                    const existing = window.sessionStorage.getItem(sessionStorageKey);
+                    if (existing) return existing;
+                    const random = window.crypto?.randomUUID
+                        ? window.crypto.randomUUID()
+                        : `${Date.now()}_${Math.random().toString(36).slice(2, 12)}`;
+                    window.sessionStorage.setItem(sessionStorageKey, random);
+                    return random;
+                } catch (_) {
+                    return `${Date.now()}_${Math.random().toString(36).slice(2, 12)}`;
+                }
+            }
+
+            const visitorKey = getOrCreateVisitorKey();
             const sessionKey = getOrCreateSessionKey();
+            let consentState = readConsent();
 
             function sendInternalAnalytics(eventName, context = {}, payload = {}) {
                 if (!internalAnalyticsEndpoint) return;
@@ -289,9 +274,18 @@
                     page_title: context.page_title ?? document.title,
                     locale: context.locale ?? null,
                     session_key: sessionKey,
+                    visitor_id: visitorKey,
                     source: 'site',
                     referrer: document.referrer || null,
-                    payload,
+                    payload: {
+                        ...payload,
+                        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || null,
+                    },
+                    consent_preferences: {
+                        necessary: true,
+                        analytics: Boolean(consentState?.analytics),
+                        marketing: Boolean(consentState?.marketing),
+                    },
                     occurred_at: new Date().toISOString(),
                 };
 
@@ -313,7 +307,68 @@
                 }).catch(() => {});
             }
 
+            function canTrackAnalytics() {
+                return Boolean(consentState?.analytics);
+            }
+
+            function canTrackMarketing() {
+                return Boolean(consentState?.marketing);
+            }
+
+            function ensureGaLoaded() {
+                if (hasGaLoaded || !gaMeasurementId) return;
+
+                window.dataLayer = window.dataLayer || [];
+                window.gtag = window.gtag || function gtag() {
+                    window.dataLayer.push(arguments);
+                };
+
+                gtag('js', new Date());
+                gtag('config', gaMeasurementId, { send_page_view: false });
+
+                const script = document.createElement('script');
+                script.async = true;
+                script.src = `https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`;
+                document.head.appendChild(script);
+                hasGaLoaded = true;
+            }
+
+            function ensureMetaLoaded() {
+                if (hasMetaLoaded || !facebookPixelId) return;
+
+                !function(f){
+                    if (f.fbq) return;
+                    const n = f.fbq = function() {
+                        n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+                    };
+                    if (!f._fbq) f._fbq = n;
+                    n.push = n;
+                    n.loaded = true;
+                    n.version = '2.0';
+                    n.queue = [];
+                }(window);
+
+                fbq('init', facebookPixelId);
+
+                const script = document.createElement('script');
+                script.async = true;
+                script.src = 'https://connect.facebook.net/en_US/fbevents.js';
+                document.head.appendChild(script);
+                hasMetaLoaded = true;
+            }
+
+            function applyConsent() {
+                if (canTrackAnalytics()) {
+                    ensureGaLoaded();
+                }
+
+                if (canTrackMarketing()) {
+                    ensureMetaLoaded();
+                }
+            }
+
             function trackGaPageView(context) {
+                if (!canTrackAnalytics()) return;
                 if (typeof window.gtag !== 'function') return;
                 gtag('event', 'page_view', {
                     page_location: context.page_location,
@@ -323,6 +378,7 @@
             }
 
             function trackMetaPageView() {
+                if (!canTrackMarketing()) return;
                 if (typeof window.fbq !== 'function') return;
                 fbq('track', 'PageView');
             }
@@ -334,30 +390,34 @@
                 const payload = params || {};
                 const context = buildPageContext(window.location.href);
 
-                if (typeof window.gtag === 'function') {
+                if (canTrackAnalytics() && typeof window.gtag === 'function') {
                     gtag('event', safeEventName, payload);
                 }
 
-                if (typeof window.fbq === 'function') {
+                if (canTrackMarketing() && typeof window.fbq === 'function') {
                     fbq('trackCustom', safeEventName, payload);
                 }
 
-                sendInternalAnalytics(safeEventName, context, payload);
+                if (canTrackAnalytics()) {
+                    sendInternalAnalytics(safeEventName, context, payload);
+                }
             };
 
             window.trackLeadConversion = function (params) {
                 const payload = params || {};
                 const context = buildPageContext(window.location.href);
 
-                if (typeof window.gtag === 'function') {
+                if (canTrackAnalytics() && typeof window.gtag === 'function') {
                     gtag('event', 'generate_lead', payload);
                 }
 
-                if (typeof window.fbq === 'function') {
+                if (canTrackMarketing() && typeof window.fbq === 'function') {
                     fbq('track', 'Lead', payload);
                 }
 
-                sendInternalAnalytics('generate_lead', context, payload);
+                if (canTrackAnalytics()) {
+                    sendInternalAnalytics('generate_lead', context, payload);
+                }
             };
 
             function trackPage(url) {
@@ -365,23 +425,126 @@
 
                 trackGaPageView(context);
                 trackMetaPageView();
-                window.trackAnalyticsEvent('site_page_view', context);
-                window.trackAnalyticsEvent('page_' + context.page_key, context);
+                if (canTrackAnalytics()) {
+                    window.trackAnalyticsEvent('site_page_view', context);
+                    window.trackAnalyticsEvent('page_' + context.page_key, context);
+                }
+            }
+
+            function getCookieBannerElements() {
+                return {
+                    root: document.getElementById('cookie-consent-root'),
+                    banner: document.getElementById('cookie-consent-banner'),
+                    customizePanel: document.getElementById('cookie-consent-customize'),
+                    openCustomizeBtn: document.getElementById('cookie-open-customize'),
+                    acceptAllBtn: document.getElementById('cookie-accept-all'),
+                    rejectOptionalBtn: document.getElementById('cookie-reject-optional'),
+                    saveBtn: document.getElementById('cookie-save-preferences'),
+                    analyticsCheckbox: document.getElementById('cookie-opt-analytics'),
+                    marketingCheckbox: document.getElementById('cookie-opt-marketing'),
+                };
+            }
+
+            function setConsentUI(consent) {
+                const { analyticsCheckbox, marketingCheckbox } = getCookieBannerElements();
+                if (!analyticsCheckbox || !marketingCheckbox) return;
+
+                analyticsCheckbox.checked = Boolean(consent.analytics);
+                marketingCheckbox.checked = Boolean(consent.marketing);
+            }
+
+            function hideConsentBanner() {
+                const { root } = getCookieBannerElements();
+                if (root) {
+                    root.style.display = 'none';
+                }
+            }
+
+            function applyAndPersistConsent(nextConsent) {
+                consentState = saveConsent(nextConsent);
+                applyConsent();
+                hideConsentBanner();
+
+                sendInternalAnalytics(
+                    'consent_preferences_updated',
+                    buildPageContext(window.location.href),
+                    {
+                        analytics: Boolean(consentState?.analytics),
+                        marketing: Boolean(consentState?.marketing),
+                    }
+                );
+
+                if (canTrackAnalytics()) {
+                    trackPage(window.location.href);
+                    lastTrackedUrl = window.location.href;
+                }
+            }
+
+            function initCookieConsent() {
+                const elements = getCookieBannerElements();
+                if (!elements.root) return;
+
+                if (consentState) {
+                    setConsentUI(consentState);
+                    applyConsent();
+                    hideConsentBanner();
+                    return;
+                }
+
+                elements.root.style.display = 'block';
+                setConsentUI({ analytics: false, marketing: false });
+
+                elements.openCustomizeBtn?.addEventListener('click', function () {
+                    const isVisible = elements.customizePanel?.classList.contains('is-visible');
+                    if (elements.customizePanel) {
+                        elements.customizePanel.classList.toggle('is-visible', !isVisible);
+                    }
+                });
+
+                elements.acceptAllBtn?.addEventListener('click', function () {
+                    applyAndPersistConsent({ analytics: true, marketing: true });
+                });
+
+                elements.rejectOptionalBtn?.addEventListener('click', function () {
+                    applyAndPersistConsent({ analytics: false, marketing: false });
+                });
+
+                elements.saveBtn?.addEventListener('click', function () {
+                    applyAndPersistConsent({
+                        analytics: Boolean(elements.analyticsCheckbox?.checked),
+                        marketing: Boolean(elements.marketingCheckbox?.checked),
+                    });
+                });
             }
 
             let lastTrackedUrl = window.location.href;
-            trackPage(lastTrackedUrl);
 
-            document.addEventListener('inertia:navigate', function (event) {
-                const nextUrl = event?.detail?.page?.url
-                    ? new URL(event.detail.page.url, window.location.origin).href
-                    : window.location.href;
+            function bootAnalytics() {
+                initCookieConsent();
 
-                if (nextUrl === lastTrackedUrl) return;
+                if (canTrackAnalytics()) {
+                    trackPage(lastTrackedUrl);
+                }
 
-                lastTrackedUrl = nextUrl;
-                trackPage(nextUrl);
-            });
+                document.addEventListener('inertia:navigate', function (event) {
+                    const nextUrl = event?.detail?.page?.url
+                        ? new URL(event.detail.page.url, window.location.origin).href
+                        : window.location.href;
+
+                    if (nextUrl === lastTrackedUrl) return;
+
+                    lastTrackedUrl = nextUrl;
+                    if (canTrackAnalytics()) {
+                        trackPage(nextUrl);
+                    }
+                });
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', bootAnalytics, { once: true });
+            } else {
+                bootAnalytics();
+            }
         </script>
     @endif
 
@@ -413,10 +576,161 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
+
+        #cookie-consent-root {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 70;
+            display: none;
+            padding: 16px;
+        }
+
+        #cookie-consent-banner {
+            max-width: 860px;
+            margin: 0 auto;
+            background: rgba(250, 250, 250, 0.98);
+            backdrop-filter: blur(8px);
+            border: 1px solid #e4e4e4;
+            border-radius: 16px;
+            box-shadow: 0 18px 45px rgba(15, 15, 15, 0.12);
+            padding: 18px;
+            font-family: 'Merriweather', serif;
+            color: #242424;
+        }
+
+        .cookie-consent-title {
+            margin: 0;
+            font-size: 0.95rem;
+            font-weight: 700;
+            font-family: 'Lora', serif;
+            letter-spacing: 0.01em;
+        }
+
+        .cookie-consent-text {
+            margin: 10px 0 0;
+            font-size: 0.82rem;
+            line-height: 1.6;
+            color: #4f4f4f;
+        }
+
+        .cookie-consent-actions {
+            margin-top: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        #cookie-consent-banner .cookie-btn {
+            border: 1px solid #cfcfcf;
+            background: #fff;
+            color: #222;
+            border-radius: 10px;
+            padding: 9px 13px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        #cookie-consent-banner .cookie-btn:hover {
+            border-color: #b9b9b9;
+            background: #f7f7f7;
+        }
+
+        #cookie-consent-banner .cookie-btn:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(45, 45, 45, 0.2);
+        }
+
+        #cookie-consent-banner .cookie-btn-primary {
+            background: #111111;
+            color: #ffffff;
+            border-color: #111111;
+            box-shadow: 0 6px 18px rgba(10, 10, 10, 0.22);
+        }
+
+        #cookie-consent-banner .cookie-btn-primary:hover {
+            background: #1d1d1d;
+            border-color: #1d1d1d;
+        }
+
+        #cookie-consent-customize {
+            display: none;
+            margin-top: 12px;
+            border-top: 1px solid #e6e6e6;
+            padding-top: 12px;
+        }
+
+        #cookie-consent-customize.is-visible {
+            display: block;
+        }
+
+        .cookie-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: #3f3f3f;
+        }
+
+        .cookie-option input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #1f1f1f;
+        }
+
+        @media (max-width: 640px) {
+            #cookie-consent-root {
+                padding: 10px;
+            }
+
+            #cookie-consent-banner {
+                padding: 12px;
+            }
+
+            #cookie-consent-banner .cookie-btn {
+                flex: 1 1 calc(50% - 8px);
+                text-align: center;
+            }
+        }
     </style>
 </head>
 
 <body class="antialiased">
+    @if($analyticsEnabledForRuntime && !$isAdminPath)
+        <div id="cookie-consent-root" role="dialog" aria-live="polite" aria-label="Cookie consent">
+            <div id="cookie-consent-banner">
+                <p class="cookie-consent-title">Privacidade e Cookies</p>
+                <p class="cookie-consent-text">
+                    Utilizamos cookies necessários para o funcionamento do site e, com sua permissão, cookies de analytics e marketing para entender origem de acesso, IP, navegador, dispositivo e melhorar conversões.
+                </p>
+
+                <div class="cookie-consent-actions">
+                    <button id="cookie-accept-all" type="button" class="cookie-btn cookie-btn-primary">Aceitar tudo</button>
+                    <button id="cookie-reject-optional" type="button" class="cookie-btn">Recusar opcionais</button>
+                    <button id="cookie-open-customize" type="button" class="cookie-btn">Personalizar</button>
+                </div>
+
+                <div id="cookie-consent-customize">
+                    <label class="cookie-option">
+                        <span>Cookies de analytics (país, cidade, horário, recorrência)</span>
+                        <input id="cookie-opt-analytics" type="checkbox">
+                    </label>
+                    <label class="cookie-option">
+                        <span>Cookies de marketing (pixel e campanhas)</span>
+                        <input id="cookie-opt-marketing" type="checkbox">
+                    </label>
+                    <div class="cookie-consent-actions">
+                        <button id="cookie-save-preferences" type="button" class="cookie-btn cookie-btn-primary">Salvar preferências</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
     @inertia
 </body>
 

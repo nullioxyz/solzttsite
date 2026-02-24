@@ -20,6 +20,7 @@ import Warning from '@/Components/Alerts/Warning';
 
 const navigation = [
   { name: 'Dashboard', routeName: 'dashboard', match: 'dashboard', icon: HomeIcon },
+  { name: 'Analytics', routeName: 'analytics.index', match: 'analytics.*', icon: ChartBarSquareIcon },
   { name: 'Institutional', routeName: 'institucional.index', match: 'institucional.*', icon: BuildingOffice2Icon },
   { name: 'Categories', routeName: 'category.index', match: 'category.*', icon: FolderIcon },
   { name: 'Portfolio', routeName: 'portfolio.index', match: 'portfolio.*', icon: BriefcaseIcon },
@@ -79,6 +80,7 @@ export default function Authenticated({ user, header, children }) {
     const [prefix, action] = currentRouteName.split('.');
     const sectionMap = {
       dashboard: 'Dashboard',
+      analytics: 'Analytics',
       institucional: 'Institutional',
       category: 'Categories',
       portfolio: 'Portfolio',

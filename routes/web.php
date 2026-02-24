@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\PortfolioController;
 use App\Http\Controllers\Admin\ContactRequestController;
 use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\Admin\SocialController;
+use App\Http\Controllers\Admin\AnalyticsController as AdminAnalyticsController;
 use App\Http\Controllers\Site\AfterCareController;
 use App\Http\Controllers\Site\AnalyticsController;
 use App\Http\Controllers\Site\AvailableController as SiteAvailableController;
@@ -44,7 +45,7 @@ Route::prefix('/')->group(function() {
 });
 
 Route::post('/analytics/collect', [AnalyticsController::class, 'collect'])
-    ->middleware(['signed', 'throttle:120,1'])
+    ->middleware(['signed:relative', 'throttle:120,1'])
     ->name('analytics.collect');
 
 Route::middleware(['lang'])->prefix('/{locale}')->where(['locale' => '[a-z]{2}'])->group(function() {
@@ -87,6 +88,8 @@ Route::prefix('hall-of-justice')->group(function() {
 
     Route::middleware('auth')->group(function () {
         Route::get('/dashboard/metrics', [DashboardController::class, 'metrics'])->name('dashboard.metrics');
+        Route::get('/analytics', [AdminAnalyticsController::class, 'index'])->name('analytics.index');
+        Route::get('/analytics/metrics', [AdminAnalyticsController::class, 'metrics'])->name('analytics.metrics');
 
         Route::prefix('site-settings')->group(function() {
             Route::get('/', [SiteSettingController::class, 'index'])->name('site.setting.index');
