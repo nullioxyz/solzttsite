@@ -33,7 +33,7 @@ class TranslationController extends Controller
      */
     public function getTranslations()
     {
-        $locale = $this->resolveLocale(Cookie::get('locale') ?? App::getLocale());
+        $locale = $this->resolveLocale(App::getLocale() ?: Cookie::get('locale'));
         
         $filePath = resource_path("lang/{$locale}/site.php");
         
@@ -69,7 +69,7 @@ class TranslationController extends Controller
     public function getCurrentTranslation()
     {
         return response()->json([
-            'lang' => $this->resolveLocale(Cookie::get('locale') ?? App::getLocale()),
+            'lang' => $this->resolveLocale(App::getLocale() ?: Cookie::get('locale')),
         ]);
     }
 }

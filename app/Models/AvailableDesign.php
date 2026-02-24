@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\App;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -51,7 +51,7 @@ class AvailableDesign extends Model implements HasMedia
 
     public function translation()
     {
-        $locale = Cookie::get('locale');;
+        $locale = App::getLocale();
 
         return $this->hasOne(AvailableDesignLang::class, 'available_design_id')
             ->whereHas('language', function ($query) use ($locale) {

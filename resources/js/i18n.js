@@ -8,15 +8,24 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
+    supportedLngs: ['pt', 'it', 'en'],
     fallbackLng: 'en',
     debug: false,
+    load: 'languageOnly',
+    nonExplicitSupportedLngs: true,
 
     interpolation: {
       escapeValue: false,
     },
 
+    detection: {
+      order: ['path', 'htmlTag', 'cookie', 'navigator'],
+      lookupFromPathIndex: 0,
+      caches: [],
+    },
+
     backend: {
-      loadPath: '/pt/translations',
+      loadPath: '/{{lng}}/translations',
     },
   });
 

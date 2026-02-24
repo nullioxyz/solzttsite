@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\App;
 
 class SiteSetting extends Model
 {
@@ -39,7 +39,7 @@ class SiteSetting extends Model
 
     public function translation()
     {
-        $locale = Cookie::get('locale');
+        $locale = App::getLocale();
 
         return $this->hasOne(SiteSettingLang::class, 'site_setting_id')
             ->whereHas('language', function ($query) use ($locale) {

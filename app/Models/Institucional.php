@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\ContentType;
 use App\Models\Traits\MediaConvertions;
 use App\Traits\SlugModelSettings;
-use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\App;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Sluggable\HasSlug;
@@ -64,7 +64,7 @@ class Institucional extends Model implements HasMedia
 
     public function translation()
     {
-        $locale = Cookie::get('locale');
+        $locale = App::getLocale();
 
         return $this->hasOne(InstitucionalLang::class, 'institucional_id')
             ->whereHas('language', function ($query) use ($locale) {

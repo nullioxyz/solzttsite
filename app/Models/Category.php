@@ -6,7 +6,7 @@ use App\Traits\SlugModelSettings;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\App;
 use Spatie\Sluggable\HasSlug;
 
 class Category extends Model
@@ -39,7 +39,7 @@ class Category extends Model
 
     public function translation()
     {
-        $locale = Cookie::get('locale');
+        $locale = App::getLocale();
 
         return $this->hasOne(CategoryLang::class, 'category_id')
             ->whereHas('language', function ($query) use ($locale) {
