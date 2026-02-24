@@ -125,4 +125,15 @@ return [
     "Tattoo Aftercare" => "Pós-Tatuagem",
 
     'back' => 'Voltar',
+
+    // cookie consent
+    'cookie_consent_aria' => 'Consentimento de cookies',
+    'cookie_consent_title' => 'Privacidade e Cookies',
+    'cookie_consent_description' => 'Utilizamos cookies necessários para o funcionamento do site e, com sua permissão, cookies de analytics e marketing para entender origem de acesso, IP, navegador, dispositivo e melhorar conversões.',
+    'cookie_consent_accept' => 'Aceitar tudo',
+    'cookie_consent_reject' => 'Recusar opcionais',
+    'cookie_consent_customize' => 'Personalizar',
+    'cookie_consent_analytics' => 'Cookies de analytics (país, cidade, horário, recorrência)',
+    'cookie_consent_marketing' => 'Cookies de marketing (pixel e campanhas)',
+    'cookie_consent_save' => 'Salvar preferências',
 ];

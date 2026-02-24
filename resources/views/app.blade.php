@@ -702,30 +702,30 @@
 
 <body class="antialiased">
     @if($analyticsEnabledForRuntime && !$isAdminPath)
-        <div id="cookie-consent-root" role="dialog" aria-live="polite" aria-label="Cookie consent">
+        <div id="cookie-consent-root" role="dialog" aria-live="polite" aria-label="{{ __('site.cookie_consent_aria') }}">
             <div id="cookie-consent-banner">
-                <p class="cookie-consent-title">Privacidade e Cookies</p>
+                <p class="cookie-consent-title">{{ __('site.cookie_consent_title') }}</p>
                 <p class="cookie-consent-text">
-                    Utilizamos cookies necessários para o funcionamento do site e, com sua permissão, cookies de analytics e marketing para entender origem de acesso, IP, navegador, dispositivo e melhorar conversões.
+                    {{ __('site.cookie_consent_description') }}
                 </p>
 
                 <div class="cookie-consent-actions">
-                    <button id="cookie-accept-all" type="button" class="cookie-btn cookie-btn-primary">Aceitar tudo</button>
-                    <button id="cookie-reject-optional" type="button" class="cookie-btn">Recusar opcionais</button>
-                    <button id="cookie-open-customize" type="button" class="cookie-btn">Personalizar</button>
+                    <button id="cookie-accept-all" type="button" class="cookie-btn cookie-btn-primary">{{ __('site.cookie_consent_accept') }}</button>
+                    <button id="cookie-reject-optional" type="button" class="cookie-btn">{{ __('site.cookie_consent_reject') }}</button>
+                    <button id="cookie-open-customize" type="button" class="cookie-btn">{{ __('site.cookie_consent_customize') }}</button>
                 </div>
 
                 <div id="cookie-consent-customize">
                     <label class="cookie-option">
-                        <span>Cookies de analytics (país, cidade, horário, recorrência)</span>
+                        <span>{{ __('site.cookie_consent_analytics') }}</span>
                         <input id="cookie-opt-analytics" type="checkbox">
                     </label>
                     <label class="cookie-option">
-                        <span>Cookies de marketing (pixel e campanhas)</span>
+                        <span>{{ __('site.cookie_consent_marketing') }}</span>
                         <input id="cookie-opt-marketing" type="checkbox">
                     </label>
                     <div class="cookie-consent-actions">
-                        <button id="cookie-save-preferences" type="button" class="cookie-btn cookie-btn-primary">Salvar preferências</button>
+                        <button id="cookie-save-preferences" type="button" class="cookie-btn cookie-btn-primary">{{ __('site.cookie_consent_save') }}</button>
                     </div>
                 </div>
             </div>

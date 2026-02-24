@@ -130,5 +130,16 @@ return [
     "You can only upload up to 5 files" => 'You can only upload up to 5 files',
     
     "Tattoo Aftercare" => "Tattoo Aftercare",
-    'back' => 'Back'
+    'back' => 'Back',
+
+    // cookie consent
+    'cookie_consent_aria' => 'Cookie consent',
+    'cookie_consent_title' => 'Privacy and Cookies',
+    'cookie_consent_description' => 'We use necessary cookies for site operation and, with your permission, analytics and marketing cookies to understand traffic source, IP, browser, device and improve conversions.',
+    'cookie_consent_accept' => 'Accept all',
+    'cookie_consent_reject' => 'Reject optional',
+    'cookie_consent_customize' => 'Customize',
+    'cookie_consent_analytics' => 'Analytics cookies (country, city, access time, recurrence)',
+    'cookie_consent_marketing' => 'Marketing cookies (pixel and campaigns)',
+    'cookie_consent_save' => 'Save preferences'
 ];
