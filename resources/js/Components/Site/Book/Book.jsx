@@ -8,10 +8,11 @@ export default function Book({ consideration, currentLanguage }) {
   const [loaded, setLoaded] = useState(false);
 
   const { t } = useTranslation();
-  
-  const considerationTranslation = consideration.translation ?? consideration.default_translation;
 
-  const hasMedia = consideration.media.length > 0;
+  const considerationTranslation =
+    consideration?.translation ?? consideration?.default_translation ?? {};
+  const mediaItems = Array.isArray(consideration?.media) ? consideration.media : [];
+  const hasMedia = mediaItems.length > 0;
 
   return (
     <section id="book" className="flex flex-col justify-between h-auto mx-auto">
@@ -22,7 +23,7 @@ export default function Book({ consideration, currentLanguage }) {
           )}
           <picture className="w-full">
             <img
-              src={fileUrl(consideration.media[0].uuid, { locale: 'lang', size: 'lg' })} 
+              src={fileUrl(mediaItems[0]?.uuid, { locale: 'lang', size: 'lg' })}
               alt={considerationTranslation.title || 'image'}
               loading="lazy"
               decoding="async"

@@ -41,7 +41,14 @@
                     ?? ''
                     ) }}">
 
-        <meta property="og:image" content="{{ isset($page['props']['metaImage']['media']) && $page['props']['metaImage']['media']['0']['uuid'] ? route('file.index', ['locale' => $page['props']['currentLanguage']['slug'], 'uuid' => $page['props']['metaImage']['media']['0']['uuid']]) : asset('images/logo.jpg') }}">
+        @php
+            $metaImageUuid = data_get($page, 'props.metaImage.media.0.uuid');
+            $metaImageLocale = data_get($page, 'props.currentLanguage.slug', app()->getLocale());
+            $metaImageUrl = $metaImageUuid
+                ? route('file.index', ['locale' => $metaImageLocale, 'uuid' => $metaImageUuid])
+                : asset('images/logo.jpg');
+        @endphp
+        <meta property="og:image" content="{{ $metaImageUrl }}">
         <meta property="og:url" content="{{ url()->current() }}">
         <meta property="og:type" content="website">
 
@@ -62,7 +69,7 @@
                     ?? ''
                     ) }}">
 
-        <meta name="twitter:image" content="{{ isset($page['props']['metaImage']['media']) && $page['props']['metaImage']['media']['0']['uuid'] ? route('file.index', ['locale' => $page['props']['currentLanguage']['slug'], 'uuid' => $page['props']['metaImage']['media']['0']['uuid']]) : asset('images/logo.jpg') }}">
+        <meta name="twitter:image" content="{{ $metaImageUrl }}">
 
         <link rel="canonical" href="{{ url()->current() }}">
     @endif

@@ -74,6 +74,7 @@ export default function Form({ currentLanguage, considerationTranslation }) {
   const [countryPhone, setCountryPhone] = useState('us');
 
   const { t } = useTranslation();
+  const considerationDescription = considerationTranslation?.description ?? "";
 
   const { selectedReferences, setSelectedReferences } = useSelectReferences();
 
@@ -202,7 +203,7 @@ export default function Form({ currentLanguage, considerationTranslation }) {
       <form id="contactForm" onSubmit={(e) => formSubmit(e)} encType="multipart/form-data">
         <div className="xl:w-[1240px] lg:w-[1240px] mx-auto space-y-6">
           
-          <div className="text-xl text-[#4d4c4c]" dangerouslySetInnerHTML={{ __html: considerationTranslation.description }} />
+          <div className="text-xl text-[#4d4c4c]" dangerouslySetInnerHTML={{ __html: considerationDescription }} />
   
           <div className="space-y-3">
             <label className="block text-md text-[#4d4c4c]">{t("Name")}</label>
