@@ -28,20 +28,25 @@ export default function Works({ currentLanguage, initialPortfolio }) {
   const resolvedLocale = currentLanguage?.slug ?? window.location.pathname.split('/').filter(Boolean)[0] ?? 'en';
 
   const handlePortfolio = async (page = null) => {
+    const currentPage = Number(pagination.current_page ?? 1);
+    const lastPage = Number(pagination.last_page ?? 1);
+    const requestedPage = page !== null ? Number(page) : currentPage + 1;
+
+    if (!Number.isFinite(requestedPage) || requestedPage < 1 || requestedPage > lastPage) {
+      return;
+    }
+
     setLoadingMore(true);
 
     try {
-      const hasNextPage = Boolean(pagination.next_page_url);
-      const url =
-        page !== null
-          ? route("site.portfolio.load", { locale: resolvedLocale, page })
-          : hasNextPage
-            ? pagination.next_page_url
-            : route("site.portfolio.load", { locale: resolvedLocale, page: pagination.current_page ?? 1 });
+      const url = route("site.portfolio.load", {
+        locale: resolvedLocale,
+        page: requestedPage,
+      });
 
       const response = await axios.get(url);
 
-      if (response.data) {
+      if (response.data?.portfolio) {
         const {
           data,
           first_page,
@@ -74,6 +79,8 @@ export default function Works({ currentLanguage, initialPortfolio }) {
             preserveState: true,
           }
         );
+      } else {
+        throw new Error("Invalid portfolio response shape");
       }
     } catch (error) {
       console.error("Failed to fetch portfolio data:", error);

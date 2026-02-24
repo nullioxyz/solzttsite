@@ -28,17 +28,25 @@ export default function AvailableDesign({ currentLanguage, initialDesigns }) {
   const initialPage = Number(new URLSearchParams(window.location.search).get("page") || 1);
 
   const handleDesigns = async (page = null) => {
+    const currentPage = Number(pagination.current_page ?? 1);
+    const lastPage = Number(pagination.last_page ?? 1);
+    const requestedPage = page !== null ? Number(page) : currentPage + 1;
+
+    if (!Number.isFinite(requestedPage) || requestedPage < 1 || requestedPage > lastPage) {
+      return;
+    }
+
     setLoadingMore(true);
     
     try {
-      const url =
-        page !== null
-          ? route("site.available_designs.load", { locale: resolvedLocale, page })
-          : pagination.next_page_url ?? route("site.available_designs.load", { locale: resolvedLocale, page: pagination.current_page ?? 1 });
+      const url = route("site.available_designs.load", {
+        locale: resolvedLocale,
+        page: requestedPage,
+      });
 
       const response = await axios.get(url);
 
-      if (response.data) {
+      if (response.data?.designs) {
         const { data, first_page, current_page, last_page, next_page_url } = response.data.designs;
         const { currentLang } = response.data;
 
@@ -67,6 +75,8 @@ export default function AvailableDesign({ currentLanguage, initialDesigns }) {
             preserveState: true,
           }
         );
+      } else {
+        throw new Error("Invalid available designs response shape");
       }
     } catch (error) {
       console.error("Error fetching designs:", error);
