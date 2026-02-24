@@ -13,6 +13,7 @@ import Attachments from "../Components/Attachments/Index";
 import axios from '@/Services/requests'
 import { FiX } from 'react-icons/fi';
 import confetti from "canvas-confetti";
+import DOMPurify from 'dompurify';
 import { trackActionEvent, trackLeadConversion } from '@/helpers/tracking';
 
 var count = 200;
@@ -124,6 +125,7 @@ export default function Form({ currentLanguage, considerationTranslation, hcaptc
 
   const sizeOptions = t('sizes', { returnObjects: true });
   const pronounsOpt = t('pronouns_opt', { returnObjects: true });
+  const sanitizedConsiderationDescription = DOMPurify.sanitize(considerationTranslation?.description || '');
 
   const contactOptions = [
     { id: 'whatsapp', value: 'WhatsApp', label: 'WhatsApp' },
@@ -208,7 +210,7 @@ export default function Form({ currentLanguage, considerationTranslation, hcaptc
       <form id="contactForm" onSubmit={(e) => formSubmit(e)} encType="multipart/form-data">
         <div className="xl:w-[1240px] lg:w-[1240px] mx-auto space-y-6">
           
-          <div className="text-xl text-[#4d4c4c]" dangerouslySetInnerHTML={{ __html: considerationDescription }} />
+          <div className="text-xl text-[#4d4c4c]" dangerouslySetInnerHTML={{ __html: sanitizedConsiderationDescription }} />
   
           <div className="space-y-3">
             <label className="block text-md text-[#4d4c4c]">{t("Name")}</label>

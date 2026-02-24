@@ -23,7 +23,9 @@ export default function AvailableDesignHome({ currentLanguage }) {
     setLoadingMore(true);
     
     try {
-      const response = await axios.get(pagination.next_page_url ?? route('site.available_designs.load', 'lang'));
+      const response = await axios.get(
+        pagination.next_page_url ?? route('site.available_designs.load', { locale: currentLanguage.slug })
+      );
       
       if (response.data) {
         const { data, first_page, current_page, last_page, next_page_url } = response.data.designs;
@@ -81,7 +83,7 @@ export default function AvailableDesignHome({ currentLanguage }) {
     handleAddAsReference(item);
     
     setTimeout(() => {
-      router.visit(route('site.contact', 'lang'));
+      router.visit(route('site.contact', { locale: currentLanguage.slug }));
     }, 3000)
   }
 
@@ -104,7 +106,7 @@ export default function AvailableDesignHome({ currentLanguage }) {
                 book={false}
                 title={item.translation ? item.translation.title : item.default_translation.title}
                 description={item.translation ? item.translation.description : item.default_translation.description}
-                coverImage={route('file.index', {locale: 'lang', uuid: item.media[0].uuid})}
+                coverImage={item.media[0].uuid}
                 images={item.media}
                 onAddReference={() => handleAddAsReference(item)}
                 onBookNow={() => handleBookNow(item)}

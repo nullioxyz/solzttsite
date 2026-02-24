@@ -10,7 +10,7 @@ use App\Models\SiteSetting;
 use App\Models\Social;
 use App\Traits\PaginationTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\App;
 use Inertia\Inertia;
 
 class AvailableController extends Controller
@@ -18,7 +18,7 @@ class AvailableController extends Controller
     use PaginationTrait;
 
     const PER_PAGE_HOME = 8;
-    const PER_PAGE_INTERNAL = 12;
+    const PER_PAGE_INTERNAL = 9;
 
     public function index(Request $request)
     {
@@ -34,6 +34,18 @@ class AvailableController extends Controller
         $social['facebook'] = $socials->get('facebook');
 
         $metatags = SiteSetting::with(['defaultTranslation.language', 'translation.language'])->where('id', 1)->first();
+        $designs = AvailableDesign::with([
+            'media' => function($query) {
+                $query->orderBy('order_column', 'asc');
+            },
+            'defaultTranslation',
+            'translation'
+        ])->whereHas('media', function($query) {
+            $query->orderBy('order_column', 'asc');
+        })
+        ->active()
+        ->orderBy("order", "asc")
+        ->paginate($this->perPage($request));
         
         return Inertia::render('Site/AvailableDesign/Index', [
             'languages' => $availableLangs,
@@ -42,7 +54,8 @@ class AvailableController extends Controller
             'metatags' => $metatags,
             'metaImage' => $metaImage,
             'meta_title' => trans('site.available'),
-            'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? $defaultLang,
+            'currentLanguage' => Language::where('slug', App::getLocale())->first() ?? $defaultLang,
+            'designs' => $designs,
         ]);
     }  
 
@@ -84,7 +97,7 @@ class AvailableController extends Controller
             'metatags' => $metatags,
             'meta_title' => $title,
             'meta_description' => $description,
-            'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? $defaultLang,
+            'currentLanguage' => Language::where('slug', App::getLocale())->first() ?? $defaultLang,
             'availableDesign' => $availableDesign,
             'metaImage' => $availableDesign,
         ]);
@@ -112,7 +125,7 @@ class AvailableController extends Controller
 
         return response()->json([
             'designs' => $designs,
-            'currentLang' => Language::where('slug', Cookie::get('locale'))->first() ?? $defaultLang,
+            'currentLang' => Language::where('slug', App::getLocale())->first() ?? $defaultLang,
         ]);
     }
 

@@ -19,6 +19,11 @@ function InertiaAppWrapper({ App, props }) {
 }
 
 createInertiaApp({
+  title: (title) => {
+    const base = 'Solztt';
+    if (!title) return base;
+    return title.includes(base) ? title : `${title} | ${base}`;
+  },
   resolve: (name) => resolvePageComponent(`./Pages/${name}.jsx`, import.meta.glob('./Pages/**/*.jsx')),
   setup({ el, App, props }) {
     if (!root) {

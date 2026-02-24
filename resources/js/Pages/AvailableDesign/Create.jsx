@@ -11,7 +11,7 @@ export default function Create({ auth, languages, translationFields, translation
             user={auth.user}
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Create portfolio</h2>}
         >
-            <Head title="Portfolio" />
+            <Head title="Available Design" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">

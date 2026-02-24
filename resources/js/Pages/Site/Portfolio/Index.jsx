@@ -25,7 +25,7 @@ export default function Index({
     <MainLayout languages={languages} defaultLang={defaultLang} social={social} metatags={metatags} currentLanguage={currentLanguage} metaImage={metaImage}>
         <Suspense fallback={<Spinner />}>
           <Works
-            portfolio={portfolio}
+            initialPortfolio={portfolio}
             institucional={institucional}
             appointmentTexts={appointmentTexts}
             appointmentWarning={appointmentWarning}

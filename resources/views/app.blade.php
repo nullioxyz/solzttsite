@@ -1,99 +1,145 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', request()->cookie('locale') ?? app()->getLocale()) }}">
 
+@php
+    $siteName = config('app.name', 'Solztt');
+    $isAdminPath = request()->is('hall-of-justice') || request()->is('hall-of-justice/*');
+
+    $metaTitle = data_get($page, 'props.meta_title')
+        ?? data_get($page, 'props.metatags.translation.title')
+        ?? data_get($page, 'props.metatags.default_translation.title')
+        ?? $siteName;
+
+    $metaDescription = strip_tags(
+        data_get($page, 'props.meta_description')
+            ?? data_get($page, 'props.metatags.translation.description')
+            ?? data_get($page, 'props.metatags.default_translation.description')
+            ?? $siteName
+    );
+
+    $metaKeywords = data_get($page, 'props.metatags.translation.keywords')
+        ?? data_get($page, 'props.metatags.default_translation.keywords')
+        ?? '';
+
+    $titleWithBrand = $metaTitle === $siteName ? $siteName : $metaTitle . ' | ' . $siteName;
+    $canonicalUrl = url()->current();
+
+    $metaImageUuid = data_get($page, 'props.metaImage.media.0.uuid');
+    $metaImageLocale = data_get($page, 'props.currentLanguage.slug', app()->getLocale());
+    $metaImageUrl = $metaImageUuid
+        ? route('file.index', ['locale' => $metaImageLocale, 'uuid' => $metaImageUuid])
+        : asset('images/logo.jpg');
+
+    $robotsContent = $isAdminPath ? 'noindex,nofollow' : 'index,follow';
+
+    $languages = collect(data_get($page, 'props.languages', []))
+        ->pluck('slug')
+        ->filter()
+        ->values();
+
+    $defaultLocale = data_get(
+        collect(data_get($page, 'props.languages', []))->firstWhere('default', 1),
+        'slug',
+        config('app.fallback_locale', 'en')
+    );
+
+    $segments = request()->segments();
+    $hasLocalePrefix = isset($segments[0]) && $languages->contains($segments[0]);
+    $queryString = request()->getQueryString();
+
+    $analyticsCollectUrl = app()->environment('production')
+        ? \Illuminate\Support\Facades\URL::temporarySignedRoute('analytics.collect', now()->addHours(12))
+        : route('analytics.collect');
+    $isContactPage = request()->is('*/contact');
+    $isPortfolioPage = request()->is('*/portfolio');
+    $isAvailableDesignPage = request()->is('*/available-designs');
+    $portfolioLcpUuid = data_get($page, 'props.portfolio.data.0.media.0.uuid');
+    $portfolioLcpLocale = data_get($page, 'props.currentLanguage.slug', app()->getLocale());
+    $portfolioLcpImage = ($isPortfolioPage && $portfolioLcpUuid)
+        ? route('file.index', ['locale' => $portfolioLcpLocale, 'uuid' => $portfolioLcpUuid, 'size' => 'md', 'format' => 'webp'])
+        : null;
+    $availableDesignLcpUuid = data_get($page, 'props.designs.data.0.media.0.uuid');
+    $availableDesignLcpLocale = data_get($page, 'props.currentLanguage.slug', app()->getLocale());
+    $availableDesignLcpImage = ($isAvailableDesignPage && $availableDesignLcpUuid)
+        ? route('file.index', ['locale' => $availableDesignLcpLocale, 'uuid' => $availableDesignLcpUuid, 'size' => 'md', 'format' => 'webp'])
+        : null;
+@endphp
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    @if(isset($page['props']['metatags']))
-        <title>{{ isset($page['props']['meta_title']) 
-                ? $page['props']['meta_title'].' | '.config('app.name') 
-                : (($page['props']['metatags']['translation']['title'] 
-                    ?? $page['props']['metatags']['default_translation']['title'] 
-                    ?? config('app.name'))) }}</title>
+    <title inertia>{{ $titleWithBrand }}</title>
+    <meta name="description" content="{{ $metaDescription }}">
+    @if(!empty($metaKeywords))
+        <meta name="keywords" content="{{ $metaKeywords }}">
+    @endif
+    <meta name="robots" content="{{ $robotsContent }}">
 
-        <meta name="description" content="{{ isset($page['props']['meta_description']) 
-                ? strip_tags($page['props']['meta_description']) 
-                : strip_tags(
-                    $page['props']['metatags']['translation']['description'] 
-                    ?? $page['props']['metatags']['default_translation']['description'] 
-                    ?? ''
-                    ) }}">
+    <meta property="og:site_name" content="{{ $siteName }}">
+    <meta property="og:title" content="{{ $titleWithBrand }}">
+    <meta property="og:description" content="{{ $metaDescription }}">
+    <meta property="og:image" content="{{ $metaImageUrl }}">
+    <meta property="og:url" content="{{ $canonicalUrl }}">
+    <meta property="og:type" content="website">
 
-        <meta name="keywords" content="{{ $page['props']['metatags']['translation']['keywords'] ?? $page['props']['metatags']['default_translation']['keywords'] ?? '' }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $titleWithBrand }}">
+    <meta name="twitter:description" content="{{ $metaDescription }}">
+    <meta name="twitter:image" content="{{ $metaImageUrl }}">
 
-        {{-- Open Graph --}}
-        <meta property="og:title" 
-            content="{{ isset($page['props']['meta_title']) 
-                ? $page['props']['meta_title'].' | '.config('app.name') 
-                : (($page['props']['metatags']['translation']['title'] 
-                    ?? $page['props']['metatags']['default_translation']['title'] 
-                    ?? config('app.name'))
-                    .' | '.config('app.name')) }}">
-
-
-        <meta property="og:description" 
-            content="{{ isset($page['props']['meta_description']) 
-                ? strip_tags($page['props']['meta_description']) 
-                : strip_tags(
-                    $page['props']['metatags']['translation']['description'] 
-                    ?? $page['props']['metatags']['default_translation']['description'] 
-                    ?? ''
-                    ) }}">
-
-        @php
-            $metaImageUuid = data_get($page, 'props.metaImage.media.0.uuid');
-            $metaImageLocale = data_get($page, 'props.currentLanguage.slug', app()->getLocale());
-            $metaImageUrl = $metaImageUuid
-                ? route('file.index', ['locale' => $metaImageLocale, 'uuid' => $metaImageUuid])
-                : asset('images/logo.jpg');
-        @endphp
-        <meta property="og:image" content="{{ $metaImageUrl }}">
-        <meta property="og:url" content="{{ url()->current() }}">
-        <meta property="og:type" content="website">
-
-        {{-- Twitter Card --}}
-        <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="{{ isset($page['props']['meta_title']) 
-                ? $page['props']['meta_title'].' | '.config('app.name') 
-                : (($page['props']['metatags']['translation']['title'] 
-                    ?? $page['props']['metatags']['default_translation']['title'] 
-                    ?? config('app.name'))
-                    .' | '.config('app.name')) }}">
-                    
-        <meta name="twitter:description" content="{{ isset($page['props']['meta_description']) 
-                ? strip_tags($page['props']['meta_description']) 
-                : strip_tags(
-                    $page['props']['metatags']['translation']['description'] 
-                    ?? $page['props']['metatags']['default_translation']['description'] 
-                    ?? ''
-                    ) }}">
-
-        <meta name="twitter:image" content="{{ $metaImageUrl }}">
-
-        <link rel="canonical" href="{{ url()->current() }}">
-    @else
-        <title>{{ config('app.name') }}</title>
-        <meta name="description" content="{{ config('app.name') }}">
-        <link rel="canonical" href="{{ url()->current() }}">
+    <link rel="canonical" href="{{ $canonicalUrl }}">
+    @if($portfolioLcpImage)
+        <link rel="preload" as="image" href="{{ $portfolioLcpImage }}" fetchpriority="high">
+    @endif
+    @if($availableDesignLcpImage)
+        <link rel="preload" as="image" href="{{ $availableDesignLcpImage }}" fetchpriority="high">
     @endif
 
-    <meta name="robots" content="index,follow">
-    <meta property="og:site_name" content="{{ config('app.name') }}">
-    <link rel="dns-prefetch" href="//fonts.googleapis.com">
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link rel="dns-prefetch" href="//www.googletagmanager.com">
-    <link rel="dns-prefetch" href="//connect.facebook.net">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Merriweather:wght@300;400&display=swap" rel="stylesheet">
-    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+    @if(!$isAdminPath && $languages->isNotEmpty() && $hasLocalePrefix)
+        @foreach($languages as $langSlug)
+            @php
+                $localizedSegments = $segments;
+                $localizedSegments[0] = $langSlug;
+                $localizedPath = implode('/', $localizedSegments);
+                $hreflangUrl = url($localizedPath) . ($queryString ? ('?' . $queryString) : '');
+            @endphp
+            <link rel="alternate" hreflang="{{ $langSlug }}" href="{{ $hreflangUrl }}">
+        @endforeach
+        @php
+            $defaultSegments = $segments;
+            $defaultSegments[0] = $defaultLocale;
+            $defaultPath = implode('/', $defaultSegments);
+            $defaultHreflangUrl = url($defaultPath) . ($queryString ? ('?' . $queryString) : '');
+        @endphp
+        <link rel="alternate" hreflang="x-default" href="{{ $defaultHreflangUrl }}">
+    @endif
+
+    @if(!$isAdminPath)
+        <link rel="dns-prefetch" href="//fonts.googleapis.com">
+        <link rel="dns-prefetch" href="//fonts.gstatic.com">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+            rel="preload"
+            as="style"
+            href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Merriweather:wght@300;400&display=swap"
+            onload="this.onload=null;this.rel='stylesheet'"
+        >
+        <noscript>
+            <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Merriweather:wght@300;400&display=swap" rel="stylesheet">
+        </noscript>
+    @endif
+    @if($isContactPage)
+        <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+    @endif
+
     @php
         $gaMeasurementId = config('services.google_analytics.measurement_id');
-        $gaEnabled = app()->environment('production');
+        $gaEnabled = app()->environment('production') && !$isAdminPath;
     @endphp
     @if($gaEnabled && !empty($gaMeasurementId))
-        <script async src="https://www.googletagmanager.com/gtag/js?id={{ $gaMeasurementId }}"></script>
+        <link rel="dns-prefetch" href="//www.googletagmanager.com">
         <script>
             window.dataLayer = window.dataLayer || [];
             window.gtag = window.gtag || function gtag() {
@@ -102,33 +148,70 @@
 
             gtag('js', new Date());
             gtag('config', @js($gaMeasurementId), { send_page_view: false });
+
+            (function loadGaWhenIdle() {
+                function inject() {
+                    const script = document.createElement('script');
+                    script.async = true;
+                    script.src = 'https://www.googletagmanager.com/gtag/js?id={{ $gaMeasurementId }}';
+                    document.head.appendChild(script);
+                }
+
+                if (document.readyState === 'complete') {
+                    inject();
+                    return;
+                }
+
+                window.addEventListener('load', inject, { once: true });
+            })();
         </script>
     @endif
 
     @php
         $facebookPixelId = config('services.facebook.pixel_id');
-        $facebookPixelEnabled = app()->environment('production');
+        $facebookPixelEnabled = app()->environment('production') && !$isAdminPath;
     @endphp
     @if($facebookPixelEnabled && !empty($facebookPixelId))
+        <link rel="dns-prefetch" href="//connect.facebook.net">
         <script>
-            !function(f,b,e,v,n,t,s)
-            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-            n.queue=[];t=b.createElement(e);t.async=!0;
-            t.src=v;s=b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t,s)}(window, document,'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
+            !function(f){
+                if (f.fbq) return;
+                const n = f.fbq = function() {
+                    n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+                };
+                if (!f._fbq) f._fbq = n;
+                n.push = n;
+                n.loaded = true;
+                n.version = '2.0';
+                n.queue = [];
+            }(window);
+
             fbq('init', @js($facebookPixelId));
+
+            (function loadMetaWhenIdle() {
+                function inject() {
+                    const script = document.createElement('script');
+                    script.async = true;
+                    script.src = 'https://connect.facebook.net/en_US/fbevents.js';
+                    document.head.appendChild(script);
+                }
+
+                if (document.readyState === 'complete') {
+                    inject();
+                    return;
+                }
+
+                window.addEventListener('load', inject, { once: true });
+            })();
         </script>
         <noscript>
             <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id={{ $facebookPixelId }}&ev=PageView&noscript=1" />
         </noscript>
     @endif
 
-    @if(app()->environment('production'))
+    @if(app()->environment('production') && !$isAdminPath)
         <script>
-            const internalAnalyticsEndpoint = @js(route('analytics.collect'));
+            const internalAnalyticsEndpoint = @js($analyticsCollectUrl);
 
             function sanitizeEventName(name) {
                 return String(name || '')
@@ -302,13 +385,10 @@
         </script>
     @endif
 
-    <title inertia>{{ config('app.name', 'Solztt') }}</title>
-
     <!-- Scripts -->
     @routes
     @viteReactRefresh
     @vite(['resources/js/app.jsx'])
-    
 
     <style>
         @keyframes spin {
@@ -337,9 +417,7 @@
 </head>
 
 <body class="antialiased">
-
     @inertia
-
 </body>
 
 </html>

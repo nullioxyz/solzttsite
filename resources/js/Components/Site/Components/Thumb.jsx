@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { fileUrl } from "@/helpers/images";
 
-export function Thumb({ uuid, alt, onClick, className }) {
+export function Thumb({ uuid, alt, onClick, className, loading = "lazy", fetchPriority = "auto" }) {
   const [loaded, setLoaded] = useState(false);
 
   // diferentes larguras para cards responsivos
@@ -9,14 +9,13 @@ export function Thumb({ uuid, alt, onClick, className }) {
   const md = fileUrl(uuid, { locale: "lang", size: "md" });
   const lg = fileUrl(uuid, { locale: "lang", size: "lg" });
 
-  // versões com formato forçado (AVIF/WebP) — fallback JPG
-  const smAvif = fileUrl(uuid, { locale: "lang", size: "sm", format: "avif" });
-  const mdAvif = fileUrl(uuid, { locale: "lang", size: "md", format: "avif" });
-  const lgAvif = fileUrl(uuid, { locale: "lang", size: "lg", format: "avif" });
-
   const smWebp = fileUrl(uuid, { locale: "lang", size: "sm", format: "webp" });
   const mdWebp = fileUrl(uuid, { locale: "lang", size: "md", format: "webp" });
   const lgWebp = fileUrl(uuid, { locale: "lang", size: "lg", format: "webp" });
+  const responsiveSizes = useMemo(
+    () => "(max-width: 640px) 33vw, (max-width: 1024px) 33vw, 420px",
+    []
+  );
 
   return (
     <div className={`relative w-full h-full overflow-hidden ${className}`}>
@@ -25,25 +24,20 @@ export function Thumb({ uuid, alt, onClick, className }) {
       )}
 
       <picture>
-        {/* AVIF */}
-        <source
-          type="image/avif"
-          srcSet={`${smAvif} 480w, ${mdAvif} 768w, ${lgAvif} 1280w`}
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 600px"
-        />
         {/* WEBP */}
         <source
           type="image/webp"
           srcSet={`${smWebp} 480w, ${mdWebp} 768w, ${lgWebp} 1280w`}
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 600px"
+          sizes={responsiveSizes}
         />
         {/* Fallback JPG */}
         <img
           src={lg}
           srcSet={`${sm} 480w, ${md} 768w, ${lg} 1280w`}
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 600px"
+          sizes={responsiveSizes}
           alt={alt}
-          loading="lazy"
+          loading={loading}
+          fetchPriority={fetchPriority}
           decoding="async"
           onClick={onClick}
           onLoad={() => setLoaded(true)}

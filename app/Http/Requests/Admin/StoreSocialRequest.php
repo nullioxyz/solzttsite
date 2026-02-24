@@ -24,7 +24,7 @@ class StoreSocialRequest extends FormRequest
     {
         return [
             'name' => 'required|string|unique:social,name',
-            'url' => 'required|string'
+            'url' => 'required|url|max:2048'
         ];
     }
 
@@ -33,7 +33,8 @@ class StoreSocialRequest extends FormRequest
         return [
             'name.required' => __('name is required'),
             'name.unique' => __('Name is already in use'),
-            'url.required' => __('Url is required')
+            'url.required' => __('Url is required'),
+            'url.url' => __('Url must be valid')
         ];
     }
 }

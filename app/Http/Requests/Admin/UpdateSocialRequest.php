@@ -28,7 +28,7 @@ class UpdateSocialRequest extends FormRequest
                 'required',
                 Rule::unique('social')->ignore($this->route('social')),
             ],
-            'url' => 'required|string'
+            'url' => 'required|url|max:2048'
         ];
     }
 
@@ -37,7 +37,8 @@ class UpdateSocialRequest extends FormRequest
         return [
             'name.required' => __('Name is required'),
             'name.unique' => __('Name is already in use'),
-            'url.required' => __('url is required')
+            'url.required' => __('url is required'),
+            'url.url' => __('Url must be valid')
         ];
     }
 }

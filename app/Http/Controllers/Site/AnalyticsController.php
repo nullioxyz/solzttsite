@@ -31,6 +31,13 @@ class AnalyticsController extends Controller
             return response()->json(['status' => 'ignored'], 202);
         }
 
+        $appHost = parse_url(config('app.url'), PHP_URL_HOST);
+        $pageLocationHost = isset($validated['page_location']) ? parse_url($validated['page_location'], PHP_URL_HOST) : null;
+
+        if ($appHost && $pageLocationHost && !hash_equals(Str::lower($appHost), Str::lower($pageLocationHost))) {
+            return response()->json(['status' => 'ignored'], 202);
+        }
+
         $eventName = Str::of($validated['event_name'])
             ->lower()
             ->replaceMatches('/[^a-z0-9_]/', '_')
@@ -47,6 +54,18 @@ class AnalyticsController extends Controller
             ? Carbon::parse($validated['occurred_at'])
             : now();
 
+        if ($occurredAt->greaterThan(now()->addMinutes(10)) || $occurredAt->lessThan(now()->subDays(3))) {
+            $occurredAt = now();
+        }
+
+        $payload = $validated['payload'] ?? null;
+        if (is_array($payload)) {
+            $payloadJson = json_encode($payload);
+            if ($payloadJson === false || strlen($payloadJson) > 4096) {
+                $payload = null;
+            }
+        }
+
         AnalyticsEvent::create([
             'event_name' => $eventName,
             'page_key' => $validated['page_key'] ?? null,
@@ -57,7 +76,7 @@ class AnalyticsController extends Controller
             'session_key' => $validated['session_key'] ?? null,
             'source' => $validated['source'] ?? 'site',
             'referrer' => $validated['referrer'] ?? null,
-            'payload' => $validated['payload'] ?? null,
+            'payload' => $payload,
             'occurred_at' => $occurredAt,
         ]);
 

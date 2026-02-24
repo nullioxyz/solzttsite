@@ -8,15 +8,22 @@ import { router } from '@inertiajs/react'
 import { SkeletonCard } from '@/Components/Skeleton/SkeletonCard';
 import { Thumb } from '../Components/Thumb';
 
-export default function AvailableDesign() {
+export default function AvailableDesign({ currentLanguage, initialDesigns }) {
   const boxRefs = useRef([]);
-  const [designs, setDesigns] = useState([]);
-  const [currentLanguage, setCurrentLanguage] = useState([]);
-  const [pagination, setPagination] = useState({});
+  const initialDesignsData = Array.isArray(initialDesigns?.data) ? initialDesigns.data : [];
+  const [designs, setDesigns] = useState(initialDesignsData);
+  const [currentLangData, setCurrentLangData] = useState(currentLanguage ?? []);
+  const [pagination, setPagination] = useState({
+    current_page: initialDesigns?.current_page ?? 1,
+    first_page: initialDesigns?.first_page ?? 1,
+    last_page: initialDesigns?.last_page ?? 1,
+    next_page_url: initialDesigns?.next_page_url ?? null,
+  });
   const [loadingMore, setLoadingMore] = useState(false);
   const [newItems, setNewItems] = useState([]);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [isInitialLoad, setIsInitialLoad] = useState(initialDesignsData.length === 0);
   const { t } = useTranslation();
+  const resolvedLocale = currentLanguage?.slug ?? window.location.pathname.split('/').filter(Boolean)[0] ?? 'en';
 
   const initialPage = Number(new URLSearchParams(window.location.search).get("page") || 1);
 
@@ -26,8 +33,8 @@ export default function AvailableDesign() {
     try {
       const url =
         page !== null
-          ? route("site.available_designs.load", { locale: "lang", page })
-          : pagination.next_page_url ?? route("site.available_designs.load", "lang");
+          ? route("site.available_designs.load", { locale: resolvedLocale, page })
+          : pagination.next_page_url ?? route("site.available_designs.load", { locale: resolvedLocale, page: pagination.current_page ?? 1 });
 
       const response = await axios.get(url);
 
@@ -42,7 +49,7 @@ export default function AvailableDesign() {
           return Array.from(new Map(merged.map(item => [item.id, item])).values());
         });
 
-        setCurrentLanguage(currentLang);
+        setCurrentLangData(currentLang);
         setPagination({
           current_page,
           first_page,
@@ -69,10 +76,12 @@ export default function AvailableDesign() {
   };
   
   useEffect(() => {
-    if (isInitialLoad) {
+    if (isInitialLoad && designs.length === 0) {
       handleDesigns(initialPage).finally(() => setIsInitialLoad(false));
+    } else if (isInitialLoad) {
+      setIsInitialLoad(false);
     }
-  }, [isInitialLoad]);
+  }, [isInitialLoad, initialPage, designs.length]);
 
   useEffect(() => {
     if (newItems.length > 0) {
@@ -114,7 +123,7 @@ export default function AvailableDesign() {
                     sm:w-full
                     cursor-pointer overflow-hidden
                   ">
-                  <a href={route('site.available_designs.show', { locale: currentLanguage.slug, slug: item.slug })}
+                  <a href={route('site.available_designs.show', { locale: (currentLangData?.slug ?? resolvedLocale), slug: item.slug })}
                     className="block"
                   >
                     {/* O aspect ratio vive AQUI */}
@@ -124,6 +133,8 @@ export default function AvailableDesign() {
                         uuid={item.media[0].uuid}
                         alt={item.translation ? item.translation.title : item.default_translation.title}
                         className="absolute inset-0"
+                        loading={index < 3 ? 'eager' : 'lazy'}
+                        fetchPriority={index === 0 ? 'high' : 'auto'}
                       />
                     </div>
                   </a>

@@ -18,21 +18,32 @@ class FileController extends Controller
         // ===== 1) Decidir qual conversão entregar =====
         // Prioridade: ?conversion=... > (size+format) > negociação pelo Accept > original
         $explicitConversion = $request->query('conversion'); // ex.: "lg-webp"
-        $size   = $request->query('size');                   // sm|md|lg
+        $size = $request->query('size');                     // sm|md|lg
         $format = $request->query('format');                 // avif|webp|jpg
+        $isFormatExplicit = $request->has('format');
 
+        // Para URLs com "size" (cards/galeria), nunca inferir formato por Accept.
+        // Isso evita cair no original quando AVIF não existe.
         if (!$format) {
-            $accept = strtolower($request->header('Accept', ''));
-            if (str_contains($accept, 'image/avif'))      $format = 'avif';
-            elseif (str_contains($accept, 'image/webp'))  $format = 'webp';
-            else                                           $format = 'jpg';
+            if ($size) {
+                $format = 'jpg';
+            } else {
+                $accept = strtolower($request->header('Accept', ''));
+                if (str_contains($accept, 'image/avif')) {
+                    $format = 'avif';
+                } elseif (str_contains($accept, 'image/webp')) {
+                    $format = 'webp';
+                } else {
+                    $format = 'jpg';
+                }
+            }
         }
 
-        // se não vier size, você pode escolher um default (ex.: lg)
-        if (!$size && !$explicitConversion) $size = 'lg';
+        if (!$size && !$explicitConversion) {
+            $size = 'lg';
+        }
 
-        // nome da conversão (ex.: "lg-webp", "md-jpg" etc.)
-        $conversion = $explicitConversion ?: ($size ? "{$size}-{$format}" : null);
+        $conversion = $explicitConversion ?: ($size ? ($format === 'jpg' ? $size : "{$size}-{$format}") : null);
 
         // ===== 2) Calcular caminho no disk =====
         $disk = Storage::disk($media->disk);
@@ -44,13 +55,37 @@ class FileController extends Controller
 
         if ($conversion) {
             $basename = pathinfo($media->file_name, PATHINFO_FILENAME);
-            $ext      = $this->extForFormat($format); // 'jpg'|'webp'|'avif'
-            // caminho padrão de conversões da Spatie
-            $convPath = "{$media->id}/conversions/{$basename}-{$conversion}.{$ext}";
+            $candidateConversions = [];
 
-            if ($disk->exists($convPath)) {
-                $pathToServe = $convPath;
-                $mimeType    = $this->mimeForExt($ext);
+            if ($explicitConversion) {
+                $candidateConversions[] = $explicitConversion;
+            } elseif ($size) {
+                if ($isFormatExplicit) {
+                    $candidateConversions[] = $format === 'jpg' ? $size : "{$size}-{$format}";
+                } else {
+                    // Sem formato explícito, prioriza JPEG da conversão de tamanho.
+                    $candidateConversions[] = $size;
+                }
+
+                // Fallbacks seguros sem voltar para original pesado.
+                if (!in_array("{$size}-webp", $candidateConversions, true)) {
+                    $candidateConversions[] = "{$size}-webp";
+                }
+                if (!in_array($size, $candidateConversions, true)) {
+                    $candidateConversions[] = $size;
+                }
+            }
+
+            foreach ($candidateConversions as $candidate) {
+                $candidateExt = str_ends_with($candidate, '-webp') ? 'webp'
+                    : (str_ends_with($candidate, '-avif') ? 'avif' : 'jpg');
+                $convPath = "{$media->id}/conversions/{$basename}-{$candidate}.{$candidateExt}";
+
+                if ($disk->exists($convPath)) {
+                    $pathToServe = $convPath;
+                    $mimeType = $this->mimeForExt($candidateExt);
+                    break;
+                }
             }
         }
 

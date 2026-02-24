@@ -10,7 +10,7 @@ use App\Models\SiteSetting;
 use App\Models\Social;
 use App\Traits\PaginationTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\App;
 use Inertia\Inertia;
 
 class PortfolioController extends Controller
@@ -18,7 +18,7 @@ class PortfolioController extends Controller
     use PaginationTrait;
 
     const PER_PAGE_HOME = 8;
-    const PER_PAGE_INTERNAL = 12;
+    const PER_PAGE_INTERNAL = 9;
 
     public function index(Request $request)
     {
@@ -59,7 +59,7 @@ class PortfolioController extends Controller
             'metatags' => $metatags,
             'metaImage' => $metaImage,
             'meta_title' => trans('site.portfolio'),
-            'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? $defaultLang,
+            'currentLanguage' => Language::where('slug', App::getLocale())->first() ?? $defaultLang,
             'portfolio' => $portfolio
         ]);
     }
@@ -103,7 +103,7 @@ class PortfolioController extends Controller
             'metatags' => $metatags,
             'meta_title' => $title,
             'meta_description' => $description,
-            'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? $defaultLang,
+            'currentLanguage' => Language::where('slug', App::getLocale())->first() ?? $defaultLang,
             'portfolio' => $portfolio,
             'metaImage' => $portfolio,
         ]);

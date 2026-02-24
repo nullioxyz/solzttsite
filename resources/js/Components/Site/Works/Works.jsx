@@ -7,27 +7,37 @@ import { useTranslation } from 'react-i18next';
 import { SkeletonCard } from "@/Components/Skeleton/SkeletonCard";
 import { Thumb } from "../Components/Thumb";
 
-export default function Works({ currentLanguage }) {
+export default function Works({ currentLanguage, initialPortfolio }) {
 
   const boxRefs = useRef([]);
-  const [portfolio, setPortfolio] = useState([]);
-  const [pagination, setPagination] = useState({});
+  const initialPortfolioData = Array.isArray(initialPortfolio?.data) ? initialPortfolio.data : [];
+  const [portfolio, setPortfolio] = useState(initialPortfolioData);
+  const [pagination, setPagination] = useState({
+    current_page: initialPortfolio?.current_page ?? 1,
+    first_page: initialPortfolio?.first_page ?? 1,
+    last_page: initialPortfolio?.last_page ?? 1,
+    next_page_url: initialPortfolio?.next_page_url ?? null,
+  });
   const [loadingMore, setLoadingMore] = useState(false);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [isInitialLoad, setIsInitialLoad] = useState(initialPortfolioData.length === 0);
   const [newItems, setNewItems] = useState([]);
   
-  const initialPage = new URLSearchParams(window.location.search).get("page") || 1;
+  const initialPage = Number(new URLSearchParams(window.location.search).get("page") || 1);
 
   const { t } = useTranslation();
+  const resolvedLocale = currentLanguage?.slug ?? window.location.pathname.split('/').filter(Boolean)[0] ?? 'en';
 
   const handlePortfolio = async (page = null) => {
     setLoadingMore(true);
 
     try {
+      const hasNextPage = Boolean(pagination.next_page_url);
       const url =
         page !== null
-          ? route("site.portfolio.load", { locale: "lang", page })
-          : pagination.next_page_url ?? route("site.portfolio.load", { lang: "lang" });
+          ? route("site.portfolio.load", { locale: resolvedLocale, page })
+          : hasNextPage
+            ? pagination.next_page_url
+            : route("site.portfolio.load", { locale: resolvedLocale, page: pagination.current_page ?? 1 });
 
       const response = await axios.get(url);
 
@@ -77,10 +87,12 @@ export default function Works({ currentLanguage }) {
   };
 
   useEffect(() => {
-    if (isInitialLoad) {
+    if (isInitialLoad && portfolio.length === 0) {
       handlePortfolio(initialPage).finally(() => setIsInitialLoad(false));
+    } else if (isInitialLoad) {
+      setIsInitialLoad(false);
     }
-  }, [isInitialLoad]);
+  }, [isInitialLoad, initialPage, portfolio.length]);
 
   useEffect(() => {
     if (newItems.length > 0) {
@@ -132,6 +144,8 @@ export default function Works({ currentLanguage }) {
                         uuid={item.media[0].uuid}
                         alt={item.translation ? item.translation.title : item.default_translation.title}
                         className="absolute inset-0"
+                        loading={index < 3 ? 'eager' : 'lazy'}
+                        fetchPriority={index === 0 ? 'high' : 'auto'}
                       />
                     </div>
                   </a>

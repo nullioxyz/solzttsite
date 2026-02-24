@@ -7,7 +7,7 @@ use App\Models\Institucional;
 use App\Models\Language;
 use App\Models\SiteSetting;
 use App\Models\Social;
-use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\App;
 use Inertia\Inertia;
 
 class AfterCareController extends Controller
@@ -38,7 +38,7 @@ class AfterCareController extends Controller
             'metatags' => $metatags,
             'metaImage' => $metaImage,
             'meta_title' => trans('site.Tattoo Aftercare'),
-            'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? $defaultLang,
+            'currentLanguage' => Language::where('slug', App::getLocale())->first() ?? $defaultLang,
             'social' => $social
         ]);
     }    

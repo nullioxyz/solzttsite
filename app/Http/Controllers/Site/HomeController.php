@@ -7,7 +7,7 @@ use App\Models\Institucional;
 use App\Models\Language;
 use App\Models\SiteSetting;
 use App\Models\Social;
-use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\App;
 use Inertia\Inertia;
 
 class HomeController extends Controller
@@ -41,7 +41,7 @@ class HomeController extends Controller
             'social' => $social,
             'metatags' => $metatags,
             'metaImage' => $metaImage,
-            'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? $defaultLang
+            'currentLanguage' => Language::where('slug', App::getLocale())->first() ?? $defaultLang
         ]);
     }
 }

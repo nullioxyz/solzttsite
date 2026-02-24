@@ -23,6 +23,8 @@ export default function Attachments() {
                     className="h-10 w-10 rounded object-cover object-center"
                     src={ref.image}
                     alt="gallery-photo"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
                 <div className="flex-grow">

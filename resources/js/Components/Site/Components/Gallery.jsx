@@ -198,14 +198,6 @@ export function Gallery({ images = [] }) {
 
               <picture className="w-full h-full">
                 <source
-                  type="image/avif"
-                  srcSet={`
-                    ${fileUrl(image.uuid, { locale: 'lang', size: 'md', format: 'avif' })} 1280w,
-                    ${fileUrl(image.uuid, { locale: 'lang', size: 'lg', format: 'avif' })} 1920w
-                  `}
-                  sizes={`${Math.min(width, 1200)}px`}
-                />
-                <source
                   type="image/webp"
                   srcSet={`
                     ${fileUrl(image.uuid, { locale: 'lang', size: 'md', format: 'webp' })} 1280w,
@@ -222,7 +214,7 @@ export function Gallery({ images = [] }) {
                   sizes={`${Math.min(width, 1200)}px`}
                   alt={image.alt || 'image'}
                   loading={getLoading(i)}
-                  fetchpriority={getPriority(i)}
+                  fetchPriority={getPriority(i)}
                   decoding="async"
                   draggable={false}
                   onLoad={handleImgLoad(i)}

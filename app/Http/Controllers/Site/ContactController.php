@@ -9,7 +9,7 @@ use App\Models\SiteSetting;
 use App\Models\Social;
 use App\Services\ContactService;
 use App\Strategies\Files\MediaUploadStrategy;
-use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
@@ -66,7 +66,7 @@ class ContactController extends Controller
             'metaImage' => ($consideration && $consideration->media && $consideration->media->count())
                 ? $consideration
                 : $metaImage,
-            'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? $defaultLang,
+            'currentLanguage' => Language::where('slug', App::getLocale())->first() ?? $defaultLang,
             'portfolio' => $portfolio,
             'hcaptchaSiteKey' => config('services.hcaptcha.site_key'),
             'meta_title' => trans('site.contact'),
@@ -78,7 +78,7 @@ class ContactController extends Controller
         $validatedData = $request->validated();
         $availableLangs = Language::select('slug', 'name', 'default')->get();
         $defaultLang = $availableLangs->firstWhere('default', 1);
-        $lang = Cookie::get('locale') ?? $defaultLang->slug;
+        $lang = App::getLocale() ?: $defaultLang->slug;
         $token = $request->input('token');
 
         if (!$token) {

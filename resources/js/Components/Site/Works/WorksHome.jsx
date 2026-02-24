@@ -23,7 +23,9 @@ export default function WorksHome({ currentLanguage }) {
     setLoadingMore(true);
 
     try {
-      const response = await axios.get(pagination.next_page_url ?? route('site.portfolio.load', ['lang', 'home']));
+      const response = await axios.get(
+        pagination.next_page_url ?? route('site.portfolio.load', { locale: currentLanguage.slug })
+      );
       if (response.data) {
         const { data, first_page, current_page, last_page, next_page_url } = response.data.portfolio;
 
@@ -106,7 +108,7 @@ export default function WorksHome({ currentLanguage }) {
                 book={false}
                 title={item.translation ? item.translation.title : item.default_translation.title}
                 description={item.translation ? item.translation.description : item.default_translation.description}
-                coverImage={route('file.index', {locale: 'lang', uuid: item.media[0].uuid})}
+                coverImage={item.media[0].uuid}
                 images={item.media}
                 onAddReference={() => handleAddAsReference(item)}
                 itemId={item.id}

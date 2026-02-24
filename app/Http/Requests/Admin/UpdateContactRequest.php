@@ -23,7 +23,7 @@ class UpdateContactRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'read' => 'nullable'
+            'read' => 'required|boolean'
         ];
     }
 

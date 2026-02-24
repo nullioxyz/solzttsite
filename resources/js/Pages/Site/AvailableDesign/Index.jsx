@@ -10,12 +10,13 @@ export default function Index({
   currentLanguage,
   social,
   metatags,
-  metaImage
+  metaImage,
+  designs
 }) {
   return (
     <MainLayout languages={languages} defaultLang={defaultLang} social={social} metatags={metatags} currentLanguage={currentLanguage} metaImage={metaImage}>
         <Suspense fallback={<Spinner />}>
-            <AvailableDesign />
+            <AvailableDesign currentLanguage={currentLanguage} initialDesigns={designs} />
         </Suspense>
     </MainLayout>
   )

@@ -16,26 +16,38 @@ use App\Http\Controllers\Site\ContactController;
 use App\Http\Controllers\Site\FileController;
 use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\PortfolioController as PortfolioSiteController;
+use App\Http\Controllers\Site\SitemapController;
 use App\Http\Controllers\Site\TranslationController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Models\Language;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Route;
 
 
 Route::prefix('/')->group(function() {
     Route::get('/', function () {
-        $locale = Cookie::get('locale') ?? 'en'; // Pega do cookie ou define 'en' como padrão
+        $fallbackLocale = Language::query()->where('default', 1)->value('slug') ?? 'en';
+        $locale = Cookie::get('locale') ?? $fallbackLocale;
+        if (!Language::query()->where('slug', $locale)->exists()) {
+            $locale = $fallbackLocale;
+        }
+
         return redirect("/$locale");
     });
     
-    Route::get('/{locale}', [HomeController::class, 'index'])->name('home.index');
+    Route::get('/sitemap.xml', SitemapController::class)->name('sitemap.xml');
+
+    Route::get('/{locale}', [HomeController::class, 'index'])
+        ->middleware('lang')
+        ->where('locale', '[a-z]{2}')
+        ->name('home.index');
 });
 
 Route::post('/analytics/collect', [AnalyticsController::class, 'collect'])
-    ->middleware('throttle:240,1')
+    ->middleware(['signed', 'throttle:120,1'])
     ->name('analytics.collect');
 
-Route::middleware(['lang'])->prefix('/{locale}')->group(function() {
+Route::middleware(['lang'])->prefix('/{locale}')->where(['locale' => '[a-z]{2}'])->group(function() {
     Route::get('/portfolio', [PortfolioSiteController::class, 'index'])->name('site.portfolio');
     Route::get('/portfolio/detail/{slug}', [PortfolioSiteController::class, 'show'])->name('site.portfolio.show');
     Route::get('/portfolio/load', [PortfolioSiteController::class, 'load'])->name('site.portfolio.load');
@@ -54,10 +66,13 @@ Route::middleware(['lang'])->prefix('/{locale}')->group(function() {
     Route::post('set-language', [TranslationController::class, 'setLanguage'])->name('site.setLanguage');
     Route::get('current-language', [TranslationController::class, 'getCurrentTranslation'])->name('site.currentLanguage');
 
-    Route::prefix('/images')->group(function() {
-        Route::get('/', [FileController::class, 'index'])->name('file.index');
-    });
 });
+
+// Imagens precisam aceitar o locale técnico "lang" usado no frontend/admin.
+// Mantemos a validação estrita de locale apenas para páginas.
+Route::get('/{locale}/images', [FileController::class, 'index'])
+    ->where('locale', '(?:[a-z]{2}|lang)')
+    ->name('file.index');
 
 
 
