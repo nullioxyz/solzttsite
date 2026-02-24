@@ -21,14 +21,14 @@ function formatNumber(value) {
   return new Intl.NumberFormat('en-US').format(value || 0);
 }
 
-export default function Dashboard({ auth, metrics: initialMetrics, tracking }) {
+export default function AnalyticsModule({ auth, metrics: initialMetrics, tracking }) {
   const [metrics, setMetrics] = useState(initialMetrics);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const refreshMetrics = async () => {
     setIsRefreshing(true);
     try {
-      const response = await request.get(route('dashboard.metrics'));
+      const response = await request.get(route('analytics.metrics'));
       setMetrics(response.data);
     } catch (error) {
       console.error('Failed to refresh dashboard metrics', error);
@@ -125,16 +125,16 @@ export default function Dashboard({ auth, metrics: initialMetrics, tracking }) {
   return (
     <AuthenticatedLayout
       user={auth.user}
-      header={<h2 className="text-xl font-semibold text-slate-800">Analytics Dashboard</h2>}
+      header={<h2 className="text-xl font-semibold text-slate-800">Analytics Module</h2>}
     >
-      <Head title="Dashboard" />
+      <Head title="Analytics" />
 
       <div className="mx-auto max-w-7xl space-y-6 px-3 pb-8 sm:px-6 lg:px-8">
         <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Overview</p>
-              <h3 className="mt-1 text-lg font-semibold text-slate-800">Traffic, Geography and Consent Monitoring</h3>
+              <h3 className="mt-1 text-lg font-semibold text-slate-800">Dedicated Analytics Monitoring</h3>
             </div>
             <button
               type="button"

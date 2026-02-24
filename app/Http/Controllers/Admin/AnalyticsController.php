@@ -8,7 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class DashboardController extends Controller
+class AnalyticsController extends Controller
 {
     public function __construct(private readonly AnalyticsMetricsService $metricsService)
     {
@@ -16,7 +16,7 @@ class DashboardController extends Controller
 
     public function index(): Response
     {
-        return Inertia::render('Dashboard', [
+        return Inertia::render('Analytics/Index', [
             'metrics' => $this->metricsService->build(),
             'tracking' => [
                 'ga_enabled' => (app()->environment('production') || filter_var(env('ANALYTICS_ENABLE_LOCAL', false), FILTER_VALIDATE_BOOL)) && filled(config('services.google_analytics.measurement_id')),
