@@ -1,11 +1,10 @@
 import React, { useMemo, useState, useEffect } from "react";
-import { Head, Link, usePage } from "@inertiajs/react";
-import { useTranslation } from 'react-i18next';
+import { Head, Link } from "@inertiajs/react";
+import { useTranslation } from "react-i18next";
 import DOMPurify from "dompurify";
 import { BookmarkIcon as BookmarkOutline } from "@heroicons/react/24/outline";
 import { BookmarkIcon as BookmarkSolid } from "@heroicons/react/24/solid";
 import { motion } from "framer-motion";
-
 
 import { useSelectReferences } from "@/Contexts/SelectReferencesContext";
 import { Gallery } from "@/Components/Site/Components/Gallery";
@@ -28,22 +27,19 @@ export default function WorkDetail({
   }, []);
 
   const [activeIndex, setActiveIndex] = useState(initialIndex);
-  
+
   const { t } = useTranslation();
   const { addAsReference, selectedReferences, setSelectedReferences } = useSelectReferences();
 
   const handleAddAsReference = (item) => {
-      
-    setSelectedReferences(prevRefs =>
-      prevRefs.filter(ref => ref.type !== 'available_design')
-    );
+    setSelectedReferences((prevRefs) => prevRefs.filter((ref) => ref.type !== "available_design"));
 
     const data = {
       id: item.id,
-      image: route('file.index', {locale: 'lang', uuid: item.media[0].uuid}),
+      image: route("file.index", { locale: "lang", uuid: item.media[0].uuid }),
       name: item.translation ? item.translation.title : item.default_translation.title,
-      type: 'portfolio'
-    }
+      type: "portfolio",
+    };
 
     addAsReference(data);
   };
@@ -55,39 +51,74 @@ export default function WorkDetail({
     }
   }, [portfolio?.media?.length, activeIndex]);
 
-  const title =
-    portfolio?.translation?.title ??
-    portfolio?.default_translation?.title ??
-    "";
+  const title = portfolio?.translation?.title ?? portfolio?.default_translation?.title ?? "";
 
   const description =
-    portfolio?.translation?.description ??
-    portfolio?.default_translation?.description ??
-    "";
+    portfolio?.translation?.description ?? portfolio?.default_translation?.description ?? "";
 
-  const sanitizedDescription = DOMPurify.sanitize(description, {
+  const normalizedDescription = useMemo(() => {
+    const trimmed = description?.trim?.() ?? "";
+    if (!trimmed) return "";
+    const hasHtmlTag = /<\/?[a-z][\s\S]*>/i.test(trimmed);
+    return hasHtmlTag ? trimmed : `<p>${trimmed}</p>`;
+  }, [description]);
+
+  const sanitizedDescription = DOMPurify.sanitize(normalizedDescription, {
     ALLOWED_TAGS: [
-      'b', 'i', 'em', 'strong', 'a',
-      'ul', 'ol', 'li', 'p', 'h1', 'h2', 'h3', 'blockquote', 'pre', 'code', 'br',
-      'table', 'thead', 'tbody', 'tr', 'td', 'th',
-      'iframe', 'img', 'figure',
+      "b",
+      "i",
+      "em",
+      "strong",
+      "a",
+      "ul",
+      "ol",
+      "li",
+      "p",
+      "h1",
+      "h2",
+      "h3",
+      "blockquote",
+      "pre",
+      "code",
+      "br",
+      "table",
+      "thead",
+      "tbody",
+      "tr",
+      "td",
+      "th",
+      "iframe",
+      "img",
+      "figure",
     ],
     ALLOWED_ATTR: [
-      'href', 'target', 'rel', 'colspan', 'rowspan', 'style',
-      'src', 'width', 'height', 'frameborder', 'allow', 'allowfullscreen', 'alt', 'title',
-      'type', 'start'
+      "href",
+      "target",
+      "rel",
+      "colspan",
+      "rowspan",
+      "style",
+      "src",
+      "width",
+      "height",
+      "frameborder",
+      "allow",
+      "allowfullscreen",
+      "alt",
+      "title",
+      "type",
+      "start",
     ],
-    ADD_TAGS: ['iframe'],
-    ADD_ATTR: ['allowfullscreen', 'allow', 'frameborder'],
+    ADD_TAGS: ["iframe"],
+    ADD_ATTR: ["allowfullscreen", "allow", "frameborder"],
   });
-
 
   const handleClick = () => {
     handleAddAsReference(portfolio);
   };
 
   const renderActionButton = () => {
-    const isSelected = selectedReferences?.some(ref => ref.id === portfolio.id);
+    const isSelected = selectedReferences?.some((ref) => ref.id === portfolio.id);
 
     return (
       <Button
@@ -95,9 +126,7 @@ export default function WorkDetail({
         className="rounded-none border-0 bg-white shadow-none hover:shadow-md flex items-center gap-2 whitespace-nowrap p-2"
         onClick={() => {
           if (isSelected) {
-            setSelectedReferences(prevRefs =>
-              prevRefs.filter(ref => ref.id !== portfolio.id)
-            );
+            setSelectedReferences((prevRefs) => prevRefs.filter((ref) => ref.id !== portfolio.id));
           } else {
             handleClick();
           }
@@ -110,11 +139,11 @@ export default function WorkDetail({
           animate={{ scale: isSelected ? [1, 1.4, 1] : [1, 0.8, 1] }}
           transition={{ duration: 0.3 }}
         >
-           {isSelected ? (
-          <BookmarkSolid className="w-6 h-6 text-orange-600" />
-        ) : (
-          <BookmarkOutline className="w-6 h-6 text-[#595954]" />
-        )}
+          {isSelected ? (
+            <BookmarkSolid className="w-6 h-6 text-orange-600" />
+          ) : (
+            <BookmarkOutline className="w-6 h-6 text-[#595954]" />
+          )}
         </motion.div>
 
         {isSelected ? (
@@ -126,7 +155,6 @@ export default function WorkDetail({
     );
   };
 
-
   return (
     <>
       <Head title={metatags?.title ?? title} />
@@ -136,10 +164,10 @@ export default function WorkDetail({
           <div className="mb-4">
             <Link
               href={route("site.portfolio", { locale: currentLanguage?.slug ?? "lang" })}
-              className="inline-flex items-center text-sm text-[#595954]/70 hover:text-[#595954] transition-colors"
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#dcdad6] bg-[#fafafa] text-xs text-[#595954] hover:bg-white hover:border-[#cfcac4] transition-colors shadow-sm"
             >
               <svg
-                className="w-4 h-4 mr-1"
+                className="w-4 h-4"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
@@ -150,35 +178,65 @@ export default function WorkDetail({
               {t("back")}
             </Link>
           </div>
-          <div className="mb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <h1 className="text-[2.0rem] tracking-tight text-[#595954] text-center sm:text-left">
-              {title}
-            </h1>
 
-            <div className="flex justify-center sm:justify-end">
-              {renderActionButton()}
+          <div className="lg:hidden">
+            <div className="w-full max-w-6xl mx-auto px-4">
+              <ImageWithDoubleTap onDoubleTap={handleClick} className="w-full">
+                <Gallery
+                  images={portfolio?.media}
+                  initialIndex={activeIndex}
+                  onIndexChange={setActiveIndex}
+                />
+              </ImageWithDoubleTap>
+            </div>
+
+            <div className="mt-5">
+              <h1 className="text-[1.4rem] tracking-tight text-[#595954] text-center">{title}</h1>
+            </div>
+
+            <div className="mt-6">
+              {description && (
+                <div
+                  className="font-normal text-justify color-gray"
+                  dangerouslySetInnerHTML={{ __html: sanitizedDescription }}
+                />
+              )}
+              <div className="mt-6 flex justify-start -ml-2">
+                {renderActionButton()}
+              </div>
             </div>
           </div>
 
+          <div className="hidden lg:block mb-12">
+            <div className="relative z-0 border border-black/10 bg-white grid grid-cols-[minmax(0,1.35fr)_minmax(320px,420px)] min-h-[72vh]">
+              <div className="relative border-r border-black/10 flex items-center justify-center bg-[#fafafa] overflow-hidden p-3">
+                <ImageWithDoubleTap onDoubleTap={handleClick} className="w-full h-full">
+                  <Gallery
+                    images={portfolio?.media}
+                    initialIndex={activeIndex}
+                    onIndexChange={setActiveIndex}
+                  />
+                </ImageWithDoubleTap>
+              </div>
 
-          <div
-          className="w-full max-w-6xl mx-auto px-4"
-          >
-            <ImageWithDoubleTap
-            onDoubleTap={handleClick}
-            >
-              <Gallery
-                images={portfolio?.media}
-                initialIndex={activeIndex}
-                onIndexChange={setActiveIndex}
-                />
-            </ImageWithDoubleTap>
-          </div>
+              <div className="flex flex-col min-h-0">
+                <div className="p-5 border-b border-black/10">
+                  <h1 className="text-[1.4rem] tracking-tight text-[#595954] leading-tight">{title}</h1>
+                </div>
 
-          <div className="mt-10">
-            {description && (
-              <div className="font-normal text-justify color-gray" dangerouslySetInnerHTML={{ __html: sanitizedDescription }} />
-            )}
+                <div className="p-5 overflow-y-auto">
+                  {description && (
+                    <div
+                      className="font-normal text-justify color-gray"
+                      dangerouslySetInnerHTML={{ __html: sanitizedDescription }}
+                    />
+                  )}
+                  <div className="mt-6 flex justify-start -ml-2">
+                    {renderActionButton()}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

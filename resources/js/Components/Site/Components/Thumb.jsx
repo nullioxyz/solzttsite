@@ -37,7 +37,7 @@ export function Thumb({ uuid, alt, onClick, className, loading = "lazy", fetchPr
           sizes={responsiveSizes}
           alt={alt}
           loading={loading}
-          fetchPriority={fetchPriority}
+          fetchpriority={fetchPriority}
           decoding="async"
           onClick={onClick}
           onLoad={() => setLoaded(true)}
