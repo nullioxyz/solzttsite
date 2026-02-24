@@ -37,6 +37,11 @@ return [
         'project_id' => env('GOOGLE_CLOUD_PROJECT_ID'),
     ],
 
+    'hcaptcha' => [
+        'site_key' => env('HCAPTCHA_SITE_KEY'),
+        'secret' => env('HCAPTCHA_SECRET'),
+    ],
+
     'facebook' => [
         'pixel_id' => env('FACEBOOK_PIXEL_ID', '1537290374142296'),
         'pixel_enabled' => env('FACEBOOK_PIXEL_ENABLED', false),

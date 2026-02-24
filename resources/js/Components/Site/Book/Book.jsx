@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { fileUrl } from '@/helpers/images';
 
-export default function Book({ consideration, currentLanguage }) {
+export default function Book({ consideration, currentLanguage, hcaptchaSiteKey }) {
   const [loaded, setLoaded] = useState(false);
 
   const { t } = useTranslation();
@@ -49,6 +49,7 @@ export default function Book({ consideration, currentLanguage }) {
             <Form
               currentLanguage={currentLanguage}
               considerationTranslation={considerationTranslation}
+              hcaptchaSiteKey={hcaptchaSiteKey}
               />
           </div>
         </div>

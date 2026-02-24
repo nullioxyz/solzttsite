@@ -40,13 +40,17 @@ const Toast = Swal.mixin({
   }
 });
 
-export default function Form({ currentLanguage, considerationTranslation }) {
+export default function Form({ currentLanguage, considerationTranslation, hcaptchaSiteKey }) {
   const captchaRef = useRef(null);
   const [disableButton, setDisableButton] = useState(false);
   const savedData = JSON.parse(localStorage.getItem("contactForm") || "{}");
 
   const handleVerify = (token) => {
       setData("token", token);
+  };
+
+  const handleCaptchaExpireOrError = () => {
+      setData("token", null);
   };
 
   const { data, setData, post, processing, errors, reset } = useForm({
@@ -66,7 +70,7 @@ export default function Form({ currentLanguage, considerationTranslation }) {
     captcha_question: savedData.captcha_question ?? null,
     attachments: savedData.attachments ?? null,
     files: savedData.files ?? null,
-    token: savedData.token ?? null,
+    token: null,
   });
 
   const [files, setFiles] = useState([]);
@@ -79,7 +83,8 @@ export default function Form({ currentLanguage, considerationTranslation }) {
   const { selectedReferences, setSelectedReferences } = useSelectReferences();
 
   useEffect(() => {
-    localStorage.setItem("contactForm", JSON.stringify(data));
+    const persistedFormData = { ...data, token: null, files: null };
+    localStorage.setItem("contactForm", JSON.stringify(persistedFormData));
   }, [data]);
 
   useEffect(() => {
@@ -423,11 +428,15 @@ export default function Form({ currentLanguage, considerationTranslation }) {
 
           {selectedReferences.length > 0 && <Attachments />}
 
-          <HCaptcha
-            sitekey="8702a8cc-c5cc-4718-a1a4-4d549d324f02"
-            onVerify={handleVerify}
-            ref={captchaRef}
-          />
+          {hcaptchaSiteKey ? (
+            <HCaptcha
+              sitekey={hcaptchaSiteKey}
+              onVerify={handleVerify}
+              onExpire={handleCaptchaExpireOrError}
+              onError={handleCaptchaExpireOrError}
+              ref={captchaRef}
+            />
+          ) : null}
   
           <button
             disabled={disableButton}

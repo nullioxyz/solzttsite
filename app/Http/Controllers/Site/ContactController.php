@@ -66,6 +66,7 @@ class ContactController extends Controller
             'metaImage' => $consideration->media ? $consideration : $metaImage,
             'currentLanguage' => Language::where('slug', Cookie::get('locale'))->first() ?? $defaultLang,
             'portfolio' => $portfolio,
+            'hcaptchaSiteKey' => config('services.hcaptcha.site_key'),
             'meta_title' => trans('site.contact'),
         ]);
     }
@@ -83,14 +84,25 @@ class ContactController extends Controller
                             ->withErrors(['error' => __("Fail to check recaptcha")]);
         }
 
+        $hcaptchaSecret = config('services.hcaptcha.secret');
+
+        if (empty($hcaptchaSecret)) {
+            Log::error('hCaptcha secret is not configured.');
+            return redirect()->route('site.contact', ["locale" => $lang])
+                            ->withErrors(['error' => __("Fail to check recaptcha")]);
+        }
+
         $response = Http::asForm()->post('https://hcaptcha.com/siteverify', [
-            'secret'   => env('HCAPTCHA_SECRET'),
+            'secret'   => $hcaptchaSecret,
             'response' => $token,
         ]);
 
         $result = $response->json();
 
         if (!($result['success'] ?? false)) {
+            Log::warning('hCaptcha verification failed.', [
+                'error_codes' => $result['error-codes'] ?? [],
+            ]);
             return redirect()->route('site.contact', ["locale" => $lang])
                             ->withErrors(['error' => __("Fail to check recaptcha")]);
         }

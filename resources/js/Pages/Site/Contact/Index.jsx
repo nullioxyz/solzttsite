@@ -12,7 +12,8 @@ export default function Index({
   currentLanguage,
   social,
   metatags,
-  metaImage
+  metaImage,
+  hcaptchaSiteKey
 }) {
   return (
 
@@ -20,6 +21,7 @@ export default function Index({
         <Book
             consideration={consideration}
             currentLanguage={currentLanguage}
+            hcaptchaSiteKey={hcaptchaSiteKey}
         />
     </MainLayout>
   )
