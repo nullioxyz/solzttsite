@@ -225,10 +225,14 @@ class AvailableController extends Controller
     {
         try {
             DB::beginTransaction();
-            
-            $this->mediaUploadStrategy->delete(
-                $this->mediaUploadStrategy->getMediaById($fileId, $availableDesign)
-            );
+
+            $media = $this->mediaUploadStrategy->getMediaById($fileId, $availableDesign);
+            if (!$media) {
+                DB::rollBack();
+                return response()->json(['message' => __('File not found for this item')], 404);
+            }
+
+            $this->mediaUploadStrategy->delete($media);
 
             DB::commit();
         } catch (\Exception $e) {

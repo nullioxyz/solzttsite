@@ -8,6 +8,7 @@ import Dropfile from '@/Components/Files/Dropfile';
 import { useState } from 'react';
 import { Gallery } from '../Files/Gallery';
 import Swal from 'sweetalert2';
+import request from '@/Services/requests';
 
 
 export default function Form (props) {
@@ -39,7 +40,7 @@ export default function Form (props) {
   }
 
   async function removeExistingFile(fileId, index) {
-    Swal.fire({
+    const result = await Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
       icon: "warning",
@@ -47,22 +48,27 @@ export default function Form (props) {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!"
-    }).then((result) => {
-      if (result.isConfirmed) {
-        router.delete(route('institucional.removeFile', [fileId, data.slug]), {
-          onSuccess: () => {
-            Swal.fire({
-              title: "Deleted!",
-              text: "Your record has been deleted.",
-              icon: "success"
-            });
-
-            updateExistingFiles(index);
-          },
-          preserveScroll: true
-        })
-      }
     });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      await request.delete(route('institucional.removeFile', [fileId, data.slug]));
+
+      updateExistingFiles(index);
+      await Swal.fire({
+        title: "Deleted!",
+        text: "Your file has been removed.",
+        icon: "success"
+      });
+    } catch (error) {
+      const message = error?.response?.data?.message || "Unable to remove this file. Please try again.";
+      await Swal.fire({
+        title: "Error",
+        text: message,
+        icon: "error"
+      });
+    }
   }
   
   const handleLangChange = (newLangData) => {

@@ -2,11 +2,9 @@
 
 namespace App\Strategies\Files;
 
-use App\Jobs\DeleteMediaJob;
 use App\Jobs\UploadMediaJob;
 use App\Models\Media;
 use App\Strategies\Interfaces\FileUploadStrategyInterface;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class MediaUploadStrategy implements FileUploadStrategyInterface
@@ -29,7 +27,7 @@ class MediaUploadStrategy implements FileUploadStrategyInterface
 
     public function getMediaById($fileId, $model)
     {
-        return $model->media()->where('id', $fileId)->first();
+        return $model->media()->where('id', (int) $fileId)->first();
     }
 
     public function sortMedia(array $media)
@@ -51,15 +49,12 @@ class MediaUploadStrategy implements FileUploadStrategyInterface
     }
 
     public function delete($media)
-    {   
-        DeleteMediaJob::dispatch(
-            [
-                'disk' => $media->disk,
-                'id' => $media->id,
-                'file_name' => $media->file_name,
-            ]
-        );
+    {
+        if (!$media instanceof Media) {
+            throw new \InvalidArgumentException('Media not found for this record.');
+        }
 
+        // Spatie MediaLibrary already handles deleting original + conversions.
         $media->delete();
     }
 

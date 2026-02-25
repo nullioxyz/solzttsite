@@ -218,10 +218,14 @@ class PortfolioController extends Controller
     {
         try {
             DB::beginTransaction();
-            
-            $this->mediaUploadStrategy->delete(
-                $this->mediaUploadStrategy->getMediaById($fileId, $portfolio)
-            );
+
+            $media = $this->mediaUploadStrategy->getMediaById($fileId, $portfolio);
+            if (!$media) {
+                DB::rollBack();
+                return response()->json(['message' => __('File not found for this item')], 404);
+            }
+
+            $this->mediaUploadStrategy->delete($media);
 
             DB::commit();
         } catch (\Exception $e) {

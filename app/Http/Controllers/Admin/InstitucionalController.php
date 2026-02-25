@@ -160,17 +160,23 @@ class InstitucionalController extends Controller
     {
         try {
             DB::beginTransaction();
-            
-            $this->mediaUploadStrategy->delete(
-                $this->mediaUploadStrategy->getMediaById($fileId, $institucional)
-            );
 
+            $media = $this->mediaUploadStrategy->getMediaById($fileId, $institucional);
+            if (!$media) {
+                DB::rollBack();
+                return response()->json(['message' => __('File not found for this item')], 404);
+            }
+
+            $this->mediaUploadStrategy->delete($media);
 
             DB::commit();
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
             DB::rollBack();
+            Log::error($e->getMessage(), ['fileId' => $fileId, 'institucional' => $institucional->id]);
+            return response()->json(['message' => __('Unable to remove file')], 500);
         }
+
+        return response()->noContent();
     }
 
     private function resolveSlugFromLanguages(array $languages): string
