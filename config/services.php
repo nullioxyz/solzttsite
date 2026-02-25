@@ -52,4 +52,11 @@ return [
         'enabled' => env('GA_ENABLED', false),
     ],
 
+    'geoip' => [
+        'enabled' => env('GEOIP_FALLBACK_ENABLED', false),
+        'endpoint' => env('GEOIP_FALLBACK_ENDPOINT', 'https://ipapi.co/{ip}/json/'),
+        'token' => env('GEOIP_FALLBACK_TOKEN'),
+        'timeout' => env('GEOIP_FALLBACK_TIMEOUT', 2),
+    ],
+
 ];

@@ -8,6 +8,7 @@ use App\Models\AnalyticsVisitor;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 class AnalyticsController extends Controller
@@ -72,7 +73,8 @@ class AnalyticsController extends Controller
         }
 
         $consentPreferences = $this->normalizeConsentPreferences($validated['consent_preferences'] ?? []);
-        $geo = $this->resolveGeo($request, $payload);
+        $ipAddress = $request->ip();
+        $geo = $this->resolveGeo($request, $payload, $ipAddress);
         $device = $this->resolveDevice($request->userAgent());
         $origin = $this->resolveTrafficSource(
             $validated['page_location'] ?? null,
@@ -80,7 +82,6 @@ class AnalyticsController extends Controller
         );
 
         $visitorId = $validated['visitor_id'] ?? $validated['session_key'] ?? null;
-        $ipAddress = $request->ip();
         $isReturning = false;
 
         if ($visitorId) {
@@ -142,7 +143,7 @@ class AnalyticsController extends Controller
         ];
     }
 
-    private function resolveGeo(Request $request, ?array $payload): array
+    private function resolveGeo(Request $request, ?array $payload, ?string $ipAddress): array
     {
         $countryCode = strtoupper((string) (
             $request->header('CF-IPCountry')
@@ -171,6 +172,14 @@ class AnalyticsController extends Controller
         $payloadTimezone = is_array($payload) ? ($payload['timezone'] ?? null) : null;
         $timezone = $payloadTimezone ?: ($request->header('X-Timezone') ?: null);
 
+        if (!$countryCode || !$countryName || !$city || !$timezone) {
+            $fallbackGeo = $this->lookupGeoByIp($ipAddress);
+            $countryCode = $countryCode ?: $fallbackGeo['country_code'];
+            $countryName = $countryName ?: $fallbackGeo['country_name'];
+            $city = $city ?: $fallbackGeo['city'];
+            $timezone = $timezone ?: $fallbackGeo['timezone'];
+        }
+
         $city = is_string($city) ? trim($city) : null;
         $countryName = is_string($countryName) ? trim($countryName) : null;
         $timezone = is_string($timezone) ? trim($timezone) : null;
@@ -181,6 +190,74 @@ class AnalyticsController extends Controller
             'city' => $city ?: null,
             'timezone' => $timezone ?: null,
         ];
+    }
+
+    private function lookupGeoByIp(?string $ipAddress): array
+    {
+        $enabled = (bool) data_get(config('services.geoip'), 'enabled', false);
+        $endpoint = (string) data_get(config('services.geoip'), 'endpoint', '');
+        $timeout = (int) data_get(config('services.geoip'), 'timeout', 2);
+        $token = data_get(config('services.geoip'), 'token');
+
+        if (
+            !$enabled ||
+            !$endpoint ||
+            !$ipAddress ||
+            !filter_var($ipAddress, FILTER_VALIDATE_IP) ||
+            !filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)
+        ) {
+            return [
+                'country_code' => null,
+                'country_name' => null,
+                'city' => null,
+                'timezone' => null,
+            ];
+        }
+
+        $url = str_replace('{ip}', $ipAddress, $endpoint);
+
+        try {
+            $request = Http::timeout(max($timeout, 1))->acceptJson();
+            if (!empty($token)) {
+                $request = $request->withToken((string) $token);
+            }
+
+            $response = $request->get($url);
+            if (!$response->ok() || !is_array($response->json())) {
+                return [
+                    'country_code' => null,
+                    'country_name' => null,
+                    'city' => null,
+                    'timezone' => null,
+                ];
+            }
+
+            $data = $response->json();
+
+            $countryCode = $this->toNullableString($data['country_code'] ?? $data['country'] ?? null);
+            $countryCode = $countryCode ? strtoupper($countryCode) : null;
+            if ($countryCode && strlen($countryCode) !== 2) {
+                $countryCode = null;
+            }
+
+            $countryName = $this->toNullableString($data['country_name'] ?? $data['country'] ?? null);
+            $city = $this->toNullableString($data['city'] ?? null);
+            $timezone = $this->toNullableString($data['timezone'] ?? $data['time_zone']['name'] ?? null);
+
+            return [
+                'country_code' => $countryCode,
+                'country_name' => $countryName,
+                'city' => $city,
+                'timezone' => $timezone,
+            ];
+        } catch (\Throwable) {
+            return [
+                'country_code' => null,
+                'country_name' => null,
+                'city' => null,
+                'timezone' => null,
+            ];
+        }
     }
 
     private function resolveDevice(?string $userAgent): array

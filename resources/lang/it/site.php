@@ -130,7 +130,7 @@ return [
     // cookie consent
     'cookie_consent_aria' => 'Consenso cookie',
     'cookie_consent_title' => 'Privacy e Cookie',
-    'cookie_consent_description' => 'Utilizziamo cookie necessari per il funzionamento del sito e, con il tuo consenso, cookie di analytics e marketing per capire origine del traffico, IP, browser, dispositivo e migliorare le conversioni.',
+    'cookie_consent_description' => 'Utilizziamo cookie essenziali per garantire il corretto funzionamento del sito. Con il tuo consenso, usiamo anche cookie di analytics e marketing per migliorare l\'esperienza e capire quali contenuti sono più utili.',
     'cookie_consent_accept' => 'Accetta tutto',
     'cookie_consent_reject' => 'Rifiuta opzionali',
     'cookie_consent_customize' => 'Personalizza',

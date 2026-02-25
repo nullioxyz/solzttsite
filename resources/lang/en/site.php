@@ -135,7 +135,7 @@ return [
     // cookie consent
     'cookie_consent_aria' => 'Cookie consent',
     'cookie_consent_title' => 'Privacy and Cookies',
-    'cookie_consent_description' => 'We use necessary cookies for site operation and, with your permission, analytics and marketing cookies to understand traffic source, IP, browser, device and improve conversions.',
+    'cookie_consent_description' => 'We use essential cookies to keep the site working properly. With your permission, we also use analytics and marketing cookies to improve your experience and understand what content people find most useful.',
     'cookie_consent_accept' => 'Accept all',
     'cookie_consent_reject' => 'Reject optional',
     'cookie_consent_customize' => 'Customize',
