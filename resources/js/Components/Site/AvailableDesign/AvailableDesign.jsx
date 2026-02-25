@@ -10,8 +10,11 @@ import { Thumb } from '../Components/Thumb';
 
 export default function AvailableDesign({ currentLanguage, initialDesigns }) {
   const boxRefs = useRef([]);
+  const initialPageFromUrl = Number(new URLSearchParams(window.location.search).get("page") || 1);
+  const initialPage = Number.isFinite(initialPageFromUrl) && initialPageFromUrl > 0 ? initialPageFromUrl : 1;
+  const shouldRehydratePages = initialPage > 1;
   const initialDesignsData = Array.isArray(initialDesigns?.data) ? initialDesigns.data : [];
-  const [designs, setDesigns] = useState(initialDesignsData);
+  const [designs, setDesigns] = useState(shouldRehydratePages ? [] : initialDesignsData);
   const [currentLangData, setCurrentLangData] = useState(currentLanguage ?? []);
   const [pagination, setPagination] = useState({
     current_page: initialDesigns?.current_page ?? 1,
@@ -21,11 +24,9 @@ export default function AvailableDesign({ currentLanguage, initialDesigns }) {
   });
   const [loadingMore, setLoadingMore] = useState(false);
   const [newItems, setNewItems] = useState([]);
-  const [isInitialLoad, setIsInitialLoad] = useState(initialDesignsData.length === 0);
+  const [isInitialLoad, setIsInitialLoad] = useState(shouldRehydratePages || initialDesignsData.length === 0);
   const { t } = useTranslation();
   const resolvedLocale = currentLanguage?.slug ?? window.location.pathname.split('/').filter(Boolean)[0] ?? 'en';
-
-  const initialPage = Number(new URLSearchParams(window.location.search).get("page") || 1);
 
   const handleDesigns = async (page = null) => {
     const currentPage = Number(pagination.current_page ?? 1);
@@ -86,12 +87,77 @@ export default function AvailableDesign({ currentLanguage, initialDesigns }) {
   };
   
   useEffect(() => {
-    if (isInitialLoad && designs.length === 0) {
-      handleDesigns(initialPage).finally(() => setIsInitialLoad(false));
-    } else if (isInitialLoad) {
-      setIsInitialLoad(false);
-    }
-  }, [isInitialLoad, initialPage, designs.length]);
+    let isMounted = true;
+
+    const rehydrateDesignsUntilPage = async () => {
+      if (!isInitialLoad) {
+        return;
+      }
+
+      const serverLastPage = Number(initialDesigns?.last_page ?? 1);
+      const targetPage = Math.min(initialPage, Number.isFinite(serverLastPage) && serverLastPage > 0 ? serverLastPage : 1);
+
+      if (targetPage <= 1 && !shouldRehydratePages) {
+        if (isMounted) {
+          setIsInitialLoad(false);
+        }
+        return;
+      }
+
+      setLoadingMore(true);
+
+      try {
+        const pageResponses = await Promise.all(
+          Array.from({ length: targetPage }, (_, index) =>
+            axios.get(
+              route("site.available_designs.load", {
+                locale: resolvedLocale,
+                page: index + 1,
+              })
+            )
+          )
+        );
+
+        if (!isMounted) {
+          return;
+        }
+
+        const allItems = pageResponses.flatMap((response) => response.data?.designs?.data ?? []);
+        const mergedItems = Array.from(new Map(allItems.map((item) => [item.id, item])).values());
+        const lastResponse = pageResponses[pageResponses.length - 1];
+        const lastDesignsPage = lastResponse?.data?.designs;
+        const currentLang = lastResponse?.data?.currentLang;
+
+        setDesigns(mergedItems);
+
+        if (currentLang) {
+          setCurrentLangData(currentLang);
+        }
+
+        if (lastDesignsPage) {
+          setPagination({
+            current_page: lastDesignsPage.current_page,
+            first_page: lastDesignsPage.first_page,
+            last_page: lastDesignsPage.last_page,
+            next_page_url: lastDesignsPage.next_page_url,
+          });
+        }
+      } catch (error) {
+        console.error("Error rehydrating available designs:", error);
+      } finally {
+        if (isMounted) {
+          setIsInitialLoad(false);
+          setLoadingMore(false);
+        }
+      }
+    };
+
+    rehydrateDesignsUntilPage();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [initialDesigns?.last_page, initialPage, isInitialLoad, resolvedLocale, shouldRehydratePages]);
 
   useEffect(() => {
     if (newItems.length > 0) {

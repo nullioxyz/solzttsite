@@ -10,8 +10,11 @@ import { Thumb } from "../Components/Thumb";
 export default function Works({ currentLanguage, initialPortfolio }) {
 
   const boxRefs = useRef([]);
+  const initialPageFromUrl = Number(new URLSearchParams(window.location.search).get("page") || 1);
+  const initialPage = Number.isFinite(initialPageFromUrl) && initialPageFromUrl > 0 ? initialPageFromUrl : 1;
+  const shouldRehydratePages = initialPage > 1;
   const initialPortfolioData = Array.isArray(initialPortfolio?.data) ? initialPortfolio.data : [];
-  const [portfolio, setPortfolio] = useState(initialPortfolioData);
+  const [portfolio, setPortfolio] = useState(shouldRehydratePages ? [] : initialPortfolioData);
   const [pagination, setPagination] = useState({
     current_page: initialPortfolio?.current_page ?? 1,
     first_page: initialPortfolio?.first_page ?? 1,
@@ -19,10 +22,8 @@ export default function Works({ currentLanguage, initialPortfolio }) {
     next_page_url: initialPortfolio?.next_page_url ?? null,
   });
   const [loadingMore, setLoadingMore] = useState(false);
-  const [isInitialLoad, setIsInitialLoad] = useState(initialPortfolioData.length === 0);
+  const [isInitialLoad, setIsInitialLoad] = useState(shouldRehydratePages || initialPortfolioData.length === 0);
   const [newItems, setNewItems] = useState([]);
-  
-  const initialPage = Number(new URLSearchParams(window.location.search).get("page") || 1);
 
   const { t } = useTranslation();
   const resolvedLocale = currentLanguage?.slug ?? window.location.pathname.split('/').filter(Boolean)[0] ?? 'en';
@@ -94,12 +95,72 @@ export default function Works({ currentLanguage, initialPortfolio }) {
   };
 
   useEffect(() => {
-    if (isInitialLoad && portfolio.length === 0) {
-      handlePortfolio(initialPage).finally(() => setIsInitialLoad(false));
-    } else if (isInitialLoad) {
-      setIsInitialLoad(false);
-    }
-  }, [isInitialLoad, initialPage, portfolio.length]);
+    let isMounted = true;
+
+    const rehydratePortfolioUntilPage = async () => {
+      if (!isInitialLoad) {
+        return;
+      }
+
+      const serverLastPage = Number(initialPortfolio?.last_page ?? 1);
+      const targetPage = Math.min(initialPage, Number.isFinite(serverLastPage) && serverLastPage > 0 ? serverLastPage : 1);
+
+      if (targetPage <= 1 && !shouldRehydratePages) {
+        if (isMounted) {
+          setIsInitialLoad(false);
+        }
+        return;
+      }
+
+      setLoadingMore(true);
+
+      try {
+        const pageResponses = await Promise.all(
+          Array.from({ length: targetPage }, (_, index) =>
+            axios.get(
+              route("site.portfolio.load", {
+                locale: resolvedLocale,
+                page: index + 1,
+              })
+            )
+          )
+        );
+
+        if (!isMounted) {
+          return;
+        }
+
+        const allItems = pageResponses.flatMap((response) => response.data?.portfolio?.data ?? []);
+        const mergedItems = Array.from(new Map(allItems.map((item) => [item.id, item])).values());
+        const lastResponse = pageResponses[pageResponses.length - 1];
+        const lastPortfolioPage = lastResponse?.data?.portfolio;
+
+        setPortfolio(mergedItems);
+
+        if (lastPortfolioPage) {
+          setPagination({
+            current_page: lastPortfolioPage.current_page,
+            first_page: lastPortfolioPage.first_page,
+            last_page: lastPortfolioPage.last_page,
+            next_page_url: lastPortfolioPage.next_page_url,
+          });
+        }
+      } catch (error) {
+        console.error("Failed to rehydrate portfolio data:", error);
+      } finally {
+        if (isMounted) {
+          setIsInitialLoad(false);
+          setLoadingMore(false);
+        }
+      }
+    };
+
+    rehydratePortfolioUntilPage();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [initialPage, initialPortfolio?.last_page, isInitialLoad, resolvedLocale, shouldRehydratePages]);
 
   useEffect(() => {
     if (newItems.length > 0) {
