@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use Throwable;
 
 class ContactController extends Controller
 {
@@ -94,10 +95,19 @@ class ContactController extends Controller
                             ->withErrors(['error' => __("Fail to check recaptcha")]);
         }
 
-        $response = Http::asForm()->post('https://hcaptcha.com/siteverify', [
-            'secret'   => $hcaptchaSecret,
-            'response' => $token,
-        ]);
+        try {
+            $response = Http::asForm()->timeout(5)->post('https://hcaptcha.com/siteverify', [
+                'secret'   => $hcaptchaSecret,
+                'response' => $token,
+            ]);
+        } catch (Throwable $exception) {
+            Log::warning('hCaptcha verification request failed.', [
+                'exception' => $exception::class,
+            ]);
+
+            return redirect()->route('site.contact', ["locale" => $lang])
+                ->withErrors(['error' => __("Fail to check recaptcha")]);
+        }
 
         $result = $response->json();
 
@@ -115,13 +125,21 @@ class ContactController extends Controller
             $contact = $this->contactService->storeContact($validatedData);
 
             if (!empty($validatedData['files']) && is_array($validatedData['files'])) {
-                $this->mediaUploadStrategy->uploadAsync($validatedData['files'], $contact, 'contact');
+                try {
+                    $this->mediaUploadStrategy->uploadAsync($validatedData['files'], $contact, 'contact');
+                } catch (Throwable $exception) {
+                    Log::warning('Contact attachments could not be queued after contact creation.', [
+                        'contact_id' => $contact->id,
+                        'exception' => $exception::class,
+                    ]);
+                }
             }
 
             return redirect()->route('site.contact', ["locale" => $lang]);
-        } catch (\Exception $e) {
-
-            Log::error($e->getMessage());
+        } catch (Throwable $exception) {
+            Log::error('Contact creation failed.', [
+                'exception' => $exception::class,
+            ]);
             return redirect()->route('site.contact', ["locale" => $lang])->withErrors(['error' => 'Something went wrong. Please try again.']);
         }
     }
