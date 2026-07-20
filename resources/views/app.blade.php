@@ -627,16 +627,6 @@
                     elements.customizePanel?.classList.add('is-visible');
                 });
 
-                if (consentState) {
-                    setConsentUI(consentState);
-                    applyConsent();
-                    hideConsentBanner();
-                    return;
-                }
-
-                elements.root.style.display = 'block';
-                setConsentUI({ analytics: false, marketing: false });
-
                 elements.openCustomizeBtn?.addEventListener('click', function () {
                     const isVisible = elements.customizePanel?.classList.contains('is-visible');
                     if (elements.customizePanel) {
@@ -658,6 +648,16 @@
                         marketing: Boolean(elements.marketingCheckbox?.checked),
                     });
                 });
+
+                if (consentState) {
+                    setConsentUI(consentState);
+                    applyConsent();
+                    hideConsentBanner();
+                    return;
+                }
+
+                elements.root.style.display = 'block';
+                setConsentUI({ analytics: false, marketing: false });
             }
 
             let lastTrackedUrl = window.location.href;
