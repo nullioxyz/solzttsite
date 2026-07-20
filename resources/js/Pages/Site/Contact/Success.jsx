@@ -69,10 +69,15 @@ function SuccessContent({ currentLanguage, success }) {
   }, [success, t]);
 
   return (
-    <section className="mx-auto flex min-h-[55vh] w-full max-w-[900px] items-center justify-center px-5 py-16 text-center">
-      <div className="w-full rounded-2xl border border-gray-200 bg-white px-6 py-12 shadow-sm md:px-12">
-        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 text-3xl text-emerald-600">
-          ✓
+    <section className="mx-auto flex min-h-[60vh] w-full max-w-[1000px] items-center justify-center px-5 py-12 text-center md:py-16">
+      <div className="w-full">
+        <div className="mx-auto mb-6 aspect-video w-full max-w-[520px] overflow-hidden">
+          <img
+            src="/images/obrigado.gif"
+            alt=""
+            aria-hidden="true"
+            className="h-full w-full object-cover"
+          />
         </div>
         <h1 className="text-3xl tracking-tight text-[#595954] md:text-4xl">
           {t('contact_success_title')}
@@ -81,10 +86,10 @@ function SuccessContent({ currentLanguage, success }) {
           {t('contact_success_description')}
         </p>
         <a
-          href={route('home.index', { locale: currentLanguage.slug })}
-          className="mt-8 inline-flex rounded-full bg-[#595954] px-7 py-3 text-sm font-semibold text-white transition hover:bg-[#3f3f3b]"
+          href={route('site.portfolio', { locale: currentLanguage.slug })}
+          className="mt-8 inline-flex border border-[#595954] bg-[#595954] px-6 py-3 text-lg uppercase text-white transition duration-300 hover:bg-white hover:text-[#595954]"
         >
-          {t('contact_success_back_home')}
+          {t('contact_success_explore_projects')}
         </a>
       </div>
     </section>

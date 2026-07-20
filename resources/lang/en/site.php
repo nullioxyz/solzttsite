@@ -72,9 +72,9 @@ return [
     "Soon I'll be in touch to discuss about your project" => "Soon I'll be in touch to discuss about your project",
     "Check your information and submit the form again" => "Check your information and submit the form again",
     'contact_success_meta_title' => 'Request sent',
-    'contact_success_title' => 'Thank you! Your request has been sent.',
+    'contact_success_title' => 'Thank you!',
     'contact_success_description' => 'I received your information and will get in touch as soon as possible to discuss your project.',
-    'contact_success_back_home' => 'Back to home',
+    'contact_success_explore_projects' => 'Explore projects',
 
     "Arm, Forearm" => 'Arm, Forearm',
     "+39 389 748 2409" => "+39 389 748 2409",
