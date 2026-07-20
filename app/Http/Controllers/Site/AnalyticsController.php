@@ -8,6 +8,7 @@ use App\Models\AnalyticsVisitor;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -413,43 +414,61 @@ class AnalyticsController extends Controller
         array $origin,
         array $consentPreferences,
     ): bool {
-        $visitor = AnalyticsVisitor::query()->firstOrNew(['visitor_id' => $visitorId]);
+        return DB::transaction(function () use (
+            $visitorId,
+            $sessionKey,
+            $occurredAt,
+            $eventName,
+            $ipAddress,
+            $geo,
+            $device,
+            $origin,
+            $consentPreferences,
+        ): bool {
+            AnalyticsVisitor::query()->insertOrIgnore([
+                'visitor_id' => $visitorId,
+                'first_seen_at' => $occurredAt,
+                'visit_count' => 0,
+                'event_count' => 0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
 
-        if (!$visitor->exists) {
-            $visitor->first_seen_at = $occurredAt;
-            $visitor->visit_count = 0;
-            $visitor->event_count = 0;
-        }
+            $visitor = AnalyticsVisitor::query()
+                ->where('visitor_id', $visitorId)
+                ->lockForUpdate()
+                ->firstOrFail();
 
-        $visitor->event_count = ((int) $visitor->event_count) + 1;
+            $visitor->event_count = ((int) $visitor->event_count) + 1;
 
-        if ($eventName === 'site_page_view') {
-            $lastVisitStartedAt = $visitor->last_visit_started_at;
-            $isNewVisitWindow = !$lastVisitStartedAt || $lastVisitStartedAt->lt($occurredAt->copy()->subMinutes(30));
+            if ($eventName === 'site_page_view') {
+                $lastVisitStartedAt = $visitor->last_visit_started_at;
+                $isNewVisitWindow = !$lastVisitStartedAt || $lastVisitStartedAt->lt($occurredAt->copy()->subMinutes(30));
 
-            if ($isNewVisitWindow) {
-                $visitor->visit_count = ((int) $visitor->visit_count) + 1;
-                $visitor->last_visit_started_at = $occurredAt;
+                if ($isNewVisitWindow) {
+                    $visitor->visit_count = ((int) $visitor->visit_count) + 1;
+                    $visitor->last_visit_started_at = $occurredAt;
+                }
             }
-        }
 
-        $visitor->last_seen_at = $occurredAt;
-        $visitor->last_session_key = $sessionKey;
-        $visitor->last_ip_address = $ipAddress;
-        $visitor->last_country_code = $geo['country_code'];
-        $visitor->last_country_name = $geo['country_name'];
-        $visitor->last_city = $geo['city'];
-        $visitor->last_timezone = $geo['timezone'];
-        $visitor->last_browser = $device['browser'];
-        $visitor->last_os = $device['os'];
-        $visitor->last_device_type = $device['device_type'];
-        $visitor->last_referrer_host = $origin['referrer_host'];
-        $visitor->last_traffic_source = $origin['traffic_source'];
-        $visitor->last_utm_source = $origin['utm_source'];
-        $visitor->consent_preferences = $consentPreferences;
-        $visitor->save();
+            $visitor->last_seen_at = $occurredAt;
+            $visitor->last_session_key = $sessionKey;
+            $visitor->last_ip_address = $ipAddress;
+            $visitor->last_country_code = $geo['country_code'];
+            $visitor->last_country_name = $geo['country_name'];
+            $visitor->last_city = $geo['city'];
+            $visitor->last_timezone = $geo['timezone'];
+            $visitor->last_browser = $device['browser'];
+            $visitor->last_os = $device['os'];
+            $visitor->last_device_type = $device['device_type'];
+            $visitor->last_referrer_host = $origin['referrer_host'];
+            $visitor->last_traffic_source = $origin['traffic_source'];
+            $visitor->last_utm_source = $origin['utm_source'];
+            $visitor->consent_preferences = $consentPreferences;
+            $visitor->save();
 
-        return ((int) $visitor->visit_count) > 1;
+            return ((int) $visitor->visit_count) > 1;
+        }, 3);
     }
 
     private function hashIp(?string $ip): ?string
