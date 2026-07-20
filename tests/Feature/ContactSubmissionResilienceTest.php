@@ -83,6 +83,45 @@ class ContactSubmissionResilienceTest extends TestCase
         $response->assertSessionHasNoErrors();
     }
 
+    public function test_contact_rate_limit_returns_a_form_error_and_does_not_mix_different_leads(): void
+    {
+        Http::fake([
+            'hcaptcha.com/siteverify' => Http::response(['success' => true]),
+        ]);
+
+        $this->mock(ContactService::class, fn ($mock) => $mock
+            ->shouldReceive('storeContact')
+            ->times(4)
+            ->andReturn((object) ['id' => 74]));
+
+        for ($attempt = 0; $attempt < 3; $attempt++) {
+            $response = $this->from('/pt/contact')
+                ->post('/pt/save-contact', $this->validContactPayload());
+
+            $response->assertRedirect();
+            $this->assertStringContainsString(
+                '/pt/contact/success/',
+                (string) $response->headers->get('Location'),
+            );
+        }
+
+        $this->from('/pt/contact')
+            ->post('/pt/save-contact', $this->validContactPayload())
+            ->assertRedirect('/pt/contact')
+            ->assertSessionHasErrors('error');
+
+        $otherLead = $this->from('/pt/contact')->post(
+            '/pt/save-contact',
+            $this->validContactPayload(['email' => 'another-lead@example.com']),
+        );
+
+        $otherLead->assertRedirect();
+        $this->assertStringContainsString(
+            '/pt/contact/success/',
+            (string) $otherLead->headers->get('Location'),
+        );
+    }
+
     private function validContactPayload(array $overrides = []): array
     {
         return array_replace_recursive([

@@ -50,7 +50,6 @@
     $analyticsEnabledForRuntime = app()->environment('production') || filter_var(env('ANALYTICS_ENABLE_LOCAL', false), FILTER_VALIDATE_BOOL);
     $analyticsCollectUrl = \Illuminate\Support\Facades\URL::temporarySignedRoute('analytics.collect', now()->addHours(12), [], absolute: false);
     $metaEventsUrl = route('meta.events', absolute: false);
-    $isContactPage = request()->is('*/contact');
     $isPortfolioPage = request()->is('*/portfolio');
     $isAvailableDesignPage = request()->is('*/available-designs');
     $portfolioLcpUuid = data_get($page, 'props.portfolio.data.0.media.0.uuid');
@@ -131,10 +130,6 @@
             <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Merriweather:wght@300;400&display=swap" rel="stylesheet">
         </noscript>
     @endif
-    @if($isContactPage)
-        <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
-    @endif
-
     @php
         $gaMeasurementId = config('services.google_analytics.measurement_id');
         $facebookPixelId = config('services.facebook.pixel_id');

@@ -7,6 +7,7 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -26,6 +27,17 @@ class RouteServiceProvider extends ServiceProvider
     {
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+        });
+
+        RateLimiter::for('contact-form', function (Request $request) {
+            $email = Str::lower(trim((string) $request->input('email')));
+            $identity = $email !== '' ? $email.'|'.$request->ip() : $request->ip();
+
+            return Limit::perMinute(3)
+                ->by(hash('sha256', $identity))
+                ->response(fn (Request $request, array $headers) => back()
+                    ->withHeaders($headers)
+                    ->withErrors(['error' => trans('site.contact_rate_limit')]));
         });
 
         $this->routes(function () {
