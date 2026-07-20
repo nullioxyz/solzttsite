@@ -43,8 +43,14 @@ return [
     ],
 
     'facebook' => [
-        'pixel_id' => env('FACEBOOK_PIXEL_ID', '1537290374142296'),
+        'pixel_id' => env('FACEBOOK_PIXEL_ID'),
         'pixel_enabled' => env('FACEBOOK_PIXEL_ENABLED', false),
+        'capi_enabled' => env('FACEBOOK_CAPI_ENABLED', false),
+        'access_token' => env('FACEBOOK_CAPI_ACCESS_TOKEN'),
+        'graph_api_version' => env('FACEBOOK_GRAPH_API_VERSION', 'v25.0'),
+        'test_event_code' => env('FACEBOOK_TEST_EVENT_CODE'),
+        'timeout' => (int) env('FACEBOOK_CAPI_TIMEOUT', 5),
+        'delivery_retention_days' => (int) env('FACEBOOK_DELIVERY_RETENTION_DAYS', 30),
     ],
 
     'google_analytics' => [

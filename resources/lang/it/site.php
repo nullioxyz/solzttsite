@@ -130,12 +130,13 @@ return [
     // cookie consent
     'cookie_consent_aria' => 'Consenso cookie',
     'cookie_consent_title' => 'Privacy e Cookie',
-    'cookie_consent_description' => 'Utilizziamo cookie essenziali per garantire il corretto funzionamento del sito. Con il tuo consenso, usiamo anche cookie di analytics e marketing per migliorare l\'esperienza e capire quali contenuti sono più utili.',
+    'cookie_consent_description' => 'Utilizziamo cookie essenziali per il funzionamento del sito. Con il tuo consenso, usiamo anche analytics, Meta Pixel e Conversions API per misurare le campagne e migliorare l\'esperienza.',
     'cookie_consent_accept' => 'Accetta tutto',
     'cookie_consent_reject' => 'Rifiuta opzionali',
     'cookie_consent_customize' => 'Personalizza',
     'cookie_consent_analytics' => 'Cookie di analytics (paese, città, orario di accesso, ricorrenza)',
-    'cookie_consent_marketing' => 'Cookie di marketing (pixel e campagne)',
-    'cookie_consent_save' => 'Salva preferenze'
+    'cookie_consent_marketing' => 'Marketing (Meta Pixel, Conversions API e campagne)',
+    'cookie_consent_save' => 'Salva preferenze',
+    'cookie_consent_manage' => 'Impostazioni cookie',
 
 ];

@@ -14,7 +14,12 @@ import axios from '@/Services/requests'
 import { FiX } from 'react-icons/fi';
 import confetti from "canvas-confetti";
 import DOMPurify from 'dompurify';
-import { trackActionEvent, trackLeadConversion } from '@/helpers/tracking';
+import {
+  createMetaEventId,
+  getMetaTrackingContext,
+  trackActionEvent,
+  trackLeadConversion,
+} from '@/helpers/tracking';
 
 var count = 200;
 var defaults = {
@@ -43,6 +48,7 @@ const Toast = Swal.mixin({
 
 export default function Form({ currentLanguage, considerationTranslation, hcaptchaSiteKey }) {
   const captchaRef = useRef(null);
+  const hasTrackedFormStartRef = useRef(false);
   const [disableButton, setDisableButton] = useState(false);
   const savedData = JSON.parse(localStorage.getItem("contactForm") || "{}");
 
@@ -54,7 +60,7 @@ export default function Form({ currentLanguage, considerationTranslation, hcaptc
       setData("token", null);
   };
 
-  const { data, setData, post, processing, errors, reset } = useForm({
+  const { data, setData, post, processing, errors, reset, transform } = useForm({
     firstname: savedData.firstname ?? null,
     lastname: savedData.lastname ?? null,
     email: savedData.email ?? null,
@@ -138,8 +144,18 @@ export default function Form({ currentLanguage, considerationTranslation, hcaptc
     e.preventDefault();
     setDisableButton(true);
 
+    const leadEventId = createMetaEventId();
+    const metaTrackingContext = getMetaTrackingContext();
+
+    transform((formData) => ({
+      ...formData,
+      meta_tracking: leadEventId ? {
+        ...metaTrackingContext,
+        event_id: leadEventId,
+      } : null,
+    }));
+
     post(route('contact.store', { locale: currentLanguage.slug }), {
-      data: data,
       preserveScroll: true,
       preserveState: true,
       onSuccess: () => {
@@ -152,7 +168,7 @@ export default function Form({ currentLanguage, considerationTranslation, hcaptc
         };
 
         trackActionEvent('contact_form_submitted', trackingPayload);
-        trackLeadConversion(trackingPayload);
+        trackLeadConversion(trackingPayload, leadEventId);
 
 
         fire(0.25, {
@@ -202,12 +218,24 @@ export default function Form({ currentLanguage, considerationTranslation, hcaptc
           title: t("Check your information and submit the form again")
         });
       },
+      onFinish: () => {
+        transform((formData) => formData);
+      },
     });
   }
 
+  const trackFormStarted = () => {
+    if (hasTrackedFormStartRef.current) return;
+    hasTrackedFormStartRef.current = true;
+    trackActionEvent('contact_form_started', {
+      page_key: 'contact',
+      locale: currentLanguage?.slug ?? 'unknown',
+    });
+  };
+
   return (
     <div className="form">
-      <form id="contactForm" onSubmit={(e) => formSubmit(e)} encType="multipart/form-data">
+      <form id="contactForm" onSubmit={(e) => formSubmit(e)} onFocus={trackFormStarted} encType="multipart/form-data">
         <div className="xl:w-[1240px] lg:w-[1240px] mx-auto space-y-6">
           
           <div className="text-xl text-[#4d4c4c]" dangerouslySetInnerHTML={{ __html: sanitizedConsiderationDescription }} />

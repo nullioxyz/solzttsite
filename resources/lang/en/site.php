@@ -135,11 +135,12 @@ return [
     // cookie consent
     'cookie_consent_aria' => 'Cookie consent',
     'cookie_consent_title' => 'Privacy and Cookies',
-    'cookie_consent_description' => 'We use essential cookies to keep the site working properly. With your permission, we also use analytics and marketing cookies to improve your experience and understand what content people find most useful.',
+    'cookie_consent_description' => 'We use essential cookies to keep the site working properly. With your permission, we also use analytics, Meta Pixel and the Conversions API to measure campaigns and improve your experience.',
     'cookie_consent_accept' => 'Accept all',
     'cookie_consent_reject' => 'Reject optional',
     'cookie_consent_customize' => 'Customize',
     'cookie_consent_analytics' => 'Analytics cookies (country, city, access time, recurrence)',
-    'cookie_consent_marketing' => 'Marketing cookies (pixel and campaigns)',
-    'cookie_consent_save' => 'Save preferences'
+    'cookie_consent_marketing' => 'Marketing (Meta Pixel, Conversions API and campaigns)',
+    'cookie_consent_save' => 'Save preferences',
+    'cookie_consent_manage' => 'Cookie settings',
 ];

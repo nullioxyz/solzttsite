@@ -26,7 +26,31 @@ export function trackActionEvent(eventName, params = {}) {
   window.trackAnalyticsEvent(normalizedName, normalizeParams(params));
 }
 
-export function trackLeadConversion(params = {}) {
+export function createMetaEventId() {
+  if (!isBrowser) return null;
+  if (typeof window.createMetaEventId === "function") {
+    return window.createMetaEventId();
+  }
+  if (window.crypto?.randomUUID) {
+    return window.crypto.randomUUID();
+  }
+  return null;
+}
+
+export function getMetaTrackingContext() {
+  if (!isBrowser || typeof window.getMetaTrackingContext !== "function") {
+    return {
+      event_source_url: null,
+      marketing_consent: false,
+      fbp: null,
+      fbc: null,
+    };
+  }
+
+  return window.getMetaTrackingContext();
+}
+
+export function trackLeadConversion(params = {}, eventId = null) {
   if (!isBrowser || typeof window.trackLeadConversion !== "function") return;
-  window.trackLeadConversion(normalizeParams(params));
+  window.trackLeadConversion(normalizeParams(params), eventId);
 }

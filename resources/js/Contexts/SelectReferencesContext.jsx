@@ -28,11 +28,9 @@ export function SelectReferencesProvider({ children }) {
     const payload = {
       reference_type: referenceType,
       reference_id: String(data?.id ?? ''),
-      reference_name: data?.name ?? '',
     };
 
     trackActionEvent('reference_added', payload);
-    trackActionEvent(`reference_added_${referenceType}`, payload);
   }
 
   return (

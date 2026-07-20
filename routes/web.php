@@ -16,6 +16,7 @@ use App\Http\Controllers\Site\AvailableController as SiteAvailableController;
 use App\Http\Controllers\Site\ContactController;
 use App\Http\Controllers\Site\FileController;
 use App\Http\Controllers\Site\HomeController;
+use App\Http\Controllers\Site\MetaTrackingController;
 use App\Http\Controllers\Site\PortfolioController as PortfolioSiteController;
 use App\Http\Controllers\Site\SitemapController;
 use App\Http\Controllers\Site\TranslationController;
@@ -47,6 +48,10 @@ Route::prefix('/')->group(function() {
 Route::post('/analytics/collect', [AnalyticsController::class, 'collect'])
     ->middleware(['signed:relative', 'throttle:120,1'])
     ->name('analytics.collect');
+
+Route::post('/meta/events', MetaTrackingController::class)
+    ->middleware('throttle:60,1')
+    ->name('meta.events');
 
 Route::middleware(['lang'])->prefix('/{locale}')->where(['locale' => '[a-z]{2}'])->group(function() {
     Route::get('/portfolio', [PortfolioSiteController::class, 'index'])->name('site.portfolio');
