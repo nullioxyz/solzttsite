@@ -12,11 +12,34 @@ ID so Meta can deduplicate them.
 | `ViewContent` | Pixel | CAPI | Portfolio and available-design detail pages |
 | `ContactFormStarted` | Pixel | CAPI | First interaction with the contact form |
 | `ReferenceAdded` | Pixel | CAPI | A portfolio/design reference is selected |
-| `Lead` | Pixel | CAPI | Contact passes validation/CAPTCHA and is persisted |
+| `Lead` | Pixel | CAPI | Contact is persisted and the signed success page opens |
 
 `Lead` is never accepted by the generic browser endpoint. Its server event is
 created from the successfully persisted contact, and its browser event is sent
-only by the success callback using the same event ID.
+only by the signed success page using the same event ID.
+
+## Contact success page
+
+A successful contact submission redirects to
+`/{locale}/contact/success/{token}`. The URL has a 30-minute Laravel signature
+and the token must also match the session that submitted the form. Unsigned,
+expired, copied to another browser, or directly typed URLs cannot render the
+success page.
+
+The first valid view receives the browser `Lead` context and runs the existing
+confetti and success message. Refreshes may keep showing the confirmation page,
+but do not receive the event context again. A browser-session guard provides an
+additional protection against React remounts.
+
+For campaign optimization, prefer the standard `Lead` event. If a custom
+conversion based on a URL is also required, use the auxiliary rule:
+
+```text
+URL contains /contact/success/
+```
+
+The URL rule is supporting evidence; the deduplicated `Lead` event remains the
+conversion source of truth.
 
 ## Environment
 
@@ -68,10 +91,11 @@ through a reverse proxy and provides its explicit IPs or CIDRs.
 6. Reject optional cookies and confirm no Meta browser/server events arrive.
 7. Enable only marketing cookies and navigate through the site.
 8. Open a portfolio/design detail and add a reference.
-9. Submit a valid contact form.
+9. Submit a valid contact form and confirm the signed `/contact/success/` URL.
 10. Confirm Browser and Server sources have identical event names and event IDs
    and are shown as deduplicated.
-11. Remove `FACEBOOK_TEST_EVENT_CODE` before production.
+11. Refresh the success page and confirm that another `Lead` is not emitted.
+12. Remove `FACEBOOK_TEST_EVENT_CODE` before production.
 
 ## Authoritative references
 
