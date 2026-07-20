@@ -73,6 +73,10 @@ return [
     "Thank you!" => 'Grazie',
     "Soon I'll be in touch to discuss about your project" => "Presto ti contatterò per discutere del tuo progetto",
     "Check your information and submit the form again" => "Controlla i tuoi dati e invia nuovamente",
+    'contact_success_meta_title' => 'Richiesta inviata',
+    'contact_success_title' => 'Grazie!',
+    'contact_success_description' => 'Ho ricevuto le tue informazioni e ti contatterò il prima possibile per parlare del tuo progetto.',
+    'contact_success_explore_projects' => 'Esplora i progetti',
 
     "Arm, Forearm" => 'Braccio, Avambraccio',
     "+39 389 748 2409" => "+39 389 748 2409",
@@ -130,12 +134,13 @@ return [
     // cookie consent
     'cookie_consent_aria' => 'Consenso cookie',
     'cookie_consent_title' => 'Privacy e Cookie',
-    'cookie_consent_description' => 'Utilizziamo cookie essenziali per garantire il corretto funzionamento del sito. Con il tuo consenso, usiamo anche cookie di analytics e marketing per migliorare l\'esperienza e capire quali contenuti sono più utili.',
+    'cookie_consent_description' => 'Utilizziamo cookie essenziali per il funzionamento del sito. Con il tuo consenso, usiamo anche analytics, Meta Pixel e Conversions API per misurare le campagne e migliorare l\'esperienza.',
     'cookie_consent_accept' => 'Accetta tutto',
     'cookie_consent_reject' => 'Rifiuta opzionali',
     'cookie_consent_customize' => 'Personalizza',
     'cookie_consent_analytics' => 'Cookie di analytics (paese, città, orario di accesso, ricorrenza)',
-    'cookie_consent_marketing' => 'Cookie di marketing (pixel e campagne)',
-    'cookie_consent_save' => 'Salva preferenze'
+    'cookie_consent_marketing' => 'Marketing (Meta Pixel, Conversions API e campagne)',
+    'cookie_consent_save' => 'Salva preferenze',
+    'cookie_consent_manage' => 'Impostazioni cookie',
 
 ];

@@ -24,6 +24,12 @@ class StoreContactRequest extends FormRequest
             'attachments' => 'array|nullable',
             'files' => 'nullable|array|max:5',
             'files.*' => 'file|mimes:jpeg,png,jpg,pdf|max:5120',
+            'meta_tracking' => 'nullable|array',
+            'meta_tracking.event_id' => 'nullable|uuid',
+            'meta_tracking.event_source_url' => 'nullable|url:http,https|max:2048',
+            'meta_tracking.marketing_consent' => 'nullable|boolean',
+            'meta_tracking.fbp' => 'nullable|string|max:255',
+            'meta_tracking.fbc' => 'nullable|string|max:255',
         ];
     }
 

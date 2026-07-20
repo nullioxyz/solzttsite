@@ -20,7 +20,13 @@ class AnalyticsController extends Controller
             'metrics' => $this->metricsService->build(),
             'tracking' => [
                 'ga_enabled' => (app()->environment('production') || filter_var(env('ANALYTICS_ENABLE_LOCAL', false), FILTER_VALIDATE_BOOL)) && filled(config('services.google_analytics.measurement_id')),
-                'meta_enabled' => (app()->environment('production') || filter_var(env('ANALYTICS_ENABLE_LOCAL', false), FILTER_VALIDATE_BOOL)) && filled(config('services.facebook.pixel_id')),
+                'meta_enabled' => (app()->environment('production') || filter_var(env('ANALYTICS_ENABLE_LOCAL', false), FILTER_VALIDATE_BOOL))
+                    && filter_var(config('services.facebook.pixel_enabled'), FILTER_VALIDATE_BOOL)
+                    && filled(config('services.facebook.pixel_id')),
+                'meta_capi_enabled' => (app()->environment('production') || filter_var(env('ANALYTICS_ENABLE_LOCAL', false), FILTER_VALIDATE_BOOL))
+                    && filter_var(config('services.facebook.capi_enabled'), FILTER_VALIDATE_BOOL)
+                    && filled(config('services.facebook.pixel_id'))
+                    && filled(config('services.facebook.access_token')),
             ],
         ]);
     }

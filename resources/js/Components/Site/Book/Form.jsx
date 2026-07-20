@@ -12,22 +12,12 @@ import { useSelectReferences } from "@/Contexts/SelectReferencesContext";
 import Attachments from "../Components/Attachments/Index";
 import axios from '@/Services/requests'
 import { FiX } from 'react-icons/fi';
-import confetti from "canvas-confetti";
 import DOMPurify from 'dompurify';
-import { trackActionEvent, trackLeadConversion } from '@/helpers/tracking';
-
-var count = 200;
-var defaults = {
-  origin: { y: 0.7 }
-};
-
-function fire(particleRatio, opts) {
-  confetti({
-    ...defaults,
-    ...opts,
-    particleCount: Math.floor(count * particleRatio)
-  });
-}
+import {
+  createMetaEventId,
+  getMetaTrackingContext,
+  trackActionEvent,
+} from '@/helpers/tracking';
 
 const Toast = Swal.mixin({
   toast: true,
@@ -43,6 +33,7 @@ const Toast = Swal.mixin({
 
 export default function Form({ currentLanguage, considerationTranslation, hcaptchaSiteKey }) {
   const captchaRef = useRef(null);
+  const hasTrackedFormStartRef = useRef(false);
   const [disableButton, setDisableButton] = useState(false);
   const savedData = JSON.parse(localStorage.getItem("contactForm") || "{}");
 
@@ -54,7 +45,7 @@ export default function Form({ currentLanguage, considerationTranslation, hcaptc
       setData("token", null);
   };
 
-  const { data, setData, post, processing, errors, reset } = useForm({
+  const { data, setData, post, processing, errors, transform } = useForm({
     firstname: savedData.firstname ?? null,
     lastname: savedData.lastname ?? null,
     email: savedData.email ?? null,
@@ -81,7 +72,7 @@ export default function Form({ currentLanguage, considerationTranslation, hcaptc
   const { t } = useTranslation();
   const considerationDescription = considerationTranslation?.description ?? "";
 
-  const { selectedReferences, setSelectedReferences } = useSelectReferences();
+  const { selectedReferences } = useSelectReferences();
 
   useEffect(() => {
     const persistedFormData = { ...data, token: null, files: null };
@@ -138,62 +129,20 @@ export default function Form({ currentLanguage, considerationTranslation, hcaptc
     e.preventDefault();
     setDisableButton(true);
 
+    const leadEventId = createMetaEventId();
+    const metaTrackingContext = getMetaTrackingContext();
+
+    transform((formData) => ({
+      ...formData,
+      meta_tracking: leadEventId ? {
+        ...metaTrackingContext,
+        event_id: leadEventId,
+      } : null,
+    }));
+
     post(route('contact.store', { locale: currentLanguage.slug }), {
-      data: data,
       preserveScroll: true,
       preserveState: true,
-      onSuccess: () => {
-        const referencesCount = Array.isArray(data.attachments) ? data.attachments.length : 0;
-        const uploadedFilesCount = Array.isArray(files) ? files.length : 0;
-        const trackingPayload = {
-          references_count: referencesCount,
-          uploaded_files_count: uploadedFilesCount,
-          preferred_contact: data.contact_me_by ?? 'unknown',
-        };
-
-        trackActionEvent('contact_form_submitted', trackingPayload);
-        trackLeadConversion(trackingPayload);
-
-
-        fire(0.25, {
-          spread: 26,
-          startVelocity: 55,
-        });
-        
-        fire(0.2, {
-          spread: 60,
-        });
-        
-        fire(0.35, {
-          spread: 100,
-          decay: 0.91,
-          scalar: 0.8
-        });
-        
-        fire(0.1, {
-          spread: 120,
-          startVelocity: 25,
-          decay: 0.92,
-          scalar: 1.2
-        });
-
-        fire(0.1, {
-          spread: 120,
-          startVelocity: 45,
-        });
-
-        Toast.fire({
-          icon: "success",
-          title: t("Soon I'll be in touch to discuss about your project"),
-        });
-
-        setData([]);
-        setFiles([]);
-        localStorage.removeItem("contactForm");
-        document.getElementById("contactForm").reset();
-        setSelectedReferences([]);
-        setDisableButton(false);
-      },
       onError: (error) => {
         setDisableButton(false);
 
@@ -202,12 +151,25 @@ export default function Form({ currentLanguage, considerationTranslation, hcaptc
           title: t("Check your information and submit the form again")
         });
       },
+      onFinish: () => {
+        transform((formData) => formData);
+        setDisableButton(false);
+      },
     });
   }
 
+  const trackFormStarted = () => {
+    if (hasTrackedFormStartRef.current) return;
+    hasTrackedFormStartRef.current = true;
+    trackActionEvent('contact_form_started', {
+      page_key: 'contact',
+      locale: currentLanguage?.slug ?? 'unknown',
+    });
+  };
+
   return (
     <div className="form">
-      <form id="contactForm" onSubmit={(e) => formSubmit(e)} encType="multipart/form-data">
+      <form id="contactForm" onSubmit={(e) => formSubmit(e)} onFocus={trackFormStarted} encType="multipart/form-data">
         <div className="xl:w-[1240px] lg:w-[1240px] mx-auto space-y-6">
           
           <div className="text-xl text-[#4d4c4c]" dangerouslySetInnerHTML={{ __html: sanitizedConsiderationDescription }} />

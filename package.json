@@ -3,7 +3,8 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vite build --minify"
+        "build": "vite build --minify",
+        "test:tracking": "node --test tests/js/tracking.test.mjs"
     },
     "devDependencies": {
         "@headlessui/react": "^1.4.2",

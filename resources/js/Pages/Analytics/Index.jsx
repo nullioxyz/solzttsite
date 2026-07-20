@@ -174,7 +174,7 @@ export default function AnalyticsModule({ auth, metrics: initialMetrics, trackin
               <h3 className="text-lg font-semibold text-slate-800">Tracking Integrations</h3>
               <BoltIcon className="h-5 w-5 text-slate-400" />
             </div>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
                 <div className="flex items-center justify-between">
                   <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Google Analytics</p>
@@ -191,6 +191,18 @@ export default function AnalyticsModule({ auth, metrics: initialMetrics, trackin
                 </div>
                 <p className={`mt-2 text-base font-semibold ${tracking?.meta_enabled ? 'text-emerald-600' : 'text-slate-500'}`}>
                   {tracking?.meta_enabled ? 'Enabled' : 'Disabled'}
+                </p>
+              </div>
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Meta CAPI</p>
+                  <BoltIcon className="h-4 w-4 text-slate-500" />
+                </div>
+                <p className={`mt-2 text-base font-semibold ${tracking?.meta_capi_enabled ? 'text-emerald-600' : 'text-slate-500'}`}>
+                  {tracking?.meta_capi_enabled ? 'Enabled' : 'Disabled'}
+                </p>
+                <p className="mt-1 text-xs text-slate-500">
+                  24h: {formatNumber(metrics?.meta_capi_deliveries_24h?.sent)} sent · {formatNumber(metrics?.meta_capi_deliveries_24h?.retrying)} retrying · {formatNumber(metrics?.meta_capi_deliveries_24h?.failed)} failed
                 </p>
               </div>
             </div>

@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\AnalyticsEvent;
 use App\Models\AnalyticsVisitor;
 use App\Models\Contact;
+use App\Models\MetaConversionDelivery;
+use Illuminate\Support\Facades\Schema;
 
 class AnalyticsMetricsService
 {
@@ -191,12 +193,31 @@ class AnalyticsMetricsService
 
         $contactsReceived = Contact::query()->count();
         $contactsUnread = Contact::query()->where('read', 0)->count();
+        $metaCapiDeliveries24h = [
+            'sent' => 0,
+            'retrying' => 0,
+            'failed' => 0,
+        ];
+
+        if (Schema::hasTable('meta_conversion_deliveries')) {
+            MetaConversionDelivery::query()
+                ->where('created_at', '>=', $since24h)
+                ->selectRaw('status, COUNT(*) as total')
+                ->groupBy('status')
+                ->pluck('total', 'status')
+                ->each(function ($total, $status) use (&$metaCapiDeliveries24h) {
+                    if (array_key_exists($status, $metaCapiDeliveries24h)) {
+                        $metaCapiDeliveries24h[$status] = (int) $total;
+                    }
+                });
+        }
 
         return [
             'online_users' => $onlineUsers,
             'page_views_24h' => $totalPageViews24h,
             'contacts_received' => $contactsReceived,
             'contacts_unread' => $contactsUnread,
+            'meta_capi_deliveries_24h' => $metaCapiDeliveries24h,
             'top_pages' => $topPages,
             'top_events' => $topEvents,
             'latest_events' => $latestEvents,
