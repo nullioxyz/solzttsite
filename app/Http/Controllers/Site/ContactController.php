@@ -2,14 +2,13 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Site\StoreContactRequest;
-use App\Jobs\SendMetaConversionJob;
 use App\Models\Institucional;
 use App\Models\Language;
 use App\Models\Portfolio;
 use App\Models\SiteSetting;
 use App\Models\Social;
 use App\Services\ContactService;
-use App\Services\Meta\MetaEventPayloadBuilder;
+use App\Services\Meta\MetaLeadDeliveryService;
 use App\Strategies\Files\MediaUploadStrategy;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -86,7 +85,7 @@ class ContactController extends Controller
         ]);
     }
 
-    public function store(StoreContactRequest $request, MetaEventPayloadBuilder $metaEventBuilder)
+    public function store(StoreContactRequest $request, MetaLeadDeliveryService $metaLeadDelivery)
     {
         $validatedData = $request->validated();
         $metaTracking = Arr::pull($validatedData, 'meta_tracking', []);
@@ -139,13 +138,15 @@ class ContactController extends Controller
             
             $contact = $this->contactService->storeContact($validatedData);
 
-            if (
-                filter_var(config('services.facebook.capi_enabled'), FILTER_VALIDATE_BOOL)
-                && filter_var($metaTracking['marketing_consent'] ?? false, FILTER_VALIDATE_BOOL)
-                && !empty($metaTracking['event_id'])
-            ) {
-                $metaEvent = $metaEventBuilder->buildLead($contact, $metaTracking, $request);
-                SendMetaConversionJob::dispatchAfterResponse($metaEvent);
+            $metaTracking['event_id'] = $metaTracking['event_id'] ?? (string) Str::uuid();
+
+            try {
+                $metaLeadDelivery->recordAndDispatch($contact, $metaTracking, $request);
+            } catch (Throwable $exception) {
+                Log::warning('Meta Lead delivery could not be audited or queued.', [
+                    'contact_id' => $contact->id,
+                    'exception' => $exception::class,
+                ]);
             }
 
             if (!empty($validatedData['files']) && is_array($validatedData['files'])) {

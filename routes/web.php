@@ -21,6 +21,7 @@ use App\Http\Controllers\Site\PortfolioController as PortfolioSiteController;
 use App\Http\Controllers\Site\SitemapController;
 use App\Http\Controllers\Site\TranslationController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\MetaDeliveryController;
 use App\Http\Controllers\Admin\QueueMonitorController;
 use App\Models\Language;
 use Illuminate\Support\Facades\Cookie;
@@ -102,6 +103,8 @@ Route::prefix('hall-of-justice')->group(function() {
         Route::get('/analytics/metrics', [AdminAnalyticsController::class, 'metrics'])->name('analytics.metrics');
         Route::get('/queue-monitor', [QueueMonitorController::class, 'index'])->name('queue-monitor.index');
         Route::get('/queue-monitor/data', [QueueMonitorController::class, 'data'])->name('queue-monitor.data');
+        Route::get('/meta-deliveries', [MetaDeliveryController::class, 'index'])->name('meta-deliveries.index');
+        Route::get('/meta-deliveries/data', [MetaDeliveryController::class, 'data'])->name('meta-deliveries.data');
 
         Route::prefix('site-settings')->group(function() {
             Route::get('/', [SiteSettingController::class, 'index'])->name('site.setting.index');
