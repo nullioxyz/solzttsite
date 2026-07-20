@@ -2,19 +2,19 @@
 
 return [
 
-    //menu
+    // menu
     'about' => 'Who Am I?',
     'contact' => 'Book a Tattoo',
     'portfolio' => 'Portfolio',
     'available' => 'Available Designs',
     'appointment' => 'Appointment',
-    
-    //sections
+
+    // sections
     'how_to_book' => 'How to book an appointment',
     'requestatatto' => 'Book a Tattoo',
     'book_now' => 'Book now',
 
-    //contact form
+    // contact form
     'tattoo_idea' => '<span class="M7eMe"><b>✦ About the design you want ✦</b><br><br><strong>What is the meaning or feeling you want your tattoo to convey?</strong><br><em>(Feel free to share any emotions, ideas, or personal significance behind the design.)</em></span>',
     'tattoTattoIdeaPlaceholder' => 'Tatto Idea',
     'references' => 'Do you have any reference images or links? (Feel free to paste links, upload images of my work you like, or anything that inspires your tattoo idea!)',
@@ -51,57 +51,58 @@ return [
     'contact_preference' => 'Contact preference',
     'allopt' => 'All options',
     'requestquote' => 'Send message',
-    "sending..." => "Sending...",
+    'sending...' => 'Sending...',
 
-    "Your best e-mail" => 'Your best e-mail',
+    'Your best e-mail' => 'Your best e-mail',
 
-    //lang selection
+    // lang selection
     'select_lang' => 'Select a language',
     'it' => 'Italian',
     'pt' => 'Brazilian Portuguese',
     'en' => 'English',
 
-
-    //modals
+    // modals
     'use_as_reference' => 'Use as reference',
     'want_this' => 'I want this',
     'load_more' => 'Go to more',
 
     // site static texts and messages
-    "Thank you!" => 'Thank you!',
+    'Thank you!' => 'Thank you!',
     "Soon I'll be in touch to discuss about your project" => "Soon I'll be in touch to discuss about your project",
-    "Check your information and submit the form again" => "Check your information and submit the form again",
+    'Check your information and submit the form again' => 'Check your information and submit the form again',
+    'Please complete the captcha before submitting' => 'Please complete the captcha before submitting',
+    'contact_rate_limit' => 'Too many attempts. Wait a minute and try again.',
     'contact_success_meta_title' => 'Request sent',
     'contact_success_title' => 'Thank you!',
     'contact_success_description' => 'I received your information and will get in touch as soon as possible to discuss your project.',
     'contact_success_explore_projects' => 'Explore projects',
 
-    "Arm, Forearm" => 'Arm, Forearm',
-    "+39 389 748 2409" => "+39 389 748 2409",
-    "Jane" => 'Jane',
-    "Joseph" => 'Joseph',
+    'Arm, Forearm' => 'Arm, Forearm',
+    '+39 389 748 2409' => '+39 389 748 2409',
+    'Jane' => 'Jane',
+    'Joseph' => 'Joseph',
     'remove' => 'Remove',
 
-    "not available" => "Not Available",
-    "remove_reference" => "Remove Reference",
-    "choose_another" => "choose another",
+    'not available' => 'Not Available',
+    'remove_reference' => 'Remove Reference',
+    'choose_another' => 'choose another',
     'btnStart' => 'Request a quote',
     'next' => 'Next',
     'previous' => 'Previous',
     'data_check_and_recaptcha' => 'Double-check your info and prove you’re not a robot 🤖✨',
-    "Your tattoo idea is very important" => "Your tattoo idea is crucial so I can give you an accurate quote!",
-    "30 characters in the minimum text size" => "Try to describe your idea in at least 30 characters.",
-    "References is required" => "Tell me about your references! Links, images, anything goes...",
-    "Size of tattoo is required" => "Knowing the tattoo size is important as it affects the price.",
-    "The body location is required" => "Let me know where you want your tattoo on your body.",
-    "Inform a valid e-mail" => "Please provide a valid email address.",
-    "Your phone number is required" => "I need a phone number to get in touch.",
-    "Please, tell me your name" => "Tell me your name, please!",
-    "Your lastname is required" => "I need your last name, don't be shy!",
-    "City is required" => "Where are you from? Tell me your city!",
-    "Availability is required" => "Let me know your availability so I can fit into your schedule.",
+    'Your tattoo idea is very important' => 'Your tattoo idea is crucial so I can give you an accurate quote!',
+    '30 characters in the minimum text size' => 'Try to describe your idea in at least 30 characters.',
+    'References is required' => 'Tell me about your references! Links, images, anything goes...',
+    'Size of tattoo is required' => 'Knowing the tattoo size is important as it affects the price.',
+    'The body location is required' => 'Let me know where you want your tattoo on your body.',
+    'Inform a valid e-mail' => 'Please provide a valid email address.',
+    'Your phone number is required' => 'I need a phone number to get in touch.',
+    'Please, tell me your name' => 'Tell me your name, please!',
+    'Your lastname is required' => "I need your last name, don't be shy!",
+    'City is required' => 'Where are you from? Tell me your city!',
+    'Availability is required' => 'Let me know your availability so I can fit into your schedule.',
 
-    //Email
+    // Email
     'Name' => 'Name',
     'Email' => 'Email',
     'Phone' => 'Phone',
@@ -131,9 +132,9 @@ return [
 
     'Visual references or tattoos (optional) - (max 5)' => 'Visual references or tattoos (optional) - max 5',
 
-    "You can only upload up to 5 files" => 'You can only upload up to 5 files',
-    
-    "Tattoo Aftercare" => "Tattoo Aftercare",
+    'You can only upload up to 5 files' => 'You can only upload up to 5 files',
+
+    'Tattoo Aftercare' => 'Tattoo Aftercare',
     'back' => 'Back',
 
     // cookie consent

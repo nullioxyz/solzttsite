@@ -71,7 +71,7 @@ Route::middleware(['lang'])->prefix('/{locale}')->where(['locale' => '[a-z]{2}']
     Route::get('/available-designs', [SiteAvailableController::class, 'index'])->name('site.available_designs');
     Route::get('/available-designs/detail/{slug}', [SiteAvailableController::class, 'show'])->name('site.available_designs.show');
     Route::get('/load-available-designs', [SiteAvailableController::class, 'load'])->name('site.available_designs.load');
-    Route::post('/save-contact', [ContactController::class, 'store'])->middleware('throttle:3,1')->name('contact.store');
+    Route::post('/save-contact', [ContactController::class, 'store'])->middleware('throttle:contact-form')->name('contact.store');
 
     Route::get('translations', [TranslationController::class, 'getTranslations'])->name('site.translations');
     Route::post('set-language', [TranslationController::class, 'setLanguage'])->name('site.setLanguage');

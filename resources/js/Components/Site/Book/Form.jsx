@@ -34,6 +34,7 @@ const Toast = Swal.mixin({
 export default function Form({ currentLanguage, considerationTranslation, hcaptchaSiteKey }) {
   const captchaRef = useRef(null);
   const hasTrackedFormStartRef = useRef(false);
+  const isSubmittingRef = useRef(false);
   const [disableButton, setDisableButton] = useState(false);
   const savedData = JSON.parse(localStorage.getItem("contactForm") || "{}");
 
@@ -127,6 +128,18 @@ export default function Form({ currentLanguage, considerationTranslation, hcaptc
 
   const formSubmit = async (e) => {
     e.preventDefault();
+
+    if (isSubmittingRef.current || processing) return;
+
+    if (!data.token) {
+      Toast.fire({
+        icon: "warning",
+        title: t("Please complete the captcha before submitting"),
+      });
+      return;
+    }
+
+    isSubmittingRef.current = true;
     setDisableButton(true);
 
     const leadEventId = createMetaEventId();
@@ -153,6 +166,9 @@ export default function Form({ currentLanguage, considerationTranslation, hcaptc
       },
       onFinish: () => {
         transform((formData) => formData);
+        captchaRef.current?.resetCaptcha();
+        setData("token", null);
+        isSubmittingRef.current = false;
         setDisableButton(false);
       },
     });
@@ -398,12 +414,16 @@ export default function Form({ currentLanguage, considerationTranslation, hcaptc
               onVerify={handleVerify}
               onExpire={handleCaptchaExpireOrError}
               onError={handleCaptchaExpireOrError}
+              onChalExpired={handleCaptchaExpireOrError}
+              reCaptchaCompat={false}
               ref={captchaRef}
             />
           ) : null}
+
+          {errors.error && <p className="text-[#7d3636] text-md italic">{errors.error}</p>}
   
           <button
-            disabled={disableButton}
+            disabled={disableButton || processing || !data.token}
             type="submit"
             className="mt-6 bg-black text-white px-6 py-3 rounded-none"
           >
