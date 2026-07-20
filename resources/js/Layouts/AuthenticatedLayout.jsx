@@ -9,6 +9,7 @@ import {
   FolderIcon,
   HomeIcon,
   PaintBrushIcon,
+  QueueListIcon,
   RectangleGroupIcon,
   UserGroupIcon,
   XMarkIcon,
@@ -21,6 +22,7 @@ import Warning from '@/Components/Alerts/Warning';
 const navigation = [
   { name: 'Dashboard', routeName: 'dashboard', match: 'dashboard', icon: HomeIcon },
   { name: 'Analytics', routeName: 'analytics.index', match: 'analytics.*', icon: ChartBarSquareIcon },
+  { name: 'Queue Jobs', routeName: 'queue-monitor.index', match: 'queue-monitor.*', icon: QueueListIcon },
   { name: 'Institutional', routeName: 'institucional.index', match: 'institucional.*', icon: BuildingOffice2Icon },
   { name: 'Categories', routeName: 'category.index', match: 'category.*', icon: FolderIcon },
   { name: 'Portfolio', routeName: 'portfolio.index', match: 'portfolio.*', icon: BriefcaseIcon },
@@ -81,6 +83,7 @@ export default function Authenticated({ user, header, children }) {
     const sectionMap = {
       dashboard: 'Dashboard',
       analytics: 'Analytics',
+      'queue-monitor': 'Queue Jobs',
       institucional: 'Institutional',
       category: 'Categories',
       portfolio: 'Portfolio',
