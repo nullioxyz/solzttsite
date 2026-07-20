@@ -42,6 +42,15 @@ class SendMetaConversionJob implements ShouldQueue, ShouldBeUnique
     public function handle(MetaConversionsApiClient $client): void
     {
         if (!filter_var(config('services.facebook.capi_enabled'), FILTER_VALIDATE_BOOL)) {
+            MetaConversionDelivery::query()->updateOrCreate(
+                ['event_id' => $this->event['event_id']],
+                [
+                    'event_name' => $this->event['event_name'],
+                    'status' => 'skipped',
+                    'skip_reason' => 'capi_disabled_at_processing',
+                ],
+            );
+
             return;
         }
 
@@ -60,6 +69,7 @@ class SendMetaConversionJob implements ShouldQueue, ShouldBeUnique
         $delivery->increment('attempts');
         $delivery->forceFill([
             'status' => 'processing',
+            'skip_reason' => null,
             'last_attempt_at' => now(),
             'last_error' => null,
         ])->save();

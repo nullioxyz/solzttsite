@@ -24,13 +24,16 @@ class SendMetaConversionJobTest extends TestCase
 
         Schema::create('meta_conversion_deliveries', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('contact_id')->nullable();
             $table->uuid('event_id')->unique();
             $table->string('event_name');
             $table->string('status')->default('processing');
+            $table->string('skip_reason')->nullable();
             $table->unsignedSmallInteger('attempts')->default(0);
             $table->unsignedSmallInteger('events_received')->nullable();
             $table->string('trace_id')->nullable();
             $table->string('last_error')->nullable();
+            $table->timestamp('queued_at')->nullable();
             $table->timestamp('last_attempt_at')->nullable();
             $table->timestamp('sent_at')->nullable();
             $table->timestamps();
@@ -98,6 +101,23 @@ class SendMetaConversionJobTest extends TestCase
         $delivery = MetaConversionDelivery::query()->firstOrFail();
         $this->assertSame(1, $delivery->attempts);
         $this->assertSame('sent', $delivery->status);
+    }
+
+    public function test_it_marks_a_queued_event_as_skipped_if_capi_is_disabled_before_processing(): void
+    {
+        config()->set('services.facebook.capi_enabled', false);
+
+        $client = $this->mock(MetaConversionsApiClient::class);
+        $client->shouldNotReceive('send');
+
+        (new SendMetaConversionJob($this->event()))->handle($client);
+
+        $this->assertDatabaseHas('meta_conversion_deliveries', [
+            'event_id' => $this->event()['event_id'],
+            'status' => 'skipped',
+            'skip_reason' => 'capi_disabled_at_processing',
+            'attempts' => 0,
+        ]);
     }
 
     private function event(): array

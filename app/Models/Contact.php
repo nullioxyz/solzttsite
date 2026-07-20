@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -53,6 +54,11 @@ class Contact extends Model implements HasMedia
     public function contentType(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(ContentType::class, 'content_type_id');
+    }
+
+    public function metaConversionDelivery(): HasOne
+    {
+        return $this->hasOne(MetaConversionDelivery::class);
     }
 
     public function getRouteKeyName()

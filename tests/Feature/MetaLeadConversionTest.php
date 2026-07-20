@@ -56,6 +56,23 @@ class MetaLeadConversionTest extends TestCase
             $table->softDeletes();
         });
 
+        Schema::create('meta_conversion_deliveries', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('contact_id')->nullable();
+            $table->uuid('event_id')->unique();
+            $table->string('event_name');
+            $table->string('status');
+            $table->string('skip_reason')->nullable();
+            $table->unsignedSmallInteger('attempts')->default(0);
+            $table->unsignedSmallInteger('events_received')->nullable();
+            $table->string('trace_id')->nullable();
+            $table->string('last_error')->nullable();
+            $table->timestamp('queued_at')->nullable();
+            $table->timestamp('last_attempt_at')->nullable();
+            $table->timestamp('sent_at')->nullable();
+            $table->timestamps();
+        });
+
         DB::table('language')->insert([
             'name' => 'Português',
             'slug' => 'pt',
@@ -130,6 +147,50 @@ class MetaLeadConversionTest extends TestCase
                 && $job->event['user_data']['fbp'] === 'fb.1.123.456'
                 && $job->event['custom_data']['content_category'] === 'tattoo_booking';
         });
+
+        $this->assertDatabaseHas('meta_conversion_deliveries', [
+            'contact_id' => 73,
+            'event_id' => $eventId,
+            'event_name' => 'Lead',
+            'status' => 'queued',
+            'skip_reason' => null,
+            'attempts' => 0,
+        ]);
+    }
+
+    public function test_it_audits_a_lead_skipped_without_marketing_consent(): void
+    {
+        Bus::fake();
+        Http::fake([
+            'hcaptcha.com/siteverify' => Http::response(['success' => true]),
+        ]);
+
+        $this->mock(ContactService::class, fn ($mock) => $mock
+            ->shouldReceive('storeContact')
+            ->once()
+            ->andReturn((object) [
+                'id' => 74,
+                'email' => 'private@example.com',
+                'firstname' => 'Private',
+            ]));
+
+        $eventId = '8a1ca508-b73b-496c-af95-c99318536341';
+
+        $this->post('/pt/save-contact', $this->validContactPayload([
+            'meta_tracking' => [
+                'event_id' => $eventId,
+                'event_source_url' => 'https://solztt.test/pt/contact',
+                'marketing_consent' => false,
+            ],
+        ]))->assertRedirect();
+
+        Bus::assertNotDispatched(SendMetaConversionJob::class);
+        $this->assertDatabaseHas('meta_conversion_deliveries', [
+            'contact_id' => 74,
+            'event_id' => $eventId,
+            'status' => 'skipped',
+            'skip_reason' => 'marketing_consent_missing',
+        ]);
     }
 
     public function test_success_page_rejects_direct_or_sessionless_access(): void
