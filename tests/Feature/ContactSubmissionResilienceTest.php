@@ -75,7 +75,11 @@ class ContactSubmissionResilienceTest extends TestCase
             'files' => [UploadedFile::fake()->image('reference.jpg')],
         ]));
 
-        $response->assertRedirect(route('site.contact', ['locale' => 'pt']));
+        $response->assertRedirect();
+        $this->assertStringContainsString(
+            '/pt/contact/success/',
+            (string) $response->headers->get('Location'),
+        );
         $response->assertSessionHasNoErrors();
     }
 

@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\URL;
+use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
 class MetaLeadConversionTest extends TestCase
@@ -26,6 +28,30 @@ class MetaLeadConversionTest extends TestCase
             $table->string('name');
             $table->boolean('default')->default(false);
             $table->string('slug');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('social', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('url')->nullable();
+        });
+
+        Schema::create('site_setting', function (Blueprint $table) {
+            $table->id();
+            $table->string('slug')->nullable();
+            $table->unsignedBigInteger('theme_id')->nullable();
+        });
+
+        Schema::create('institucional', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('language_id')->nullable();
+            $table->unsignedBigInteger('content_type_id')->nullable();
+            $table->string('title')->nullable();
+            $table->string('subtitle')->nullable();
+            $table->text('description')->nullable();
+            $table->string('slug')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -76,13 +102,67 @@ class MetaLeadConversionTest extends TestCase
             ],
         ]));
 
-        $response->assertRedirect(route('site.contact', ['locale' => 'pt']));
+        $successUrl = $response->headers->get('Location');
+        $this->assertNotNull($successUrl);
+        $this->assertStringContainsString('/pt/contact/success/', $successUrl);
+
+        $this->get($successUrl)
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('Site/Contact/Success')
+                ->where('success.celebrate', true)
+                ->where('success.event_id', $eventId)
+                ->where('success.tracking.references_count', 0)
+                ->where('success.tracking.uploaded_files_count', 0)
+                ->where('success.tracking.preferred_contact', 'WhatsApp'));
+
+        $this->get($successUrl)
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('Site/Contact/Success')
+                ->where('success.celebrate', false)
+                ->where('success.event_id', null)
+                ->where('success.tracking', []));
+
         Bus::assertDispatchedAfterResponse(SendMetaConversionJob::class, function ($job) use ($eventId) {
             return $job->event['event_name'] === 'Lead'
                 && $job->event['event_id'] === $eventId
                 && $job->event['user_data']['fbp'] === 'fb.1.123.456'
                 && $job->event['custom_data']['content_category'] === 'tattoo_booking';
         });
+    }
+
+    public function test_success_page_rejects_direct_or_sessionless_access(): void
+    {
+        $token = 'fb457769-23a8-4aa7-b28c-ebf0c2b4f983';
+
+        $this->get(route('site.contact.success', [
+            'locale' => 'pt',
+            'token' => $token,
+        ]))->assertForbidden();
+
+        $signedUrl = URL::temporarySignedRoute(
+            'site.contact.success',
+            now()->addMinutes(30),
+            ['locale' => 'pt', 'token' => $token],
+        );
+
+        $this->get($signedUrl)
+            ->assertRedirect(route('site.contact', ['locale' => 'pt']));
+    }
+
+    public function test_success_page_rejects_an_expired_signature(): void
+    {
+        $expiredUrl = URL::temporarySignedRoute(
+            'site.contact.success',
+            now()->subMinute(),
+            [
+                'locale' => 'pt',
+                'token' => '5521fb0a-f26b-44d9-b6cb-7646a262ae19',
+            ],
+        );
+
+        $this->get($expiredUrl)->assertForbidden();
     }
 
     public function test_lead_is_not_dispatched_when_hcaptcha_rejects_the_submission(): void

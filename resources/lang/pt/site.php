@@ -75,6 +75,10 @@ return [
     "Thank you!" => 'Obrigada',
     "Soon I'll be in touch to discuss about your project" => "Em breve entrarei em contato para discutir sobre seu projeto",
     "Check your information and submit the form again" => "Verifique suas informações e envie o formulário novamente",
+    'contact_success_meta_title' => 'Solicitação enviada',
+    'contact_success_title' => 'Obrigado! Sua solicitação foi enviada.',
+    'contact_success_description' => 'Recebi suas informações e entrarei em contato assim que possível para conversarmos sobre o seu projeto.',
+    'contact_success_back_home' => 'Voltar para o início',
 
     "Arm, Forearm" => 'Braço, antebraço, perna, costas...',
     "+39 389 748 2409" => "+55 67 99954-2233",

@@ -50,6 +50,20 @@ export function getMetaTrackingContext() {
   return window.getMetaTrackingContext();
 }
 
+export function claimContactSuccess(completionId) {
+  if (!isBrowser || !completionId) return false;
+
+  const key = `contact_success:${completionId}`;
+
+  try {
+    if (window.sessionStorage.getItem(key)) return false;
+    window.sessionStorage.setItem(key, '1');
+    return true;
+  } catch (_) {
+    return true;
+  }
+}
+
 export function trackLeadConversion(params = {}, eventId = null) {
   if (!isBrowser || typeof window.trackLeadConversion !== "function") return;
   window.trackLeadConversion(normalizeParams(params), eventId);

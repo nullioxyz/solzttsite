@@ -73,6 +73,10 @@ return [
     "Thank you!" => 'Grazie',
     "Soon I'll be in touch to discuss about your project" => "Presto ti contatterò per discutere del tuo progetto",
     "Check your information and submit the form again" => "Controlla i tuoi dati e invia nuovamente",
+    'contact_success_meta_title' => 'Richiesta inviata',
+    'contact_success_title' => 'Grazie! La tua richiesta è stata inviata.',
+    'contact_success_description' => 'Ho ricevuto le tue informazioni e ti contatterò il prima possibile per parlare del tuo progetto.',
+    'contact_success_back_home' => 'Torna alla home',
 
     "Arm, Forearm" => 'Braccio, Avambraccio',
     "+39 389 748 2409" => "+39 389 748 2409",

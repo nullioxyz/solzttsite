@@ -62,6 +62,10 @@ Route::middleware(['lang'])->prefix('/{locale}')->where(['locale' => '[a-z]{2}']
     Route::get('/after-care', [AfterCareController::class, 'index'])->name('site.after_care');
 
     Route::get('/contact', [ContactController::class, 'index'])->name('site.contact');
+    Route::get('/contact/success/{token}', [ContactController::class, 'success'])
+        ->middleware('signed')
+        ->whereUuid('token')
+        ->name('site.contact.success');
     
     Route::get('/available-designs', [SiteAvailableController::class, 'index'])->name('site.available_designs');
     Route::get('/available-designs/detail/{slug}', [SiteAvailableController::class, 'show'])->name('site.available_designs.show');

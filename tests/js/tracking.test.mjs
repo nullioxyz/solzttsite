@@ -3,6 +3,7 @@ import test from 'node:test';
 
 const calls = [];
 const eventId = 'fef0d98e-3a8f-4af3-bf5c-f1e9cad53c55';
+const sessionValues = new Map();
 
 globalThis.window = {
   createMetaEventId: () => eventId,
@@ -14,6 +15,10 @@ globalThis.window = {
   }),
   trackAnalyticsEvent: (...args) => calls.push(['action', ...args]),
   trackLeadConversion: (...args) => calls.push(['lead', ...args]),
+  sessionStorage: {
+    getItem: (key) => sessionValues.get(key) ?? null,
+    setItem: (key, value) => sessionValues.set(key, value),
+  },
 };
 
 const tracking = await import('../../resources/js/helpers/tracking.js');
@@ -49,4 +54,11 @@ test('returns only the consented Meta tracking context', () => {
     fbp: 'fb.1.123.456',
     fbc: 'fb.1.123.click',
   });
+});
+
+test('claims a contact success only once per browser session', () => {
+  const completionId = 'completion-123';
+
+  assert.equal(tracking.claimContactSuccess(completionId), true);
+  assert.equal(tracking.claimContactSuccess(completionId), false);
 });

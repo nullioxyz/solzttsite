@@ -217,6 +217,8 @@
                     pageKey = 'available_design_detail';
                 } else if (segments[0] === 'available-designs') {
                     pageKey = 'available_designs';
+                } else if (segments[0] === 'contact' && segments[1] === 'success') {
+                    pageKey = 'contact_success';
                 } else if (segments[0] === 'contact') {
                     pageKey = 'contact';
                 } else if (segments[0] === 'after-care') {
